@@ -9,5 +9,7 @@ Set your secret key\
 ```export SECRET_KEY="your secret key"```
 ### Running the App
 ```flask run```\
--Create new account http://127.0.0.1:5000/signup\
+-Create new account http://127.0.0.1:5000/signup
+
+
 -Login account http://127.0.0.1:5000/login
