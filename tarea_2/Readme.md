@@ -5,11 +5,9 @@ This is a simple login and registration application that uses Flask, SQLAlchemy,
 ```pip install -r requirements.txt```
 
 ### Export
-```export FLASK_APP=auth.py```
-
-
-Set your secret key\
+```export FLASK_APP=auth.py```\
 ```export SECRET_KEY="your secret key"```
+
 ### Running the App
 ```flask run```
 
