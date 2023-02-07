@@ -1,23 +1,63 @@
-<!doctype html5>
-<html>
-<head>
-  <title>Login</title>
-</head>
-<body>
-  <h2>Login</h2>
-  <form id="login" action="{{ url_for('main.login')}}" method="post">
-    Username :  <input type="text" id="username" name="username" />
-    Password : <input type="password" id="password" name="password" />
-    <input type="submit" id="submit" text="Login" />
-  </form>
-  {% with messages = get_flashed_messages() %}
-    {% if messages %}
-      <ul class=flashes>
-      {% for message in messages %}
-        <li>{{ message }}</li>
-      {% endfor %}
-      </ul>
-    {% endif %}
-  {% endwith %}
-</body>
-</html>
+{% extends 'layout.html' %}
+{% block content %}
+<style>
+    body{
+        font-family: 'Overpass', sans-serif;
+        font-weight: normal;
+        font-size: 100%;
+        color: #1b262c;
+
+        margin: 0;
+        background-color: #0f4c75;
+    }
+.myblock{
+    border:1px solid black;
+    border-radius: 4%;
+    background-color: #3282b8;
+    margin-top:20%;
+    padding:3%;
+}
+.h1{
+    margin-bottom:5% ;
+    color:#bbe1fa;
+}
+.mybtn{
+    font-family: 'Overpass', sans-serif;
+    color:#1b262c;
+    background-color: #bbe1fa;
+}}
+
+</style>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-3 col-md-3 col-sm-12"></div>
+        <div class="col-lg-6 col-md-6 col-sm-12 myblock">
+            <h1 class="h1">Login Form</h1>
+            <form id="login" action="{{ url_for('main.login')}}" method="post" class="form-group">
+
+            <div class="form-group">
+                <input type="text" id="username" name="username" placeholder="Username" class="form-control">
+            </div>
+            <div class="form-group">
+                <input type="password" name="password" placeholder="Password" class="form-control">
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-block btn-dark mybtn" id="submit">Submit</button>
+                <a href="{{ url_for('main.signup') }}" class="btn btn-block btn-dark  mybtn link">Signup</a>
+            </div>
+            </form>
+              {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                  <ul class=flashes>
+                  {% for message in messages %}
+                    <li>{{ message }}</li>
+                  {% endfor %}
+                  </ul>
+                {% endif %}
+              {% endwith %}
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-12"></div>
+    </div>
+</div>
+
+{% endblock %}
