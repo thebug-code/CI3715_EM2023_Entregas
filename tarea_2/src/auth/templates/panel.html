@@ -1,0 +1,48 @@
+{% extends 'layout.html' %}
+{% block content %}
+    <style>
+      .center {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+      }
+
+      button {
+        padding: 10px 20px;
+        border-radius: 5px;
+        background-color: lightblue;
+        color: white;
+        cursor: pointer;
+        margin: 10px;
+      }
+    </style>
+    <div class="center">
+      <button id="client-btn">Client</button>
+      <button id="admin-btn">Administrator</button>
+    </div>
+    <div id="form-container" style="display: none;">
+      <h3 id="form-title"></h3>
+      <form method="post">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br><br>
+        <input type="submit" value="Submit">
+      </form>
+    </div>
+    <script>
+      document.querySelector("#client-btn").addEventListener("click", function() {
+        document.querySelector("#form-container").style.display = "block";
+        document.querySelector("#form-title").innerHTML = "Client Form";
+      });
+
+      document.querySelector("#admin-btn").addEventListener("click", function() {
+        document.querySelector("#form-container").style.display = "block";
+        document.querySelector("#form-title").innerHTML = "Administrator Form";
+      });
+    </script>
+    
+
+{% endblock %}
+</html>

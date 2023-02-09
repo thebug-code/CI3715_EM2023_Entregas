@@ -93,3 +93,17 @@ def logout(username):
     session.pop(username, None)
     flash("successfully logged out.")
     return redirect(url_for('main.login'))
+
+@bp.route("/cms/", methods=["GET"])
+def cms():
+    """
+    Render the cms.html template.
+    """
+    return render_template("cms.html")
+
+@bp.route("/cms/panel", methods=["GET"])
+def panel():
+    """
+    Render the cms.html template.
+    """
+    return render_template("panel.html")
