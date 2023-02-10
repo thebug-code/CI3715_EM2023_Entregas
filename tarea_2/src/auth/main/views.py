@@ -18,9 +18,13 @@ def signup():
     if request.method == "POST":
         username = request.form['username']
         password = request.form['password']
+        confirm_password = request.form['confirmpassword']
 
-        if not (username and password):
-            flash("Username or Password cannot be empty")
+        if not (username and password and confirm_password):
+            flash("Username, Password or Confirm Password cannot be empty")
+            return redirect(url_for('main.signup'))
+        elif password != confirm_password:
+            flash("The passwords do not match")
             return redirect(url_for('main.signup'))
         else:
             username = username.strip()
