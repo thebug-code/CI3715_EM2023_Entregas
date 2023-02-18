@@ -1,18 +1,11 @@
-## Flask / SQLAlchemy simple sign up and login app
-This is a simple login and registration application that uses Flask, SQLAlchemy, and the Flask-SQLAlchemy plugin library.
+## Iteración 0
+### (Plan de la Iteración)
+1. Como Sistema, puedo Identificar a Usuarios para Controlar el Acceso No Autorizado al Sistema (Épica).
+    * Como Sistema, puedo Autenticar Usuarios para Controlar el Acceso No Autorizado al Sistema (INVEST)
+    * Como Administrador, puedo Crear perfiles de Usuarios para Controlar de Acceso No Autorizado al Sistema (INVEST).
+    * Como Administrador, puedo Ingresar Roles a los Usuarios para Controlar el Acceso No Autorizado al Sistema (INVEST).
 
-### Installing Dependencies
-```pip install -r requirements.txt```
-
-### Export
-```export FLASK_APP=auth```\
-```export SECRET_KEY="your secret key"```
-
-### Running the App
-```flask run```
-
-
--Create new account http://127.0.0.1:5000/signup
-
-
--Login account http://127.0.0.1:5000/login 
+#### Nota:
+* Autenticar Usuarios implica un algoritmo de encriptación.
+* Crear Perfiles implica Agregar, Buscar, Modificar, Pausar, Eliminar y Descargar datos de un proyecto en particular.
+* Los roles son Gerente de Operaciones, Supervisor del área de Mecánica General, Supervisor del área de Latonería y Pintura, Especialistas en Mecánica, Especialistas en Electrónica , Especialistas en Electricidad, etc.
