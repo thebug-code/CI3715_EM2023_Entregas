@@ -6,7 +6,7 @@ from SAGTMA.utils import auth, events
 from SAGTMA.utils.decorators import requires_roles
 
 
-@current_app.route('/user-profiles',methods=['GET', 'POST'])
+@current_app.route('/user-profiles/',methods=['GET', 'POST'])
 @requires_roles('Administrador')
 def users_profiles() -> Response:
     '''Muestra la lista de usuarios registrados en el sistema'''
@@ -42,7 +42,7 @@ def users_profiles() -> Response:
     roles = [r for r, in result]
     return render_template('admin/users.html', users=users, roles=roles)
 
-@current_app.route('/event-logger', methods=['GET', 'POST'])
+@current_app.route('/event-logger/', methods=['GET', 'POST'])
 @requires_roles('Administrador')
 def logger() -> Response:
     if request.method == 'POST':
@@ -71,7 +71,7 @@ def logger() -> Response:
     events = [r for r, in result]
     return render_template('admin/logger.html', events=events)
 
-@current_app.route('/user-profiles/register', methods=['POST'])
+@current_app.route('/user-profiles/register/', methods=['POST'])
 @requires_roles('Administrador')
 def register() -> Response:
     '''Registra un usuario en la base de datos.'''

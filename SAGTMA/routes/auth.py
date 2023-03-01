@@ -6,7 +6,7 @@ from SAGTMA.utils import auth
 from SAGTMA.utils.decorators import login_required, logout_required
 
 
-@current_app.route('/login',methods=['GET', 'POST'])
+@current_app.route('/login/',methods=['GET', 'POST'])
 @logout_required
 def login() -> Response:
     '''Inicia la sesión de un usuario y guarda el correo electrónico y nombre
@@ -33,7 +33,7 @@ def login() -> Response:
 
     return render_template('base/login.html')
 
-@current_app.route('/logout',methods=['POST'])
+@current_app.route('/logout/',methods=['POST'])
 @login_required
 def logout() -> Response:
     '''Cierra la sesión de un usuario y elimina los datos de la sesión.'''
