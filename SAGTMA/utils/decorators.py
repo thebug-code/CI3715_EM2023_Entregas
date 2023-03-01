@@ -1,6 +1,5 @@
 from flask import session, flash, redirect, url_for, abort
 from functools import wraps
-from SAGTMA.models import Role
 
 def login_required(f):
     '''Decorador de login requerido para rutas protegidas.
@@ -22,17 +21,12 @@ def logout_required(f):
 
     Si el usuario ya ha iniciado sesión, se redirige a la página de inicio.
     '''
-    print('logout_required')
     @wraps(f)
     def verify_logout(*args, **kwargs):
-        print('por aqui')
         if 'username' in session:
-            print("por el if")
             return redirect(url_for('home'))
         else:
-            print("por el else")
             return f(*args, **kwargs)
-    print("despues del return")
     return verify_logout
 
 def requires_roles(*roles):

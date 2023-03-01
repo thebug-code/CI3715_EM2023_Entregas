@@ -1,7 +1,7 @@
 from flask import session
 
 from SAGTMA.models import Event, db
-from SAGTMA.utils import AuthFactory
+from SAGTMA.utils import auth
 
 
 def add_register(username: str):
@@ -17,7 +17,7 @@ def add_search_log(search: str):
     _add_event('Logger de Eventos', f"Buscar '{search}'")
 
 def _add_event(module: str, description: str):
-    current_user = AuthFactory.get_current_user(session['id'])
+    current_user = auth.get_current_user(session['id'])
     new_event = Event(
         current_user,
         module,

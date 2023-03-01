@@ -2,8 +2,8 @@ from typing import Tuple
 
 import bcrypt
 
-from SAGTMA.models import Event, Role, User, db
-from SAGTMA.utils import EventFactory
+from SAGTMA.models import Role, User, db
+from SAGTMA.utils import events
 
 
 # ========== Excepciones ==========
@@ -144,7 +144,7 @@ def register_user(
     db.session.add(new_user)
 
     # Registra el evento en la base de datos
-    EventFactory.add_register(new_user.username)
+    events.add_register(new_user.username)
 
 def hash_password(password: str):
     '''Crea un hash de la contraseña ingresada.'''

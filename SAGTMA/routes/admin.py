@@ -2,7 +2,7 @@ from flask import (Response, current_app, flash, redirect, render_template,
                    request, url_for)
 
 from SAGTMA.models import Event, Role, User, db
-from SAGTMA.utils import AuthFactory, EventFactory
+from SAGTMA.utils import auth, events
 from SAGTMA.utils.decorators import requires_roles
 
 
@@ -29,7 +29,7 @@ def users_profiles() -> Response:
             stmt = stmt.where(User.role_id == role)
 
         # Añade el evento de búsqueda
-        EventFactory.add_search_user(user, role)
+        events.add_search_user(user, role)
     else:
         # Selecciona los usuarios y roles de la base de datos
         stmt = db.select(User)
@@ -62,7 +62,7 @@ def logger() -> Response:
             ))
 
             # Añade el evento de búsqueda
-            EventFactory.add_search_log(event)
+            events.add_search_log(event)
     else:
         # Selecciona los eventos de la base de datos
         stmt = db.select(Event)
@@ -93,11 +93,11 @@ def register() -> Response:
 
         role = [r for r, in result][0]
         try:
-            AuthFactory.register_user(
+            auth.register_user(
                 username, names, surnames,
                 password, confirm_password, role
             )
-        except AuthFactory.AuthenticationError as e:
+        except auth.AuthenticationError as e:
             flash(f'{e}')
 
     # Se permanece en la página
