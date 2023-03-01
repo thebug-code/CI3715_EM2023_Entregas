@@ -1,6 +1,6 @@
-# Flask Login
+# SAGTMA
 
-Sistema de registro y autenticación de usuarios construido en Flask, un micro framework de desarrollo web para Python.
+Sistema Automatizado de Gestión del Taller Mecánico Automotriz de Alta Gama Holiday International.
 
 ## Comenzando :rocket:
 
@@ -17,15 +17,15 @@ Para poner en marcha el proyecto, siga estos pasos:
 1. Comience clonando el repositorio en su máquina local y navegando a él:
 
 ```bash
-git clone https://github.com/adelinarf/LogInFlask.git
-cd LogInFlask
+git clone https://github.com/thebug-code/SAGTMA.git
+cd SAGTMA
 ```
 
 2. Cree y active un entorno virtual para el proyecto
 
 ```powershell
-python -m venv env
-source env/bin/activate # o simplemente .\env\Scripts\Activate.bat en Windows
+python -m venv venv
+source venv/bin/activate # o simplemente .\venv\Scripts\Activate.bat en Windows
 ```
 
 3. Instale las dependencias del proyecto:
