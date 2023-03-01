@@ -1,7 +1,6 @@
 from flask import (Response, current_app, flash, redirect, render_template,
                    request, session, url_for)
 
-from SAGTMA.models import db, Role
 from SAGTMA.utils import auth
 from SAGTMA.utils.decorators import login_required, logout_required
 
