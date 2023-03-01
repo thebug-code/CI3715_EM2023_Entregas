@@ -1,0 +1,66 @@
+{% extends 'base/base.html' %} {% block title %}Iniciar Sesión{% endblock %}
+{% block content %}
+  <section class="h-100">
+    <div class="container h-100">
+      <div class="row justify-content-sm-center h-100">
+        <div class="col-xxl-4 col-xl-5 col-lg-5 col-md-7 col-sm-9">
+          <div class="text-center my-3">
+            <img
+              src="{{ url_for('static', filename='img/logo.png') }}"
+              height="100"
+              class="my-4"
+            />
+          </div>
+          <div class="card shadow-lg">
+            <div class="card-body p-5">
+              <h1 class="fs-4 card-title fw-bold mb-4">Iniciar sesión</h1>
+
+              <!-- Form de inicio de sesión -->
+              <form method="POST" class="needs-validation" autocomplete="off">
+                <div class="mb-3">
+                  <label class="mb-2 text-muted" for="email"
+                    >Nombre de usuario</label
+                  >
+                  <input
+                    id="username"
+                    class="form-control"
+                    name="username"
+                    value=""
+                    required
+                    autofocus
+                  />
+                </div>
+
+                <div class="mb-3">
+                  <div class="mb-2 w-100">
+                    <label class="text-muted" for="password">Contraseña</label>
+                    <a href="#" class="float-end"> Cambiar contraseña </a>
+                  </div>
+                  <input
+                    id="password"
+                    type="password"
+                    class="form-control"
+                    name="password"
+                    required
+                  />
+                </div>
+
+                <div class="d-flex align-items-center">
+                  <button type="reset" class="btn btn-link text-muted">
+                    Limpiar
+                  </button>
+                  <button type="submit" class="btn btn-primary ms-auto">
+                    Siguiente
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="text-center mt-5 text-muted">
+            Copyright &copy; 2023 &mdash; Holiday International
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

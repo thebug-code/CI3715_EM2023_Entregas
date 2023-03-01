@@ -1,0 +1,317 @@
+{% extends 'base/base.html' %}
+{% set active_page = "portfolio" %}
+{% block title %}Portafolio de Proyectos{% endblock %}
+{% block content %}
+  <div class="d-flex justify-content-center my-4">
+    <h1 class="title-container">Portafolio de Proyectos</h1>
+  </div>
+  <!-- Modal modificar proyecto -->
+  <div
+    class="modal fade"
+    id="modifyModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="ModalLabel"
+    aria-hidden="false"
+  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="ModalLabel">Modificar un proyecto</h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <label class="mb-2 text-muted" for="email"
+            >Descripcion del Proyecto</label
+          >
+          <input
+            type="text"
+            id="description"
+            class="form-control"
+            name="description"
+            value=""
+            required
+            autofocus
+          />
+          <label class="mb-2 text-muted" for="email">Inicio</label>
+          <input
+            id="start"
+            type="date"
+            style="background-color:transparent;border-radius: 5px;display: inline-block;"
+            required
+          />
+          <label class="mb-2 text-muted" for="email">Cierre</label>
+          <input
+            id="end"
+            type="date"
+            style="background-color:transparent;border-radius: 5px;display: inline-block;"
+            required
+          />
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            Cerrar
+          </button>
+          <button type="button" class="btn btn-primary">Enviar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal agregar proyecto -->
+  <div
+    class="modal fade"
+    id="exampleModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="AddModalLabel"
+    aria-hidden="false"
+  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="AddModalLabel">Agregar un proyecto</h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <label class="mb-2 text-muted" for="email"
+            >Descripcion del Proyecto</label
+          >
+          <input
+            type="text"
+            id="description"
+            class="form-control"
+            name="description"
+            value=""
+            required
+            autofocus
+          />
+          <label class="mb-2 text-muted" for="email">Inicio</label>
+          <input
+            id="start"
+            type="date"
+            style="background-color:transparent;border-radius: 5px;display: inline-block;"
+            required
+          />
+          <label class="mb-2 text-muted" for="email">Cierre</label>
+          <input
+            id="end"
+            type="date"
+            style="background-color:transparent;border-radius: 5px;display: inline-block;"
+            required
+          />
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            Cerrar
+          </button>
+          <button type="button" class="btn btn-primary">Enviar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row search-filter">
+      <div class="col-sm-12">
+        <div class="input-group">
+          <input id="table_filter" type="text" class="form-control" />
+          <div class="input-group-btn" style="margin-left: 10px;display: flex;">
+            <form action="/" method="post">
+              <button
+                type="submit"
+                class="btn btn-primary"
+                data-toggle="modal"
+                data-target="#modifyModal"
+                style="border-radius: 5px;margin-left: 10px;"
+              >
+                <img
+                  src="{{ url_for('static', filename='img/search.svg') }}"
+                  width="40"
+                  height="40"
+                  fill="white"
+                  class="table-button"
+                  value="submit"
+                  style="border-radius: 5px;"
+                  title="Buscar proyecto"
+                />
+              </button>
+            </form>
+            <form action="/" method="post">
+              <button
+                type="submit"
+                class="btn btn-primary"
+                style="border-radius: 5px;margin-left: 10px;"
+              >
+                <img
+                  src="{{ url_for('static', filename='img/add.svg') }}"
+                  width="40"
+                  height="40"
+                  fill="white"
+                  class="table-button"
+                  value="submit"
+                  style="border-radius: 5px;"
+                />
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabla de proyectos -->
+  <div class="container">
+    <div class="container table-container">
+      <table class="table table-striped table-hover">
+        <!-- Header de la tabla -->
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Descripcion</th>
+            <th>Inicio</th>
+            <th>Cierre</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Prueba -->
+          <tr>
+            <td>1</td>
+            <td>Proyecto X</td>
+            <td>
+              <input
+                type="date"
+                style="background-color:transparent;border-radius: 5px;"
+              />
+            </td>
+            <td>
+              <input
+                type="date"
+                style="background-color:transparent;border-radius: 5px;"
+              />
+            </td>
+            <td>
+              <button type="button" class="btn btn-primary">
+                <!-- Generar -->
+                <img
+                  src="{{ url_for('static', filename='img/generate.svg') }}"
+                  width="24"
+                  height="24"
+                  fill="white"
+                  class="table-button"
+                  value="submit"
+                  style="border-radius: 5px;"
+                  title="Generar proyecto"
+                />
+              </button>
+
+              <!-- Modificar -->
+              <button
+                type="button"
+                class="btn btn-primary"
+                data-toggle="modal"
+                data-target="#modifyModal"
+              >
+                <img
+                  src="{{ url_for('static', filename='img/edit.svg') }}"
+                  width="24"
+                  height="24"
+                  fill="white"
+                  class="table-button"
+                  value="submit"
+                  style="border-radius: 5px;"
+                  title="Modificar proyecto"
+                />
+              </button>
+
+              <!-- Eliminar -->
+              <button
+                type="button"
+                class="btn btn-primary"
+                data-toggle="modal"
+                data-target="#modifyModal"
+              >
+                <img
+                  src="{{ url_for('static', filename='img/delete.svg') }}"
+                  width="24"
+                  height="24"
+                  fill="white"
+                  class="table-button"
+                  value="submit"
+                  style="border-radius: 5px;"
+                  title="Eliminar proyecto"
+                />
+              </button>
+
+              <!-- Habilitar/Cerrar -->
+              <button
+                type="button"
+                class="btn btn-primary"
+                data-toggle="modal"
+                data-target="#modifyModal"
+              >
+                {% if project %}
+                  <img
+                    src="{{ url_for('static', filename='img/stop.svg') }}"
+                    width="24"
+                    height="24"
+                    fill="white"
+                    class="table-button"
+                    value="submit"
+                    style="border-radius: 5px;"
+                    title="Cerrar proyecto"
+                  />
+                {% else %}
+                  <img
+                    src="{{ url_for('static', filename='img/play.svg') }}"
+                    width="24"
+                    height="24"
+                    fill="white"
+                    class="table-button"
+                    value="submit"
+                    style="border-radius: 5px;"
+                    title="Habilitar proyecto"
+                  />
+                {% endif %}
+              </button>
+
+              <!-- Imprimir -->
+              <button
+                type="button"
+                class="btn btn-primary"
+                data-toggle="modal"
+                data-target="#modifyModal"
+              >
+                <img
+                  src="{{ url_for('static', filename='img/print.svg') }}"
+                  width="24"
+                  height="24"
+                  fill="white"
+                  class="table-button"
+                  value="submit"
+                  style="border-radius: 5px;"
+                  title="Imprimir proyecto"
+                />
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}

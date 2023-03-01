@@ -1,0 +1,9 @@
+{% extends 'errors/base.html' %}
+{% block title %}Error {% block error_code %}500{% endblock %}{% endblock %}
+{% block error_message %}
+  Error interno del servidor
+{% endblock %}
+{% block error_explanation %}
+  Ha ocurrido un error interno del servidor. Por favor, inténtalo de nuevo más
+  tarde.
+{% endblock %}

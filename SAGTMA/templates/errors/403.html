@@ -1,0 +1,8 @@
+{% extends 'errors/base.html' %}
+{% block title %}Error {% block error_code %}403{% endblock %}{% endblock %}
+{% block error_message %}
+  Acceso denegado
+{% endblock %}
+{% block error_explanation %}
+  No tienes permiso para acceder a esta página.
+{% endblock %}

@@ -1,0 +1,99 @@
+<div
+  class="offcanvas offcanvas-start offcanvas-size-sm"
+  data-bs-scroll="true"
+  data-bs-backdrop="false"
+  tabindex="-1"
+  id="offcanvasScrolling"
+  aria-labelledby="offcanvasScrollingLabel"
+  style="box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);"
+>
+  <button
+    type="button"
+    data-bs-dismiss="offcanvas"
+    aria-label="Close"
+    class="card-header"
+    style="
+      background-color: transparent;
+      border: none;
+      padding: 0;
+      margin: 0;
+    "
+  >
+    <div
+      class="offcanvas-header fw-bold text-white d-flex justify-content-center"
+      style="background-color: #2e4e8c;"
+    >
+      {{ 'Cerrar ✕' }}
+    </div>
+  </button>
+  <div class="offcanvas-body">
+    <!-- Si el usuario ya inició sesión -->
+    {% if session['username'] %}
+      <ul class="nav nav-pills flex-column mb-auto">
+        <!-- Si el usuario es gerente -->
+        {% if session['role'] == 'Gerente de Operaciones' %}
+          <li>
+            <a
+              href="{{ url_for('portfolio') }}"
+              class="nav-link link {% if active_page == 'portfolio' %}
+                active fw-bold
+              {% endif %}"
+              aria-current="page"
+            >
+              Portafolio de Proyectos
+            </a>
+          </li>
+
+          <!-- Si el usuario es administrador -->
+        {% elif session['role'] == 'Administrador' %}
+          <li>
+            <a
+              href="{{ url_for('home') }}"
+              class="nav-link link {% if active_page == 'profiles' %}
+                active fw-bold
+              {% endif %}"
+            >
+              Perfiles de Usuarios
+            </a>
+          </li>
+          <li>
+            <a
+              href="{{ url_for('logger') }}"
+              class="nav-link link {% if active_page == 'logger' %}
+                active fw-bold
+              {% endif %}"
+            >
+              Logger de Eventos
+            </a>
+          </li>
+        {% endif %}
+        <li>
+          <!-- Envía una request POST sin tag de form explícita -->
+          <a
+            class="nav-link link"
+            href="{{ url_for('logout') }}"
+            onclick="
+              event.preventDefault();
+              document.getElementById('logout-form').submit();
+            "
+          >
+            Cerrar sesión
+          </a>
+        </li>
+      </ul>
+
+      <!-- Form de logout invisible -->
+      <form
+        id="logout-form"
+        action="{{ url_for('logout') }}"
+        method="POST"
+        style="display: none;"
+      ></form>
+    {% else %}
+      <!-- Mensaje -->
+      <div class="sidebar">
+        Inicia sesión para acceder a las opciones del menú.
+      </div>
+    {% endif %}
+  </div>
+</div>

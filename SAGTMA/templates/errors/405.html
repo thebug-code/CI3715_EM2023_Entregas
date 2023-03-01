@@ -1,0 +1,8 @@
+{% extends 'errors/base.html' %}
+{% block title %}Error {% block error_code %}405{% endblock %}{% endblock %}
+{% block error_message %}
+  Método no permitido
+{% endblock %}
+{% block error_explanation %}
+  El método que estás intentando usar no está permitido para esta página.
+{% endblock %}
