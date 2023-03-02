@@ -60,13 +60,13 @@ class Project(db.Model):
     start_date = db.Column(db.Date)
     end_date = db.Column(db.Date)
 
-    def __init__(self, description: str, startdate: str, enddate: str):
+    def __init__(self, description: str, start_date, end_date):
         self.description = description
-        self.startdate = startdate
-        self.enddate = enddate
+        self.start_date = start_date
+        self.end_date = end_date
 
     def __repr__(self) -> str:
-        return f'Project<{self.description}: {self.startdate} - {self.enddate}>'
+        return f'Project<{self.description}: {self.start_date} - {self.end_date}>'
 
 class Event(db.Model):
     '''Modelo de evento.'''
