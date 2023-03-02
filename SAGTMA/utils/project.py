@@ -104,7 +104,7 @@ def modify_project(
         raise MissingFieldError('Todos los campos son obliglatorios')
 
     # Verifica si ya existe un proyecto con la mima descripcion
-    stmt = db.select(Project).where(Project.description == description)
+    stmt = db.select(Project).where(Project.description == description).where(Project.id != project_id)
     if db.session.execute(stmt).first():
         raise AlreadyExistingProjectError('El proyecto ya existe')
 
@@ -131,6 +131,6 @@ def modify_project(
     project_query[0].end_date = deadline_t
 
     # Registra el evento en la base de datos
-    events.add_modify_project(new_project.description)
+    events.add_modify_project(description.strip())
 
     db.session.commit()
