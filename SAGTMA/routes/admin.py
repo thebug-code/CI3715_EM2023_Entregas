@@ -102,3 +102,30 @@ def register() -> Response:
 
     # Se permanece en la página
     return redirect(url_for('users_profiles'))
+
+@current_app.route('/user-profiles/delete/<int:user_id>/', methods=['POST'])
+@requires_roles('Administrador')
+def delete_user(user_id: int) -> Response:
+    '''Elimina un usuario de la base de datos.'''
+    # Busca el usuario en la base de datos
+    stmt = db.select(User).where(User.id == user_id)
+    result = db.session.execute(stmt).fetchone()
+    if not result:
+        # Si no existe, se permanece en la página
+        flash('El usuario indicado no existe')
+        return redirect(url_for('users_profiles'))
+
+    # No se puede eliminar un administrador
+    if result[0].role.name == 'Administrador':
+        flash('No se puede eliminar un administrador')
+        return redirect(url_for('users_profiles'))
+
+    # Elimina el usuario de la base de datos
+    db.session.delete(result[0])
+    db.session.commit()
+
+    # Añade el evento de eliminación
+    events.add_delete_user(result[0].username)
+
+    flash('Usuario eliminado exitosamente')
+    return redirect(url_for('users_profiles'))

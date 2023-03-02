@@ -40,7 +40,11 @@ class User(db.Model):
     )
 
     # Relación 1:n entre usuarios y eventos
-    events = db.relationship('Event', backref='user')
+    events = db.relationship(
+        'Event',
+        backref='user',
+        cascade='all, delete-orphan'
+    )
 
     def __init__( self, username: str, names: str, surnames: str, password: str, role: Role):
         self.username = username
@@ -56,7 +60,6 @@ class Project(db.Model):
     '''Modelo de proyecto.'''
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     description = db.Column(db.String(200), unique=True)
-    # Fecha de sql almacena la fecha 
     start_date = db.Column(db.Date)
     end_date = db.Column(db.Date)
 

@@ -104,6 +104,49 @@
     </div>
   </div>
 
+  <!-- Modal confirmar eliminar usuario -->
+  <div
+    class="modal fade"
+    id="deleteModal"
+    tabindex="-1"
+    aria-labelledby="deleteModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">Eliminar usuario</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <p>¿Está seguro que desea eliminar este usuario?</p>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Cerrar
+          </button>
+          <form
+            action="{{ url_for('delete_user', user_id=0) }}"
+            method="post"
+            class="d-inline"
+          >
+            <input type="hidden" name="user-id" id="user-id" />
+            <button type="submit" class="btn btn-danger">Eliminar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="container">
     <!-- Barra de filtro de usuarios -->
     <form
@@ -220,15 +263,16 @@
                       class="table-button"
                       value="submit"
                       style="border-radius: 5px;"
-                      title="Modificar proyecto"
+                      title="Modificar usuario"
                     />
                   </button>
 
                   <button
                     type="button"
                     class="btn btn-primary"
-                    data-toggle="modal"
-                    data-target="#modifyModal"
+                    data-bs-toggle="modal"
+                    data-bs-target="#deleteModal"
+                    data-bs-whatever="{{ user.id }}"
                   >
                     <img
                       src="{{ url_for('static', filename='img/delete.svg') }}"
@@ -238,7 +282,7 @@
                       class="table-button"
                       value="submit"
                       style="border-radius: 5px;"
-                      title="Eliminar proyecto"
+                      title="Eliminar usuario"
                     />
                   </button>
                 </td>
@@ -249,4 +293,6 @@
       </div>
     {% endif %}
   </div>
+
+  <script src="{{ url_for('static', filename='js/users.js') }}"></script>
 {% endblock %}
