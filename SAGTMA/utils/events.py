@@ -20,6 +20,9 @@ def add_project(description: str):
 def add_search_project(search: str):
     _add_event('Portafolio de proyectos', f"Buscar '{search}'")
 
+def add_modify_project(description: str):
+    _add_event('Portafolio de proyectos', f"Modificar '{description}'")
+    
 # Modulo evento
 def add_search_log(search: str):
     _add_event('Logger de Eventos', f"Buscar '{search}'")

@@ -130,4 +130,7 @@ def modify_project(
     project_query[0].start_date = start_date_t
     project_query[0].end_date = deadline_t
 
+    # Registra el evento en la base de datos
+    events.add_modify_project(new_project.description)
+
     db.session.commit()
