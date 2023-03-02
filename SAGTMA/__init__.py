@@ -9,7 +9,7 @@ def create_app(test_config=None):
     # Configura la app
     app.config.from_mapping(
         # Genera bits aleatorios para la clave secreta
-        SECRET_KEY=os.urandom(24),
+        SECRET_KEY='una_clave_muy_secreta',
 
         # Habilita el modo de depuración
         DEBUG=True,
