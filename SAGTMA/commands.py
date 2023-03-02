@@ -1,4 +1,5 @@
 from random import randint
+from datetime import date
 
 from flask import current_app
 
@@ -57,7 +58,7 @@ def populate_db():
     # Añade proyectos dummy
     for i in range(1, 11):
         project = Project(
-            f'Proyecto Automotriz {i}', '01/01/2021', '01/01/2022'
+            f'Proyecto Automotriz {i}', date(2021, 4, 1),  date(2023, 4, 1)
         )
 
         db.session.add(project)
