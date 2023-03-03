@@ -116,8 +116,11 @@ def register_user(
 
     Lanza una excepción AuthenticationError si hubo algún error.
     '''
+    username = username.strip()
+    names = names.strip()
+    surnames = surnames.strip()
     if not all([username, names, surnames, password, confirm_password, role_id]):
-        raise MissingFieldError('Todos los campos son obliglatorios')
+        raise MissingFieldError('Todos los campos son obligatorios')
 
     # Verifica si ya existe un usuario con el mismo nombre de usuario
     stmt = db.select(User).where(User.username == username)
@@ -187,6 +190,9 @@ def edit_user( user_id: int, username: str, names: str, surnames: str, role_id: 
 
     Lanza una excepción AuthenticationError si hubo algún error.
     '''
+    username = username.strip()
+    names = names.strip()
+    surnames = surnames.strip()
     if not all([user_id, username, names, surnames, role_id]):
         raise MissingFieldError('Todos los campos son obligatorios')
 
