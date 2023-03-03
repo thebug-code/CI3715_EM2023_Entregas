@@ -59,7 +59,7 @@ class User(db.Model):
 class Project(db.Model):
     '''Modelo de proyecto.'''
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    description = db.Column(db.String(200), unique=True)
+    description = db.Column(db.String(100), unique=True)
     active = db.Column(db.Boolean, default=False)
     start_date = db.Column(db.Date)
     end_date = db.Column(db.Date)
