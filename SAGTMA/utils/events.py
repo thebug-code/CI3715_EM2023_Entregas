@@ -3,7 +3,7 @@ from flask import session
 from SAGTMA.models import Event, db
 from SAGTMA.utils import auth
 
-# Modulo usuario
+# ========== Perfiles de Usuarios ==========
 def add_register(username: str):
     _add_event('Perfiles de Usuarios', f"Agregar usuario '{username}'")
 
@@ -14,6 +14,13 @@ def add_search_user(search: str, role: str):
     )
 
 # ========== Portafolios de proyectos ==========
+def add_edit_user(username: str):
+    _add_event('Perfiles de Usuarios', f"Editar usuario '{username}'")
+
+def add_delete_user(username: str):
+    _add_event('Perfiles de Usuarios', f"Eliminar usuario '{username}'")
+
+# Modulo proyecto
 def add_project(description: str):
     _add_event('Portafolio de proyectos', f"Agregar proyecto '{description}'")
 
