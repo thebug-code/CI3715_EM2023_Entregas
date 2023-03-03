@@ -32,7 +32,7 @@ def add_modify_project(description: str):
 def add_delete_project(description: str):
     _add_event('Portafolio de Proyectos', f"Eliminar '{description}'")
 
-# ========== Logger de eventos ==========
+# ========== Logger de Eventos ==========
 def add_search_log(search: str):
     _add_event('Logger de Eventos', f"Buscar '{search}'")
 

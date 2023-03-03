@@ -5,7 +5,7 @@ from SAGTMA.models import Event, Role, User, db
 from SAGTMA.utils import events, profiles
 from SAGTMA.utils.decorators import requires_roles
 
-
+events
 @current_app.route('/user-profiles/',methods=['GET', 'POST'])
 @requires_roles('Administrador')
 def users_profiles() -> Response:
@@ -52,13 +52,13 @@ def logger() -> Response:
         # SELECT * FROM event JOIN user ON event.user_id = user.id
         stmt = db.select(Event).join(User, Event.user_id == User.id)
         if event:
-            # WHERE type LIKE '%event%' OR
+            # WHERE description LIKE '%event%' OR
             #     module LIKE '%event%' OR
-            #     user.name LIKE '%event%'
+            #     user.username LIKE '%event%'
             stmt = stmt.where(db.or_(
                 Event.description.like(f'%{event}%'),
                 Event.module.like(f'%{event}%'),
-                db.func.lower(User.names + ' ' + User.surnames).like(f'%{event}%')
+                db.func.lower(User.username).like(f'%{event}%')
             ))
 
             # Añade el evento de búsqueda
@@ -68,8 +68,8 @@ def logger() -> Response:
         stmt = db.select(Event)
 
     result = db.session.execute(stmt).fetchall()
-    events = [r for r, in result]
-    return render_template('admin/logger.html', events=events)
+    _events = [r for r, in result]
+    return render_template('admin/logger.html', events=_events)
 
 @current_app.route('/user-profiles/register/', methods=['POST'])
 @requires_roles('Administrador')
