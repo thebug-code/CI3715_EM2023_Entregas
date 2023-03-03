@@ -28,7 +28,7 @@ def portfolio() -> Response:
 
     return render_template('manager/portfolio.html', projects=_projects)
 
-@current_app.route('/create-project/',methods=['POST'])
+@current_app.route('/project-portfolio/add/',methods=['POST'])
 @login_required
 @requires_roles('Gerente de Operaciones')
 def create_project() -> Response:
@@ -47,7 +47,7 @@ def create_project() -> Response:
     flash('Proyecto creado exitosamente')
     return redirect(url_for('portfolio'))
 
-@current_app.route('/project-portfolio/modify/<int:project_id>', methods=['POST'])
+@current_app.route('/project-portfolio/modify/<int:project_id>/', methods=['POST'])
 @login_required
 @requires_roles('Gerente de Operaciones')
 def modify_project(project_id):
@@ -64,7 +64,7 @@ def modify_project(project_id):
     # Se permanece en la pagina
     return redirect(url_for('portfolio'))
 
-@current_app.route('/project-portfolio/delete/<int:project_id>', methods=['post'])
+@current_app.route('/project-portfolio/delete/<int:project_id>/', methods=['POST'])
 @login_required
 @requires_roles('Gerente de Operaciones')
 def delete_project(project_id) -> Response:
@@ -88,7 +88,7 @@ def delete_project(project_id) -> Response:
     # Se permanece en la pagina
     return redirect(url_for('portfolio'))
 
-@current_app.route('/project-portfolio/change-status//<int:project_id>', methods=['POST'])
+@current_app.route('/project-portfolio/modify/status/<int:project_id>/', methods=['POST'])
 @login_required
 @requires_roles('Gerente de Operaciones')
 def change_project_status(project_id):

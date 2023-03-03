@@ -14,7 +14,7 @@ $(document).ready(function () {
         $("#deadlineM").val(data_rs[0]["deadline"]);
         $("#modifyProjectForm").attr(
           "action",
-          "/project-portfolio/modify/" + form.attr("id")
+          "/project-portfolio/modify/" + form.attr("id") + "/"
         );
       },
     });
@@ -26,7 +26,7 @@ $(document).ready(function () {
     $("#deleteModal").modal("show");
     $("#deleteProjectForm").attr(
       "action",
-      "/project-portfolio/delete/" + form.attr("id")
+      "/project-portfolio/delete/" + form.attr("id") + "/"
     );
   });
 
@@ -55,7 +55,7 @@ $(document).ready(function () {
 
     $("#changeStatusProjectForm").attr(
       "action",
-      "/project-portfolio/change-status/" + form.attr("id")
+      "/project-portfolio/modify/status/" + form.attr("id") + "/"
     );
   });
 });
