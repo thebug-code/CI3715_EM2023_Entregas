@@ -3,47 +3,53 @@ from flask import session
 from SAGTMA.models import Event, db
 from SAGTMA.utils import profiles
 
+
 # ========== Perfiles de Usuarios ==========
 def add_register(username: str):
-    _add_event('Perfiles de Usuarios', f"Agregar usuario '{username}'")
+    _add_event("Perfiles de Usuarios", f"Agregar usuario '{username}'")
+
 
 def add_search_user(search: str, role: str):
     _add_event(
-        'Perfiles de Usuarios',
-        f"Buscar '{search}' en " + ('todos los roles' if not role else f"el rol '{role}'")
+        "Perfiles de Usuarios",
+        f"Buscar '{search}' en "
+        + ("todos los roles" if not role else f"el rol '{role}'"),
     )
 
+
 def add_edit_user(username: str):
-    _add_event('Perfiles de Usuarios', f"Editar usuario '{username}'")
+    _add_event("Perfiles de Usuarios", f"Editar usuario '{username}'")
+
 
 def add_delete_user(username: str):
-    _add_event('Perfiles de Usuarios', f"Eliminar usuario '{username}'")
+    _add_event("Perfiles de Usuarios", f"Eliminar usuario '{username}'")
+
 
 # ========== Portafolios de Proyectos ==========
 def add_project(description: str):
-    _add_event('Portafolio de Proyectos', f"Agregar proyecto '{description}'")
+    _add_event("Portafolio de Proyectos", f"Agregar proyecto '{description}'")
+
 
 def add_search_project(search: str):
-    _add_event('Portafolio de Proyectos', f"Buscar '{search}'")
+    _add_event("Portafolio de Proyectos", f"Buscar '{search}'")
+
 
 def add_modify_project(description: str):
-    _add_event('Portafolio de Proyectos', f"Modificar '{description}'")
-    
+    _add_event("Portafolio de Proyectos", f"Modificar '{description}'")
+
+
 def add_delete_project(description: str):
-    _add_event('Portafolio de Proyectos', f"Eliminar '{description}'")
+    _add_event("Portafolio de Proyectos", f"Eliminar '{description}'")
+
 
 # ========== Logger de Eventos ==========
 def add_search_log(search: str):
-    _add_event('Logger de Eventos', f"Buscar '{search}'")
+    _add_event("Logger de Eventos", f"Buscar '{search}'")
+
 
 def _add_event(module: str, description: str):
-    '''Crea y anade un nuevo a la base de datos'''
-    current_user = profiles.get_current_user(session['id'])
-    new_event = Event(
-        current_user,
-        module,
-        description
-    )
+    """Crea y anade un nuevo a la base de datos"""
+    current_user = profiles.get_current_user(session["id"])
+    new_event = Event(current_user, module, description)
     db.session.add(new_event)
     db.session.commit()
-
