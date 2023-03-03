@@ -1,7 +1,7 @@
 from flask import session
 
 from SAGTMA.models import Event, db
-from SAGTMA.utils import auth
+from SAGTMA.utils import users
 
 # ========== Perfiles de Usuarios ==========
 def add_register(username: str):
@@ -38,7 +38,7 @@ def add_search_log(search: str):
 
 def _add_event(module: str, description: str):
     '''Crea y anade un nuevo a la base de datos'''
-    current_user = auth.get_current_user(session['id'])
+    current_user = users.get_current_user(session['id'])
     new_event = Event(
         current_user,
         module,

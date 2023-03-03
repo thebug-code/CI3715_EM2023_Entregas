@@ -4,7 +4,7 @@ from datetime import date
 from flask import current_app
 
 from SAGTMA.models import Project, Role, User, Event, db
-from SAGTMA.utils import auth
+from SAGTMA.utils import profiles
 
 
 @current_app.cli.command('init-db')
@@ -38,7 +38,7 @@ def populate_db():
     # Añade un usuario administrador
     admin_user = User(
         'admin', 'Juanito', 'Alimaña',
-        auth.hash_password('Admin123.'), admin
+        profiles.hash_password('Admin123.'), admin
     )
     db.session.add(admin_user)
 
@@ -49,7 +49,7 @@ def populate_db():
     for i in range(10):
         user = User(
             f'user{i}', names[i % len(names)], surnames[i % len(surnames)],
-            auth.hash_password('User123.'),
+            profiles.hash_password('User123.'),
             roles_slice[i % len(roles_slice)]
         )
 

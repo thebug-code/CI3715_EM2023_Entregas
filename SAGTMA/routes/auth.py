@@ -1,7 +1,7 @@
 from flask import (Response, current_app, flash, redirect, render_template,
                    request, session, url_for)
 
-from SAGTMA.utils import auth
+from SAGTMA.utils import profiles
 from SAGTMA.utils.decorators import login_required, logout_required
 
 
@@ -16,13 +16,13 @@ def login() -> Response:
         password = request.form.get('password')
 
         try:
-            id, role = auth.log_user(username, password)
+            id, role = profiles.log_user(username, password)
 
             # Guarda la id del usuario y su nombre de usuario en la sesión
             session['id'] = id
             session['username'] = username
             session['role'] = role
-        except auth.AuthenticationError as e:
+        except profiles.AuthenticationError as e:
             # Si algo salió mal, permanece en la página
             flash(f'{e}')
             return redirect(request.url)

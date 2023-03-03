@@ -1,5 +1,5 @@
 from SAGTMA.models import Role
-from SAGTMA.utils import auth
+from SAGTMA.utils import users
 from tests import BaseTestClass
 
 
@@ -14,8 +14,8 @@ class TestAuth(BaseTestClass):
           -Tiene al menos un caracter especial
         '''
         def test_register_user(password_to_test: str):
-            with self.assertRaises(auth.InvalidPasswordError):
-                auth.register_user(
+            with self.assertRaises(users.InvalidPasswordError):
+                users.register_user(
                     "Alice", "Alice@example.com",
                     password_to_test, password_to_test,
                     Role.USER
@@ -42,7 +42,7 @@ class TestAuth(BaseTestClass):
     def test_register_valid_password(self):
         ''' Testea la creación de usuarios con la contraseñas válidas.'''
         def register_test_user(id: int, password_to_test: str):
-            auth.register_user(
+            users.register_user(
                 f"user_{id}", f"user_{id}@example.com",
                 password_to_test, password_to_test,
                 Role.USER
@@ -56,29 +56,29 @@ class TestAuth(BaseTestClass):
 
     def test_register_no_empty_allowed(self):
         ''' Testea la creación de usuarios con campos vacíos.'''
-        with self.assertRaises(auth.MissingFieldError):
-            auth.register_user(
+        with self.assertRaises(users.MissingFieldError):
+            users.register_user(
                 "", "Alice@example.com",
                 "Alice123.", "Alice123.",
                 Role.USER
             )
 
-        with self.assertRaises(auth.MissingFieldError):
-            auth.register_user(
+        with self.assertRaises(users.MissingFieldError):
+            users.register_user(
                 "Alice", "",
                 "Alice123.", "Alice123.",
                 Role.USER
             )
 
-        with self.assertRaises(auth.MissingFieldError):
-            auth.register_user(
+        with self.assertRaises(users.MissingFieldError):
+            users.register_user(
                 "Alice", "Alice@example.com",
                 "", "Alice123.",
                 Role.USER
             )
 
-        with self.assertRaises(auth.MissingFieldError):
-            auth.register_user(
+        with self.assertRaises(users.MissingFieldError):
+            users.register_user(
                 "Alice", "Alice@example.com",
                 "Alice123.", "",
                 Role.USER
@@ -93,8 +93,8 @@ class TestAuth(BaseTestClass):
           -No comienza con un caracter numérico
         '''
         def test_register_user(username: str):
-            with self.assertRaises(auth.InvalidUsernameError):
-                auth.register_user(
+            with self.assertRaises(users.InvalidUsernameError):
+                users.register_user(
                     username, f"{username}@example.com",
                     'Hola123.', 'Hola123.',
                     Role.USER
@@ -116,8 +116,8 @@ class TestAuth(BaseTestClass):
         '''Testea la creación de usuarios cuando la contraseña y su
         verificacion no coinciden
         '''
-        with self.assertRaises(auth.PasswordMismatchError):
-            auth.register_user(
+        with self.assertRaises(users.PasswordMismatchError):
+            users.register_user(
                 "Alice", "Alice@example.com",
                 "Alice123.", "Alice12.",
                 Role.USER
@@ -128,23 +128,23 @@ class TestAuth(BaseTestClass):
         registrados
         '''
         # Crea el usuario base
-        auth.register_user(
+        users.register_user(
             "Alice", "Alice@example.com",
             "Alice123.", "Alice123.",
             Role.USER
         )
 
-        with self.assertRaises(auth.AlreadyExistingUserError):
+        with self.assertRaises(users.AlreadyExistingUserError):
             # Usuario ya registrado
-            auth.register_user(
+            users.register_user(
                 "Alice","Alice_dup@example.com",
                 "Alice123.", "Alice123.",
                 Role.USER
             )
 
-        with self.assertRaises(auth.AlreadyExistingUserError):
+        with self.assertRaises(users.AlreadyExistingUserError):
             # Correo ya registrado
-            auth.register_user(
+            users.register_user(
                 "Alice_dup","Alice@example.com",
                 "Alice123.", "Alice123.",
                 Role.USER
@@ -153,8 +153,8 @@ class TestAuth(BaseTestClass):
     def test_register_invalid_email(self):
         '''Se testea la creación de usuarios con correos inválidos'''
         def test_register_user(email: str):
-            with self.assertRaises(auth.InvalidEmailError):
-                auth.register_user(
+            with self.assertRaises(users.InvalidEmailError):
+                users.register_user(
                     'generic_user', email,
                     'Hola123.', 'Hola123.',
                     Role.USER
@@ -170,21 +170,21 @@ class TestAuth(BaseTestClass):
     def test_login_incorrect_password(self):
         '''Testea el inicio de sesión con contraseña incorrecta
         '''
-        auth.register_user(
+        users.register_user(
             "Alice", "Alice@example.com",
             "Alice123.", "Alice123.",
             Role.USER
         )
 
-        with self.assertRaises(auth.IncorrectPasswordError):
-            auth.log_user("Alice","Alice12.")
+        with self.assertRaises(users.IncorrectPasswordError):
+            users.log_user("Alice","Alice12.")
 
     def test_login_correct_password(self):
         '''Testea el inicio de sesión con contraseña correcta'''
-        auth.register_user(
+        users.register_user(
             "Alice", "Alice@example.com",
             "Alice123.", "Alice123.",
             Role.USER
         )
 
-        self.assertIsNotNone(auth.log_user("Alice","Alice123."))
+        self.assertIsNotNone(users.log_user("Alice","Alice123."))
