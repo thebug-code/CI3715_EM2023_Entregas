@@ -1,7 +1,7 @@
 from flask import (Response, current_app, flash, redirect, render_template,
                    request, url_for, json)
 
-from SAGTMA.utils import project, events
+from SAGTMA.utils import projects, events
 from SAGTMA.utils.decorators import login_required, requires_roles
 
 from SAGTMA.models import Project, db
@@ -38,8 +38,8 @@ def create_project() -> Response:
         deadline = request.form['deadline']
         
         try:
-            project.create_project(description, start_date, deadline)
-        except project.CreateProjectError as e:
+            projects.create_project(description, start_date, deadline)
+        except projects.CreateProjectError as e:
             flash(f'{e}')
         
     # Se permanece en la página
@@ -55,8 +55,8 @@ def modify_project(project_id):
     deadline = request.form['deadline']
 
     try:
-        project.modify_project(project_id, description, start_date, deadline)
-    except project.CreateProjectError as e:
+        projects.modify_project(project_id, description, start_date, deadline)
+    except projects.CreateProjectError as e:
         flash(f'{e}')
 
     # Se permanece en la pagina
