@@ -4,6 +4,14 @@ from SAGTMA.models import Event, db
 from SAGTMA.utils import profiles
 
 
+class EventError(ValueError):
+    pass
+
+
+class InvalidEventError(EventError):
+    pass
+
+
 # ========== Perfiles de Usuarios ==========
 def add_register(username: str):
     _add_event("Perfiles de Usuarios", f"Agregar usuario '{username}'")
@@ -45,6 +53,26 @@ def add_delete_project(description: str):
 # ========== Logger de Eventos ==========
 def add_search_log(search: str):
     _add_event("Logger de Eventos", f"Buscar '{search}'")
+
+
+def delete_event(event_id: int):
+    """Elimina un usuario de la base de datos y"""
+    if not event_id:
+        raise InvalidEventError("El evento indicado no existe")
+
+    # Busca el evento en la base de datos
+    stmt = db.select(Event).where(Event.id == event_id)
+    result = db.session.execute(stmt).fetchone()
+    if not result:
+        raise InvalidEventError("El evento indicado no existe")
+    (deleted_event,) = result
+
+    # Elimina el evento de la base de datos
+    db.session.delete(deleted_event)
+    db.session.commit()
+
+    # Añade el evento de eliminación
+    _add_event("Logger de eventos", f"Eliminar '{deleted_event.description}'")
 
 
 def _add_event(module: str, description: str):

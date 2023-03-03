@@ -13,9 +13,8 @@ from SAGTMA.models import Event, Role, User, db
 from SAGTMA.utils import events, profiles
 from SAGTMA.utils.decorators import requires_roles
 
-events
 
-
+# ========== Perfiles de Usuario ==========
 @current_app.route("/user-profiles/", methods=["GET", "POST"])
 @requires_roles("Administrador")
 def users_profiles() -> Response:
@@ -53,38 +52,6 @@ def users_profiles() -> Response:
     result = db.session.execute(stmt).fetchall()
     roles = [r for r, in result]
     return render_template("admin/users.html", users=users, roles=roles)
-
-
-@current_app.route("/event-logger/", methods=["GET", "POST"])
-@requires_roles("Administrador")
-def logger() -> Response:
-    if request.method == "POST":
-        # Obtiene los datos del formulario
-        event = request.form.get("event-filter").lower().strip()
-
-        # SELECT * FROM event JOIN user ON event.user_id = user.id
-        stmt = db.select(Event).join(User, Event.user_id == User.id)
-        if event:
-            # WHERE description LIKE '%event%' OR
-            #     module LIKE '%event%' OR
-            #     user.username LIKE '%event%'
-            stmt = stmt.where(
-                db.or_(
-                    Event.description.like(f"%{event}%"),
-                    Event.module.like(f"%{event}%"),
-                    db.func.lower(User.username).like(f"%{event}%"),
-                )
-            )
-
-            # Añade el evento de búsqueda
-            events.add_search_log(event)
-    else:
-        # Selecciona los eventos de la base de datos
-        stmt = db.select(Event)
-
-    result = db.session.execute(stmt).fetchall()
-    _events = [r for r, in result]
-    return render_template("admin/logger.html", events=_events)
 
 
 @current_app.route("/user-profiles/register/", methods=["POST"])
@@ -147,3 +114,50 @@ def edit_user(user_id: int) -> Response:
     # Se permanece en la página
     flash("Usuario editado exitosamente")
     return redirect(url_for("users_profiles"))
+
+
+# ========== Logger ==========
+@current_app.route("/event-logger/", methods=["GET", "POST"])
+@requires_roles("Administrador")
+def logger() -> Response:
+    if request.method == "POST":
+        # Obtiene los datos del formulario
+        event = request.form.get("event-filter").lower().strip()
+
+        # SELECT * FROM event JOIN user ON event.user_id = user.id
+        stmt = db.select(Event).join(User, Event.user_id == User.id)
+        if event:
+            # WHERE description LIKE '%event%' OR
+            #     module LIKE '%event%' OR
+            #     user.username LIKE '%event%'
+            stmt = stmt.where(
+                db.or_(
+                    Event.description.like(f"%{event}%"),
+                    Event.module.like(f"%{event}%"),
+                    db.func.lower(User.username).like(f"%{event}%"),
+                )
+            )
+
+            # Añade el evento de búsqueda
+            events.add_search_log(event)
+    else:
+        # Selecciona los eventos de la base de datos
+        stmt = db.select(Event)
+
+    result = db.session.execute(stmt).fetchall()
+    _events = [r for r, in result]
+    return render_template("admin/logger.html", events=_events)
+
+
+@current_app.route("/event-logger/delete/<int:event_id>/", methods=["POST"])
+@requires_roles("Administrador")
+def delete_event(event_id: int) -> Response:
+    """Elimina un evento de la base de datos."""
+    try:
+        events.delete_event(event_id)
+    except events.EventError as e:
+        flash(f"{e}")
+        return redirect(url_for("logger"))
+
+    flash("Evento eliminado exitosamente")
+    return redirect(url_for("logger"))
