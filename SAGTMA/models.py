@@ -60,7 +60,7 @@ class Project(db.Model):
     '''Modelo de proyecto.'''
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     description = db.Column(db.String(200), unique=True)
-    status = db.Column(db.Boolean, default=False)
+    active = db.Column(db.Boolean, default=False)
     start_date = db.Column(db.Date)
     end_date = db.Column(db.Date)
 
@@ -70,7 +70,7 @@ class Project(db.Model):
         self.end_date = end_date
 
     def __repr__(self) -> str:
-        return f'Project<{self.description}: {self.start_date} - {self.end_date}>'
+        return f'Project<{self.description}: {self.start_date} - {self.end_date}, {"Activo" if self.active else "Inactivo"}>'
 
 class Event(db.Model):
     '''Modelo de evento.'''

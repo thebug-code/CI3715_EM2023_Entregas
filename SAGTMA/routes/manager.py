@@ -103,9 +103,9 @@ def change_project_status(project_id):
 
     # Verifica si hay que habilitar o desactivar proyecto
     if 'enable_project' in request.form:
-        result[0].status = True
+        result[0].active = True
     else:
-        result[0].status = False
+        result[0].active = False
 
     db.session.commit()
     flash('Status de proyecto actualizado exitosamente')

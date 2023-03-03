@@ -309,7 +309,7 @@
                     type="date"
                     style="background-color:transparent;border-radius: 5px;"
                     value="{{ project.start_date }}"
-                    {% if not project.status %}disabled{% endif %}
+                    {% if not project.active %}disabled{% endif %}
                   />
                 </td>
                 <td>
@@ -317,15 +317,17 @@
                     type="date"
                     style="background-color:transparent;border-radius: 5px;"
                     value="{{ project.end_date }}"
-                    {% if not project.status %}disabled{% endif %}
+                    {% if not project.active %}disabled{% endif %}
                   />
                 </td>
                 <td>
                   {# Generar #}
                   <button
                     type="button"
-                    class="btn btn-primary"
-                    {% if not project.status %}disabled{% endif %}
+                    class="btn {% if project.active %}btn-primary
+                  {% else %}
+                    btn-secondary{% endif %}"
+                    {% if not project.active %}disabled{% endif %}
                   >
                     <img
                       src="{{ url_for('static', filename='img/generate.svg') }}"
@@ -343,9 +345,11 @@
                   <button
                     type="button"
                     id="{{ project.id }}"
-                    class="btn btn-primary modifyProject"
+                    class="btn {% if project.active %}btn-primary
+                  {% else %}
+                    btn-secondary{% endif %} modify-project"
                     data-toggle="modal"
-                    {% if not project.status %}disabled{% endif %}
+                    {% if not project.active %}disabled{% endif %}
                   >
                     <img
                       src="{{ url_for('static', filename='img/edit.svg') }}"
@@ -363,9 +367,11 @@
                   <button
                     type="button"
                     id="{{ project.id }}"
-                    class="btn btn-primary deleteProject"
+                    class="btn {% if project.active %}btn-primary
+                  {% else %}
+                    btn-secondary{% endif %} delete-project"
                     data-toggle="modal"
-                    {% if not project.status %}disabled{% endif %}
+                    {% if not project.active %}disabled{% endif %}
                   >
                     <img
                       src="{{ url_for('static', filename='img/delete.svg') }}"
@@ -380,11 +386,11 @@
                   </button>
 
                   {# Habilitar/Cerrar #}
-                  {% if project.status %}
+                  {% if project.active %}
                     <button
                       type="button"
                       id="{{ project.id }}"
-                      class="btn btn-primary changeStatusProject"
+                      class="btn btn-primary change-status-project"
                       name="disable_project"
                     >
                       <img
@@ -403,7 +409,7 @@
                       type="submit"
                       id="{{ project.id }}"
                       name="enable_project"
-                      class="btn btn-primary changeStatusProject"
+                      class="btn btn-primary change-status-project"
                     >
                       <img
                         src="{{ url_for('static', filename='img/play.svg') }}"
