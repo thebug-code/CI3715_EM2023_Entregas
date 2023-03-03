@@ -6,6 +6,47 @@
     <h1 class="title-container">Portafolio de Proyectos</h1>
   </div>
 
+  {# Modal confirmar status proyecto #}
+  <div
+    class="modal fade"
+    id="changeStatusModal"
+    tabindex="-1"
+    aria-labelledby="changeStatusModalModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">Cambiar estatus de proyecto</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div id="modalBodyCS" class="modal-body">
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Cerrar
+          </button>
+          <form
+            method="post"
+            id="changeStatusProjectForm"
+            class="d-inline"
+          >
+            <button id="submitButtonCS" type="submit" class="btn"></button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
   {# Modal confirmar eliminar proyecto #}
   <div
     class="modal fade"
@@ -280,6 +321,7 @@
                     type="date"
                     style="background-color:transparent;border-radius: 5px;"
                     value="{{ project.start_date }}"
+                    {% if not project.status %} disabled {% endif %}
                   />
                 </td>
                 <td>
@@ -287,11 +329,16 @@
                     type="date"
                     style="background-color:transparent;border-radius: 5px;"
                     value="{{ project.end_date }}"
+                    {% if not project.status %} disabled {% endif %}
                   />
                 </td>
                 <td>
-                  <button type="button" class="btn btn-primary">
-                    {# Generar #}
+                  {# Generar #}
+                  <button 
+                    type="button" 
+                    class="btn btn-primary"
+                    {% if not project.status %} disabled {% endif %}
+                    >
                     <img
                       src="{{ url_for('static', filename='img/generate.svg') }}"
                       width="24"
@@ -310,7 +357,7 @@
                     id="{{ project.id }}" 
                     class="btn btn-primary modifyProject"
                     data-toggle="modal"
-                    {# data-bs-target="#modifyModal{{ project.id }}" #}
+                    {% if not project.status %} disabled {% endif %}
                   >
                     <img
                       src="{{ url_for('static', filename='img/edit.svg') }}"
@@ -330,6 +377,7 @@
                     id="{{ project.id }}" 
                     class="btn btn-primary deleteProject"
                     data-toggle="modal"
+                    {% if not project.status %} disabled {% endif %}
                   >
                     <img
                       src="{{ url_for('static', filename='img/delete.svg') }}"
@@ -344,13 +392,13 @@
                   </button>
 
                   {# Habilitar/Cerrar #}
-                  <button
-                    type="button"
-                    class="btn btn-primary"
-                    data-toggle="modal"
-                    data-target="#modifyModal"
-                  >
-                    {% if project %}
+                    {% if project.status %}
+                      <button
+                        type="button"
+                        id="{{ project.id }}" 
+                        class="btn btn-primary changeStatusProject"
+                        name="disable_project"
+                      >
                       <img
                         src="{{ url_for('static', filename='img/stop.svg') }}"
                         width="24"
@@ -361,7 +409,14 @@
                         style="border-radius: 5px;"
                         title="Cerrar proyecto"
                       />
+                      </button>
                     {% else %}
+                      <button
+                        type="submit"
+                        id="{{ project.id }}" 
+                        name="enable_project"
+                        class="btn btn-primary changeStatusProject"
+                      >
                       <img
                         src="{{ url_for('static', filename='img/play.svg') }}"
                         width="24"
@@ -372,8 +427,8 @@
                         style="border-radius: 5px;"
                         title="Habilitar proyecto"
                       />
-                    {% endif %}
-                  </button>
+                      </button>
+                    {% endif %} 
 
                   {# Imprimir #}
                   <button
@@ -381,6 +436,7 @@
                     class="btn btn-primary"
                     data-toggle="modal"
                     data-target="#modifyModal"
+                    {% if not project.status %} disabled {% endif %}
                   >
                     <img
                       src="{{ url_for('static', filename='img/print.svg') }}"

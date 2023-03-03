@@ -86,6 +86,30 @@ def delete_project(project_id) -> Response:
     # Se permanece en la pagina
     return redirect(url_for('portfolio'))
 
+@current_app.route('/project-portfolio/change-status//<int:project_id>', methods=['POST'])
+@login_required
+@requires_roles('Gerente de Operaciones')
+def change_project_status(project_id):
+    '''Activa o desactiva un proyecto de la base de datos'''
+    # Busca el proyecto con el id indicado
+    stmt = db.select(Project).where(Project.id == project_id)
+    result = db.session.execute(stmt).first()
+    if not result:
+        flash('El proyecto indicado no existe')
+        return redirect(url_for('portfolio'))
+
+    # Verifica si hay que habilitar o desactivar proyecto
+    if 'enable_project' in request.form:
+        result[0].status = True
+    else:
+        result[0].status = False
+
+    db.session.commit()
+    flash('Status de proyecto actualizado exitosamente')
+
+    # Se permanece en la pagina
+    return redirect(url_for('portfolio'))
+
 @current_app.route('/select', methods=['GET', 'POST'])
 @login_required
 @requires_roles('Gerente de Operaciones')

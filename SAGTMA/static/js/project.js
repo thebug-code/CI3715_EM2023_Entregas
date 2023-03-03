@@ -23,4 +23,26 @@ $(document).ready(function(){
     $('#deleteModal').modal('show');
     $('#deleteProjectForm').attr('action', "/project-portfolio/delete/" + form.attr("id"));
  });
+  
+  // Cambiar status de proyecto
+  $(document).on('click', '.changeStatusProject', function() {
+    var form = $(this)
+    $('#changeStatusModal').modal('show');
+      $('#modalBodyCS').empty()
+
+      // Verifica si se activa o desactiva proyecto
+      if (form.attr("name") == 'enable_project') {
+        $('#modalBodyCS').append("<p>¿Está seguro que desea activar este proyecto?</p>");
+        $('#submitButtonCS').attr('name', 'enable_project');
+        $('#submitButtonCS').addClass("btn-primary")
+        $('#submitButtonCS').text("Activar");
+      } else {
+        $('#modalBodyCS').append("<p>¿Está seguro que desea cerrar este proyecto?</p>");
+        $('#submitButtonCS').attr('name', 'disable_project');
+        $('#submitButtonCS').addClass("btn-danger")
+        $('#submitButtonCS').text("Cerrar");
+      }
+
+    $('#changeStatusProjectForm').attr('action', "/project-portfolio/change-status/" + form.attr("id"));
+ });
 });

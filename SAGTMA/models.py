@@ -60,6 +60,7 @@ class Project(db.Model):
     '''Modelo de proyecto.'''
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     description = db.Column(db.String(200), unique=True)
+    status = db.Column(db.Boolean, default=False)
     start_date = db.Column(db.Date)
     end_date = db.Column(db.Date)
 
