@@ -332,9 +332,11 @@
                   {# Generar #}
                   <button
                     type="button"
-                    class="my-2 btn {% if project.active %}btn-primary
-                  {% else %}
-                    btn-secondary{% endif %}"
+                    class="my-2 btn {% if project.active %}
+                      btn-primary
+                    {% else %}
+                      btn-secondary
+                    {% endif %}"
                     {% if not project.active %}disabled{% endif %}
                   >
                     <img
@@ -353,9 +355,11 @@
                   <button
                     type="button"
                     id="{{ project.id }}"
-                    class="my-2 btn {% if project.active %}btn-primary
-                  {% else %}
-                    btn-secondary{% endif %} modify-project"
+                    class="my-2 btn {% if project.active %}
+                      btn-primary
+                    {% else %}
+                      btn-secondary
+                    {% endif %} modify-project"
                     data-toggle="modal"
                     {% if not project.active %}disabled{% endif %}
                   >
@@ -375,9 +379,11 @@
                   <button
                     type="button"
                     id="{{ project.id }}"
-                    class="my-2 btn {% if project.active %}btn-primary
-                  {% else %}
-                    btn-secondary{% endif %} delete-project"
+                    class="my-2 btn {% if project.active %}
+                      btn-primary
+                    {% else %}
+                      btn-secondary
+                    {% endif %} delete-project"
                     data-toggle="modal"
                     {% if not project.active %}disabled{% endif %}
                   >
