@@ -36,6 +36,8 @@
                 id="username"
                 name="username"
                 placeholder="Ingrese el login del usuario"
+                required
+                autofocus
               />
             </div>
             <div class="mb-3">
@@ -46,6 +48,7 @@
                 id="password"
                 name="password"
                 placeholder="Ingrese la contraseña del usuario"
+                required
               />
             </div>
             <div class="mb-3">
@@ -58,6 +61,7 @@
                 id="confirm-password"
                 name="confirm-password"
                 placeholder="Confirme la contraseña del usuario"
+                required
               />
             </div>
             <div class="mb-3">
@@ -68,6 +72,7 @@
                 id="names"
                 name="names"
                 placeholder="Ingrese los nombres del usuario"
+                required
               />
             </div>
             <div class="mb-3">
@@ -78,6 +83,7 @@
                 id="surnames"
                 name="surnames"
                 placeholder="Ingrese los apellidos del usuario"
+                required
               />
             </div>
             <div class="mb-3">
@@ -217,6 +223,7 @@
                             name="username"
                             placeholder="Ingrese el login del usuario"
                             value="{{ user.username }}"
+                            required
                           />
                         </div>
                         <div class="mb-3">
@@ -230,6 +237,7 @@
                             name="names"
                             placeholder="Ingrese los nombres del usuario"
                             value="{{ user.names }}"
+                            required
                           />
                         </div>
                         <div class="mb-3">
@@ -245,6 +253,7 @@
                             name="surnames"
                             placeholder="Ingrese los apellidos del usuario"
                             value="{{ user.surnames }}"
+                            required
                           />
                         </div>
                         <div class="mb-3">
