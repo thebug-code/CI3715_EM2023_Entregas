@@ -103,10 +103,3 @@ def select():
         }]
 
         return json.dumps(project_list)
-
-from urllib.parse import unquote as urllib_unquote
-
-@current_app.template_filter('unquote')
-def unquote(url):
-    safe = app.jinja_env.filters['safe']
-    return safe(urllib_unquote(url))
