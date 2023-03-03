@@ -13,14 +13,13 @@ def add_search_user(search: str, role: str):
         f"Buscar '{search}' en " + ('todos los roles' if not role else f"el rol '{role}'")
     )
 
-# ========== Portafolios de proyectos ==========
 def add_edit_user(username: str):
     _add_event('Perfiles de Usuarios', f"Editar usuario '{username}'")
 
 def add_delete_user(username: str):
     _add_event('Perfiles de Usuarios', f"Eliminar usuario '{username}'")
 
-# Modulo proyecto
+# ========== Portafolios de proyectos ==========
 def add_project(description: str):
     _add_event('Portafolio de proyectos', f"Agregar proyecto '{description}'")
 
@@ -33,10 +32,9 @@ def add_modify_project(description: str):
 def add_delete_project(description: str):
     _add_event('Portafolio de proyectos', f"Eliminar '{description}'")
 
-# Modulo evento
+# ========== Logger de eventos ==========
 def add_search_log(search: str):
     _add_event('Logger de Eventos', f"Buscar '{search}'")
-
 
 def _add_event(module: str, description: str):
     '''Crea y anade un nuevo a la base de datos'''
