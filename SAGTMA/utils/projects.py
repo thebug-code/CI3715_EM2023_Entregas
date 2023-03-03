@@ -1,9 +1,6 @@
-from typing import Tuple
 from datetime import date
 
-import bcrypt
-
-from SAGTMA.models import Project, User, db
+from SAGTMA.models import Project, db
 from SAGTMA.utils import events
 
 
@@ -23,6 +20,10 @@ class InvalidProjectDate(CreateProjectError):
 class MissingFieldError(CreateProjectError):
     pass
 
+# El proyecto no existe
+class ProjectNotFoundError(CreateProjectError):
+    pass
+
 # ========== Validaciones ==========
 def validate_descrip_project(description: str) -> bool:
     '''Lanza una excepción si la descripcion de un proyecto no es valida.
@@ -40,7 +41,7 @@ def validate_descrip_project(description: str) -> bool:
 
     for char in description:
         if not char.isalnum() and char != '_' and char != ' ':
-            raise InvalidDescripProjectError('La descripcion de un proyeto no puede contener caracteres especiales.')
+            raise InvalidDescripProjectError('La descripcion de un proyecto no puede contener caracteres especiales.')
 
 # Falta tipo de parametro
 def validate_date(start_date, deadline) -> bool:
@@ -112,7 +113,7 @@ def modify_project(
     stmt = db.select(Project).where(Project.id == project_id)
     project_query = db.session.execute(stmt).first()
     if not project_query:
-        raise InvalidProjectError('El proyecto indicado no existe')
+        raise ProjectNotFoundError('El proyecto indicado no existe')
 
     # Convert fechas a tipo Date
     y, m, d = start_date.split('-')

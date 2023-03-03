@@ -19,18 +19,18 @@ def add_edit_user(username: str):
 def add_delete_user(username: str):
     _add_event('Perfiles de Usuarios', f"Eliminar usuario '{username}'")
 
-# ========== Portafolios de proyectos ==========
+# ========== Portafolios de Proyectos ==========
 def add_project(description: str):
-    _add_event('Portafolio de proyectos', f"Agregar proyecto '{description}'")
+    _add_event('Portafolio de Proyectos', f"Agregar proyecto '{description}'")
 
 def add_search_project(search: str):
-    _add_event('Portafolio de proyectos', f"Buscar '{search}'")
+    _add_event('Portafolio de Proyectos', f"Buscar '{search}'")
 
 def add_modify_project(description: str):
-    _add_event('Portafolio de proyectos', f"Modificar '{description}'")
+    _add_event('Portafolio de Proyectos', f"Modificar '{description}'")
     
 def add_delete_project(description: str):
-    _add_event('Portafolio de proyectos', f"Eliminar '{description}'")
+    _add_event('Portafolio de Proyectos', f"Eliminar '{description}'")
 
 # ========== Logger de eventos ==========
 def add_search_log(search: str):

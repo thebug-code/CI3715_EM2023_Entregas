@@ -82,7 +82,7 @@ def delete_project(project_id) -> Response:
     db.session.commit()
 
     # Registra el evento en la base de datos
-    events.add_modify_project(result[0].description)
+    events.add_delete_project(result[0].description)
 
     flash('Proyecto eliminado exitosamente')
 

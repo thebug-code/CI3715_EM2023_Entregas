@@ -317,7 +317,7 @@
                     type="date"
                     style="background-color:transparent;border-radius: 5px;"
                     value="{{ project.start_date }}"
-                    {% if not project.active %}disabled{% endif %}
+                    disabled
                   />
                 </td>
                 <td>
@@ -325,14 +325,14 @@
                     type="date"
                     style="background-color:transparent;border-radius: 5px;"
                     value="{{ project.end_date }}"
-                    {% if not project.active %}disabled{% endif %}
+                    disabled
                   />
                 </td>
                 <td>
                   {# Generar #}
                   <button
                     type="button"
-                    class="btn {% if project.active %}btn-primary
+                    class="my-2 btn {% if project.active %}btn-primary
                   {% else %}
                     btn-secondary{% endif %}"
                     {% if not project.active %}disabled{% endif %}
@@ -353,7 +353,7 @@
                   <button
                     type="button"
                     id="{{ project.id }}"
-                    class="btn {% if project.active %}btn-primary
+                    class="my-2 btn {% if project.active %}btn-primary
                   {% else %}
                     btn-secondary{% endif %} modify-project"
                     data-toggle="modal"
@@ -375,7 +375,7 @@
                   <button
                     type="button"
                     id="{{ project.id }}"
-                    class="btn {% if project.active %}btn-primary
+                    class="my-2 btn {% if project.active %}btn-primary
                   {% else %}
                     btn-secondary{% endif %} delete-project"
                     data-toggle="modal"
@@ -398,7 +398,7 @@
                     <button
                       type="button"
                       id="{{ project.id }}"
-                      class="btn btn-primary change-status-project"
+                      class="my-2 btn btn-primary change-status-project"
                       name="disable_project"
                     >
                       <img
@@ -434,7 +434,7 @@
                   {# Imprimir #}
                   <button
                     type="button"
-                    class="btn btn-primary"
+                    class="my-2 btn btn-primary"
                     data-toggle="modal"
                     data-target="#modifyModal"
                   >
