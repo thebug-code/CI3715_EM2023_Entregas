@@ -1,5 +1,5 @@
 from flask import (Response, current_app, flash, redirect, render_template,
-                   request, url_for)
+                   request, url_for, session)
 
 from SAGTMA.models import Event, Role, User, db
 from SAGTMA.utils import auth, events
@@ -75,57 +75,58 @@ def logger() -> Response:
 @requires_roles('Administrador')
 def register() -> Response:
     '''Registra un usuario en la base de datos.'''
-    if request.method == 'POST':
-        username = request.form.get('username')
-        names = request.form.get('names')
-        surnames = request.form.get('surnames')
-        password = request.form.get('password')
-        confirm_password = request.form.get('confirm-password')
-        role = request.form.get('role')
+    username = request.form.get('username')
+    names = request.form.get('names')
+    surnames = request.form.get('surnames')
+    password = request.form.get('password')
+    confirm_password = request.form.get('confirm-password')
+    role = request.form.get('role')
 
-        # Busca el rol en la base de datos
-        stmt = db.select(Role.name).where(Role.id == role)
-        result = db.session.execute(stmt).fetchall()
-        if not result:
-            # Si no existe, se permanece en la página
-            flash('El rol indicado no existe')
-            return redirect(url_for('users_profiles'))
-
-        role = [r for r, in result][0]
-        try:
-            auth.register_user(
-                username, names, surnames,
-                password, confirm_password, role
-            )
-        except auth.AuthenticationError as e:
-            flash(f'{e}')
+    try:
+        auth.register_user(
+            username, names, surnames,
+            password, confirm_password, role
+        )
+    except auth.AuthenticationError as e:
+        flash(f'{e}')
 
     # Se permanece en la página
+    flash('Usuario registrado exitosamente')
     return redirect(url_for('users_profiles'))
 
 @current_app.route('/user-profiles/delete/<int:user_id>/', methods=['POST'])
 @requires_roles('Administrador')
 def delete_user(user_id: int) -> Response:
     '''Elimina un usuario de la base de datos.'''
-    # Busca el usuario en la base de datos
-    stmt = db.select(User).where(User.id == user_id)
-    result = db.session.execute(stmt).fetchone()
-    if not result:
-        # Si no existe, se permanece en la página
-        flash('El usuario indicado no existe')
+    try:
+        auth.delete_user(user_id)
+    except auth.AuthenticationError as e:
+        flash(f'{e}')
         return redirect(url_for('users_profiles'))
-
-    # No se puede eliminar un administrador
-    if result[0].role.name == 'Administrador':
-        flash('No se puede eliminar un administrador')
-        return redirect(url_for('users_profiles'))
-
-    # Elimina el usuario de la base de datos
-    db.session.delete(result[0])
-    db.session.commit()
-
-    # Añade el evento de eliminación
-    events.add_delete_user(result[0].username)
 
     flash('Usuario eliminado exitosamente')
+    return redirect(url_for('users_profiles'))
+
+@current_app.route('/user-profiles/modify/<int:user_id>/', methods=['POST'])
+@requires_roles('Administrador')
+def edit_user(user_id: int) -> Response:
+    '''Edita un usuario en la base de datos.'''
+    # Obtiene los datos del formulario
+    username = request.form.get('username')
+    names = request.form.get('names')
+    surnames = request.form.get('surnames')
+    role = request.form.get('role')
+
+    try:
+        auth.edit_user(user_id, username, names, surnames, role)
+
+        # Si el usuario editado es el mismo que está logueado, cambia su sesión
+        if int(user_id) == session['id']:
+            session['username'] = username
+    except auth.AuthenticationError as e:
+        flash(f'{e}')
+        return redirect(url_for('users_profiles'))
+
+    # Se permanece en la página
+    flash('Usuario editado exitosamente')
     return redirect(url_for('users_profiles'))

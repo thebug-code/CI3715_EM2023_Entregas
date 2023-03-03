@@ -13,6 +13,9 @@ def add_search_user(search: str, role: str):
         f"Buscar '{search}' en " + ('todos los roles' if not role else f"el rol '{role}'")
     )
 
+def add_edit_user(username: str):
+    _add_event('Perfiles de Usuarios', f"Editar usuario '{username}'")
+
 def add_delete_user(username: str):
     _add_event('Perfiles de Usuarios', f"Eliminar usuario '{username}'")
 
