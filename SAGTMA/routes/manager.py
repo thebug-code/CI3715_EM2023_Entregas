@@ -102,7 +102,7 @@ def delete_project(project_id) -> Response:
 
 
 @current_app.route(
-    "/project-portfolio/modify/status/<int:project_id>/", methods=["POST"]
+    "/project-portfolio/modify/<int:project_id>/status/", methods=["POST"]
 )
 @login_required
 @requires_roles("Gerente de Operaciones")

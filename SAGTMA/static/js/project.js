@@ -55,7 +55,7 @@ $(document).ready(function () {
 
     $("#changeStatusProjectForm").attr(
       "action",
-      "/project-portfolio/modify/status/" + form.attr("id") + "/"
+      "/project-portfolio/modify/"+ form.attr("id") + "/status/"
     );
   });
 });
