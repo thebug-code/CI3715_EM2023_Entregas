@@ -2,7 +2,7 @@ from datetime import date
 
 from SAGTMA.models import Project, db
 from SAGTMA.utils import events
-
+from datetime import date
 
 # ========== Excepciones ==========
 class CreateProjectError(ValueError):
@@ -20,59 +20,47 @@ class InvalidProjectDate(CreateProjectError):
 class MissingFieldError(CreateProjectError):
     pass
 
-# El proyecto no existe
 class ProjectNotFoundError(CreateProjectError):
     pass
 
 # ========== Validaciones ==========
 def validate_descrip_project(description: str) -> bool:
-    '''Lanza una excepción si la descripcion de un proyecto no es valida.
+    '''Lanza una excepción si la descripción de un proyecto no es valida.
 
-    Una descripcion de un proyecto es válida si:
-      -Tiene al menos 10 caracteres y a lo sumo 200 caracteres
-      -No tiene caracteres especiales distintos de '_' (guión bajo)
-      -No comienza con un caracter numérico
+    Una descripción de un proyecto es válida si:
+      -Tiene al menos 6 caracteres y a lo sumo 100 caracteres
+      -No tiene caracteres especiales distintos de ' -_?¿¡!:'
     '''
-    if len(description) < 10 or len(description) > 200:
-            raise InvalidDescripProjectError('La descripcion del proyecto debe tener entre 10 y 200 caracteres.')
-
-    if description[0].isdigit():
-        raise InvalidDescripProjectError('La descripcion de un proyecto no puede comenzar con un número.')
+    if len(description) < 6 or len(description) > 100:
+            raise InvalidDescripProjectError('La descripción del proyecto debe tener entre 6 y 100 caracteres.')
 
     for char in description:
-        if not char.isalnum() and char != '_' and char != ' ':
-            raise InvalidDescripProjectError('La descripcion de un proyecto no puede contener caracteres especiales.')
+        if not char.isalnum() and char not in ' -_?¿¡!:':
+            raise InvalidDescripProjectError('La descripción de un proyecto no puede contener caracteres especiales.')
 
-# Falta tipo de parametro
-def validate_date(start_date, deadline) -> bool:
+def validate_date(start_date: date, deadline: date) -> bool:
     '''Lanza una excepción si la fecha de inicio de un proyecto es despues que su fecha de cierre'''
 
     if start_date > deadline:
         raise InvalidProjectDate('La fecha de inicio no puede ser mayor que la fecha de cierre.')
 
 # ========== Anadidura ==========
-# Falta tipo de parametro
-def create_project(
-    description: str,
-    start_date,
-    deadline
-):
+def create_project(description: str, start_date: str, deadline: str):
     '''Crea y anade un usuario en la base de datos.
 
     Lanza una excepción CreateProyectError si hubo algún error.
     '''
+    # Eliminar espacios al comienzo y final de la descripción
+    description = description.strip()
     if not all([description, start_date, deadline]):
-        raise MissingFieldError('Todos los campos son obliglatorios')
+        raise MissingFieldError('Todos los campos son obligatorios')
 
-    # Verifica si ya existe un proyecto con la mima descripcion
+    # Verifica si ya existe un proyecto con la misma descripción
     stmt = db.select(Project).where(Project.description == description)
     if db.session.execute(stmt).first():
         raise AlreadyExistingProjectError('El proyecto ya existe')
-    
-    # Eliminar espacios al comienzo y final de la descripcion
-    description = description.strip()
 
-    # Convert fechas a tipo Date
+    # Convert fechas a tipo Date usando la libreria datetime
     y, m, d = start_date.split('-')
     start_date_t = date(int(y), int(m), int(d))
 
@@ -92,19 +80,19 @@ def create_project(
 
 # ========== Modificar ==========
 def modify_project(
-    project_id: int, 
-    description: str, 
-    start_date, 
-    deadline
+    project_id: int,
+    description: str,
+    start_date: str,
+    deadline: str
 ):
     '''Modifica los datos de un proyecto en la base de datos
         
     Lanza una excepción CreateProyectError si hubo algún error.
     '''
     if not all([description, start_date, deadline]):
-        raise MissingFieldError('Todos los campos son obliglatorios')
+        raise MissingFieldError('Todos los campos son obligatorios')
 
-    # Verifica si ya existe un proyecto con la mima descripcion
+    # Verifica si ya existe un proyecto con la mima descripción
     stmt = db.select(Project).where(Project.description == description).where(Project.id != project_id)
     if db.session.execute(stmt).first():
         raise AlreadyExistingProjectError('El proyecto ya existe')
@@ -127,7 +115,7 @@ def modify_project(
     validate_date(start_date_t, deadline_t)
 
     # Actualiza los datos del proyecto
-    project_query[0].description = description.strip() 
+    project_query[0].description = description.strip()
     project_query[0].start_date = start_date_t
     project_query[0].end_date = deadline_t
 
