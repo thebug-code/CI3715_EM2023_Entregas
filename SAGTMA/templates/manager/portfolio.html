@@ -5,6 +5,48 @@
   <div class="d-flex justify-content-center my-4">
     <h1 class="title-container">Portafolio de Proyectos</h1>
   </div>
+
+  {# Modal confirmar eliminar proyecto #}
+  <div
+    class="modal fade"
+    id="deleteModal"
+    tabindex="-1"
+    aria-labelledby="deleteModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">Eliminar proyecto</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <p>¿Está seguro que desea eliminar este proyecto?</p>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Cerrar
+          </button>
+          <form
+            method="post"
+            id="deleteProjectForm"
+            class="d-inline"
+          >
+            <button type="submit" class="btn btn-danger">Eliminar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
   {# Modal modificar proyecto #}
   <div
     class="modal fade"
@@ -152,54 +194,58 @@
   </div>
 
   <div class="container">
-    <div class="row search-filter">
+  {# Barra de filtro de proyectos #}
+    <form
+      class="row search-filter"
+      action="{{ url_for('portfolio') }}"
+      method="post"
+    >
       <div class="col-sm-12">
         <div class="input-group">
-          <input id="table_filter" type="text" class="form-control" />
-          <div class="input-group-btn" style="margin-left: 10px;display: flex;">
-            <form action="/" method="post">
-              <button
-                type="submit"
-                class="btn btn-primary"
-                data-toggle="modal"
-                data-target="#modifyModal" {# malo #}
-                style="border-radius: 5px;margin-left: 10px;"
-              >
-                <img
-                  src="{{ url_for('static', filename='img/search.svg') }}"
-                  width="40"
-                  height="40"
-                  fill="white"
-                  class="table-button"
-                  value="submit"
-                  style="border-radius: 5px;"
-                  title="Buscar proyecto"
-                />
-              </button>
-            </form>
-            <form action="/" method="post">
-              <button
-                type="button"
-                class="btn btn-primary"
-                style="border-radius: 5px;margin-left: 10px;"
-                data-bs-toggle="modal"
-                data-bs-target="#addModal"
-              >
-                <img
-                  src="{{ url_for('static', filename='img/add.svg') }}"
-                  width="40"
-                  height="40"
-                  fill="white"
-                  class="table-button"
-                  value="submit"
-                  style="border-radius: 5px;"
-                />
-              </button>
-            </form>
-          </div>
+          <input 
+            name="descrip-filter" 
+            id="descrip-filter" 
+            type="text" 
+            class="form-control" 
+            placeholder="Buscar proyecto"
+          />
+          {# <div class="input-group-btn" style="margin-left: 10px;display: flex;"> #}
+          <button
+            type="submit"
+            class="btn btn-primary"
+            style="border-radius: 5px;margin-left: 10px;"
+          >
+          <img
+            src="{{ url_for('static', filename='img/search.svg') }}"
+            width="40"
+            height="40"
+            fill="white"
+            class="table-button"
+            value="submit"
+            style="border-radius: 5px;"
+            title="Buscar proyecto"
+          />
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            style="border-radius: 5px;margin-left: 10px;"
+            data-bs-toggle="modal"
+            data-bs-target="#addModal"
+          >
+          <img
+            src="{{ url_for('static', filename='img/add.svg') }}"
+            width="40"
+            height="40"
+            fill="white"
+            class="table-button"
+            value="submit"
+            style="border-radius: 5px;"
+          />
+          </button>
         </div>
       </div>
-    </div>
+    </form>
   </div>
 
   {# Si no hay proyectos o no se encontraron en la busqueda #}
@@ -281,9 +327,9 @@
                   {# Eliminar #}
                   <button
                     type="button"
-                    class="btn btn-primary"
+                    id="{{ project.id }}" 
+                    class="btn btn-primary deleteProject"
                     data-toggle="modal"
-                    data-target="#modifyModal"
                   >
                     <img
                       src="{{ url_for('static', filename='img/delete.svg') }}"
@@ -356,25 +402,32 @@
   {% endif %}
 </div>
 
-{# Insertar dinamicamente el contenido a modal modificar via Ajax #}
 <script>
-$(document).ready(function(){
-  $(document).on('click', '.modifyProject', function() {
-  var form = $(this)
-  $.ajax({
-   url: "/select",
-   method: "POST",
-   data: {project_id: form.attr("id")},
-   success: function(data) {
-    $('#modifyModal').modal('show');
-    var data_rs = JSON.parse(data);
-    $('#descriptionM').val(data_rs[0]['description']);
-    $('#start_dateM').val(data_rs[0]['start_date']);
-    $('#deadlineM').val(data_rs[0]['deadline']);
-    $('#modifyProjectForm').attr('action', "/modify-project/" + form.attr("id"));
-   }
+  // Insertar dinamicamente el contenido a modal modificar via Ajax
+  $(document).ready(function(){
+    $(document).on('click', '.modifyProject', function() {
+      var form = $(this)
+      $.ajax({
+       url: "/select",
+       method: "POST",
+       data: {project_id: form.attr("id")},
+       success: function(data) {
+        $('#modifyModal').modal('show');
+        var data_rs = JSON.parse(data);
+        $('#descriptionM').val(data_rs[0]['description']);
+        $('#start_dateM').val(data_rs[0]['start_date']);
+        $('#deadlineM').val(data_rs[0]['deadline']);
+        $('#modifyProjectForm').attr('action', "/project-portfolio/modify/" + form.attr("id"));
+     }
+    });
+   });
+  
+    // Eliminar proyecto
+    $(document).on('click', '.deleteProject', function() {
+      var form = $(this)
+      $('#deleteModal').modal('show');
+      $('#deleteProjectForm').attr('action', "/project-portfolio/delete/" + form.attr("id"));
+   });
   });
- });
-});
 </script>
 {% endblock %}

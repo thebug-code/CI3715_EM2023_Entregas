@@ -10,10 +10,17 @@ from SAGTMA.models import Project, db
 @requires_roles('Gerente de Operaciones')
 def portfolio() -> Response:
     '''Muestra la lista de proyectos anadidos en el sistema'''
-        
-    # SE ASUME QUE ES METDO GET, FALTA BARRA DE BUSQUEDA
-    # Selecciona los proyectos de la base de datos
-    stmt = db.select(Project)
+    if request.method == 'POST':
+        # Obtiene los datos del formulario
+        descrip = request.form.get('descrip-filter')
+
+        stmt = db.select(Project).where(Project.description.like(f'%{descrip}%'))
+
+        # Añade el evento de búsqueda
+        events.add_search_project(descrip)
+    else:
+        # Selecciona los proyectos de la base de datos
+        stmt = db.select(Project)
 
     result = db.session.execute(stmt).fetchall()
     projects = [r for r, in result]
@@ -38,7 +45,7 @@ def create_project() -> Response:
     # Se permanece en la página
     return redirect(url_for('portfolio'))
 
-@current_app.route('/modify-project/<int:project_id>', methods=['POST'])
+@current_app.route('/project-portfolio/modify/<int:project_id>', methods=['POST'])
 @login_required
 @requires_roles('Gerente de Operaciones')
 def modify_project(project_id):
@@ -51,6 +58,30 @@ def modify_project(project_id):
         project.modify_project(project_id, description, start_date, deadline)
     except project.CreateProjectError as e:
         flash(f'{e}')
+
+    # Se permanece en la pagina
+    return redirect(url_for('portfolio'))
+
+@current_app.route('/project-portfolio/delete/<int:project_id>', methods=['post'])
+@login_required
+@requires_roles('Gerente de Operaciones')
+def delete_project(project_id) -> Response:
+    '''Elimina un proyecto de la base de datos'''
+    # Busca el proyecto con el id indicado
+    stmt = db.select(Project).where(Project.id == project_id)
+    result = db.session.execute(stmt).first()
+    if not result:
+        flash('El proyecto indicado no existe')
+        return redirect(url_for('portfolio'))
+
+    # Elimina el proyecto de la base de datos
+    db.session.delete(result[0])
+    db.session.commit()
+
+    # Registra el evento en la base de datos
+    events.add_modify_project(result[0].description)
+
+    flash('Proyecto eliminado exitosamente')
 
     # Se permanece en la pagina
     return redirect(url_for('portfolio'))
