@@ -70,7 +70,7 @@ def populate_db():
         stmt = db.select(Project).order_by(db.func.random()).limit(randint(0, 5))
         for project, in db.session.execute(stmt):
             user.projects.append(project)
-            
+
     # Crea eventos de prueba
     stmt = db.select(User)
     for user, in db.session.execute(stmt):

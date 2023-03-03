@@ -10,6 +10,7 @@ from SAGTMA.models import Project, db
 @requires_roles('Gerente de Operaciones')
 def portfolio() -> Response:
     '''Muestra la lista de proyectos anadidos en el sistema'''
+    print(request.method)
     if request.method == 'POST':
         # Obtiene los datos del formulario
         descrip = request.form.get('descrip-filter')
@@ -23,26 +24,28 @@ def portfolio() -> Response:
         stmt = db.select(Project)
 
     result = db.session.execute(stmt).fetchall()
-    projects = [r for r, in result]
+    _projects = [r for r, in result]
+    print(f'Proyectos: {_projects}')
 
-    return render_template('manager/portfolio.html', projects=projects)
+    return render_template('manager/portfolio.html', projects=_projects)
 
-@current_app.route('/create-project/',methods=['GET', 'POST'])
+@current_app.route('/create-project/',methods=['POST'])
 @login_required
 @requires_roles('Gerente de Operaciones')
 def create_project() -> Response:
     '''Crear y anade un proyecto en la base de datos.'''
-    if request.method == "POST":
-        description = request.form['description']
-        start_date = request.form['start_date']
-        deadline = request.form['deadline']
-        
-        try:
-            projects.create_project(description, start_date, deadline)
-        except projects.CreateProjectError as e:
-            flash(f'{e}')
-        
+    description = request.form['description']
+    start_date = request.form['start_date']
+    deadline = request.form['deadline']
+
+    try:
+        projects.create_project(description, start_date, deadline)
+    except projects.CreateProjectError as e:
+        flash(f'{e}')
+        return redirect(url_for('portfolio'))
+
     # Se permanece en la página
+    flash('Proyecto creado exitosamente')
     return redirect(url_for('portfolio'))
 
 @current_app.route('/project-portfolio/modify/<int:project_id>', methods=['POST'])
