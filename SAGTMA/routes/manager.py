@@ -10,7 +10,6 @@ from SAGTMA.models import Project, db
 @requires_roles('Gerente de Operaciones')
 def portfolio() -> Response:
     '''Muestra la lista de proyectos anadidos en el sistema'''
-    print(request.method)
     if request.method == 'POST':
         # Obtiene los datos del formulario
         descrip = request.form.get('descrip-filter')
