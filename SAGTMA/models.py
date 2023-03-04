@@ -18,22 +18,6 @@ class Role(db.Model):
         return f"Role<{self.name}>"
 
 
-class Color(db.Model):
-    """Modelo de color de un vehículo."""
-
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(20), unique=True, nullable=False)
-    hex = db.Column(db.String(7), unique=True, nullable=False)
-    vehicles = db.relationship("Vehicle", backref="color")
-
-    def __init__(self, name: str, hex: str):
-        self.name = name
-        self.hex = hex
-
-    def __repr__(self) -> str:
-        return f"Color<{self.name}: {self.hex}>"
-
-
 user_project = db.Table(
     "user_project",
     db.Column("id", db.Integer, primary_key=True, autoincrement=True),
@@ -157,7 +141,7 @@ class Vehicle(db.Model):
     year = db.Column(db.Integer, nullable=False)
     body_number = db.Column(db.String(20), nullable=False)
     engine_number = db.Column(db.String(20), nullable=False)
-    color_id = db.Column(db.Integer, db.ForeignKey("color.id"), nullable=False)
+    color = db.Column(db.String(20), nullable=False)
     problem = db.Column(db.String(120), nullable=False)
     owner_id = db.Column(db.Integer, db.ForeignKey("client.id"), nullable=False)
 
@@ -169,7 +153,7 @@ class Vehicle(db.Model):
         year: int,
         body_number: str,
         engine_number: str,
-        color: Color,
+        color: str,
         problem: str,
         owner: Client,
     ):
