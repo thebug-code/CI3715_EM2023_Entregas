@@ -45,17 +45,17 @@
           </li>
           <!-- Si el usuario es analista -->
         {% elif session['role'] == 'Analista de Operaciones' %}
-        <li>
-          <a
-            href="{{ url_for('clients_details') }}"
-            class="nav-link link {% if active_page == 'clients' %}
-              active fw-bold
-            {% endif %}"
-            aria-current="page"
-          >
-            Detalles de Clientes
-          </a>
-        </li>
+          <li>
+            <a
+              href="{{ url_for('clients_details') }}"
+              class="nav-link link {% if active_page == 'clients' %}
+                active fw-bold
+              {% endif %}"
+              aria-current="page"
+            >
+              Detalles de Clientes
+            </a>
+          </li>
 
           <!-- Si el usuario es administrador -->
         {% elif session['role'] == 'Administrador' %}
