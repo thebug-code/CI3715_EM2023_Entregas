@@ -19,10 +19,12 @@ def init_db_command():
 
 
 def populate_db():
+    """Prepuebla la base de datos."""
     # Crea los roles
     user = Role("Usuario (Dummy)")
     admin = Role("Administrador")
     manager = Role("Gerente de Operaciones")
+    analyst = Role("Analista de Operaciones")
     mechanics_supervisor = Role("Supervisor del Área de Mecánica General")
     painting_supervisor = Role("Supervisor del Área de Latonería y Pintura")
     mechanics_specialist = Role("Especialista en Mecánica")
@@ -32,6 +34,7 @@ def populate_db():
     roles = [
         user,
         admin,
+        analyst,
         manager,
         mechanics_supervisor,
         painting_supervisor,

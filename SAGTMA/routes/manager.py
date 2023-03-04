@@ -6,7 +6,6 @@ from flask import (
     render_template,
     request,
     url_for,
-    json,
 )
 
 from SAGTMA.utils import projects, events

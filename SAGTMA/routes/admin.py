@@ -19,13 +19,14 @@ from SAGTMA.utils.decorators import requires_roles
 @requires_roles("Administrador")
 def users_profiles() -> Response:
     """Muestra la lista de usuarios registrados en el sistema"""
+    # SELECT * FROM user
+    stmt = db.select(User)
+
     if request.method == "POST":
         # Obtiene los datos del formulario
         user = request.form.get("user-filter").lower().strip()
         role = request.form.get("role-filter")
 
-        # SELECT * FROM users
-        stmt = db.select(User)
         if user:
             # WHERE (names || surnames) LIKE '%user%' OR
             #     username LIKE '%user%'
@@ -41,9 +42,6 @@ def users_profiles() -> Response:
 
         # Añade el evento de búsqueda
         events.add_search_user(user, role)
-    else:
-        # Selecciona los usuarios y roles de la base de datos
-        stmt = db.select(User)
 
     result = db.session.execute(stmt).fetchall()
     users = [r for r, in result]

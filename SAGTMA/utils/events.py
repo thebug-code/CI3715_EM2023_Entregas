@@ -75,6 +75,11 @@ def delete_event(event_id: int):
     _add_event("Logger de eventos", f"Eliminar '{deleted_event.description}'")
 
 
+# =========== Detalles de los Clientes ===========
+def add_search_client(search: str):
+    _add_event("Detalles de los Clientes", f"Buscar '{search}'")
+
+
 def _add_event(module: str, description: str):
     """Crea y anade un nuevo a la base de datos"""
     current_user = profiles.get_current_user(session["id"])
