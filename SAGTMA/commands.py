@@ -3,7 +3,7 @@ from datetime import date
 
 from flask import current_app
 
-from SAGTMA.models import Project, Role, User, Event, db
+from SAGTMA.models import Project, Role, User, Client, Event, db
 from SAGTMA.utils import profiles
 
 
@@ -81,6 +81,19 @@ def populate_db():
         stmt = db.select(Project).order_by(db.func.random()).limit(randint(0, 5))
         for (project,) in db.session.execute(stmt):
             user.projects.append(project)
+
+    # Añade un cliente dummy
+    client = Client(
+        "V-82482795",
+        "Carlos",
+        "Marx",
+        date(1974, 1, 16),
+        "+584254635142",
+        "carlmarx@usb.ve",
+        "La Castellana, Caracas, Al lado del portón rojo",
+    )
+
+    db.session.add(client)
 
     # Crea eventos de prueba
     stmt = db.select(User)

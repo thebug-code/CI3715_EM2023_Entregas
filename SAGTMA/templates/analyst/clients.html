@@ -175,14 +175,15 @@
     {% else %}
       <!-- Tabla de clientes -->
       <div class="container table-container">
-        <table class="table table-striped table-hover">
+      <!-- Letra pequeña -->
+        <table class="table table-striped table-hover" style="font-size: 0.8rem;">
           <!-- Header de la tabla -->
           <thead>
             <tr>
               <th>Cédula</th>
               <th>Nombres</th>
               <th>Apellidos</th>
-              <th>F. de Nac.</th>
+              <th>Nacimiento</th>
               <th>Contacto</th>
               <th>Email</th>
               <th>Dirección</th>
@@ -356,7 +357,7 @@
                 <td>{{ client.names }}</td>
                 <td>{{ client.surnames }}</td>
                 <td>{{ client.birthdate }}</td>
-                <td>{{ client.contact }}</td>
+                <td>{{ client.phone_number }}</td>
                 <td>{{ client.email }}</td>
                 <td>{{ client.address }}</td>
                 <td>
