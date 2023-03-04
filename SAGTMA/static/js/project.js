@@ -1,20 +1,22 @@
-// Modificar proyecto
 $(document).ready(function () {
+  // Modificar proyecto
   $(document).on("click", ".modify-project", function () {
     var form = $(this);
-    $.ajax({
-      url: "/select",
-      method: "POST",
-      data: { project_id: form.attr("id") },
+    id = form.attr("id").match(/\d+/)[0];
+
+    $.getJSON({
+      url: "/api/v1/projects",
+      data: { id },
       success: function (data) {
         $("#modifyModal").modal("show");
-        var data_rs = JSON.parse(data);
-        $("#descriptionM").val(data_rs[0]["description"]);
-        $("#start_dateM").val(data_rs[0]["start_date"]);
-        $("#deadlineM").val(data_rs[0]["deadline"]);
+        var project = data[0];
+
+        $("#descriptionM").val(project.description);
+        $("#start_dateM").val(project.start_date);
+        $("#deadlineM").val(project.deadline);
         $("#modifyProjectForm").attr(
           "action",
-          "/project-portfolio/modify/" + form.attr("id") + "/"
+          "/project-portfolio/modify/" + id + "/"
         );
       },
     });
@@ -23,16 +25,19 @@ $(document).ready(function () {
   // Eliminar proyecto
   $(document).on("click", ".delete-project", function () {
     var form = $(this);
+    id = form.attr("id").match(/\d+/)[0];
+
     $("#deleteModal").modal("show");
     $("#deleteProjectForm").attr(
       "action",
-      "/project-portfolio/delete/" + form.attr("id") + "/"
+      "/project-portfolio/delete/" + id + "/"
     );
   });
 
   // Cambiar status de proyecto
   $(document).on("click", ".change-status-project", function () {
     var form = $(this);
+    id = form.attr("id").match(/\d+/)[0];
     $("#changeStatusModal").modal("show");
     $("#modalBodyCS").empty();
 
@@ -55,7 +60,7 @@ $(document).ready(function () {
 
     $("#changeStatusProjectForm").attr(
       "action",
-      "/project-portfolio/modify/"+ form.attr("id") + "/status/"
+      "/project-portfolio/modify/" + id + "/status/"
     );
   });
 });

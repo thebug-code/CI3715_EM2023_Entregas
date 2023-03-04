@@ -105,7 +105,7 @@ def edit_user(user_id: int) -> Response:
         profiles.edit_user(user_id, username, names, surnames, role)
 
         # Si el usuario editado es el mismo que está logueado, cambia su sesión
-        if int(user_id) == session["id"]:
+        if user_id == session["id"]:
             session["username"] = username
     except profiles.AuthenticationError as e:
         flash(f"{e}")

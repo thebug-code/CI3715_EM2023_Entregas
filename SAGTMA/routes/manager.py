@@ -33,7 +33,6 @@ def portfolio() -> Response:
 
     result = db.session.execute(stmt).fetchall()
     _projects = [r for r, in result]
-    print(f"Proyectos: {_projects}")
 
     return render_template("manager/portfolio.html", projects=_projects)
 
@@ -126,24 +125,3 @@ def change_project_status(project_id):
 
     # Se permanece en la pagina
     return redirect(url_for("portfolio"))
-
-
-@current_app.route("/select", methods=["GET", "POST"])
-@login_required
-@requires_roles("Gerente de Operaciones")
-def select():
-    if request.method == "POST":
-        project_id = request.form["project_id"]
-        stmt = db.select(Project).where(Project.id == project_id)  # FALTA VERIFICAR
-        rproject = db.session.execute(stmt).first()[0]
-
-        project_list = [
-            {
-                "id": rproject.id,
-                "description": rproject.description,
-                "start_date": rproject.start_date.strftime("%Y-%m-%d"),
-                "deadline": rproject.end_date.strftime("%Y-%m-%d"),
-            }
-        ]
-
-        return json.dumps(project_list)

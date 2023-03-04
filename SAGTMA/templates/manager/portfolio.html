@@ -354,7 +354,7 @@
                   {# Modificar #}
                   <button
                     type="button"
-                    id="{{ project.id }}"
+                    id="modify{{ project.id }}"
                     class="my-2 btn {% if project.active %}
                       btn-primary
                     {% else %}
@@ -378,7 +378,7 @@
                   {# Eliminar #}
                   <button
                     type="button"
-                    id="{{ project.id }}"
+                    id="delete{{ project.id }}"
                     class="my-2 btn {% if project.active %}
                       btn-primary
                     {% else %}
@@ -403,7 +403,7 @@
                   {% if project.active %}
                     <button
                       type="button"
-                      id="{{ project.id }}"
+                      id="disable{{ project.id }}"
                       class="my-2 btn btn-primary change-status-project"
                       name="disable_project"
                     >
@@ -421,7 +421,7 @@
                   {% else %}
                     <button
                       type="submit"
-                      id="{{ project.id }}"
+                      id="enable{{ project.id }}"
                       name="enable_project"
                       class="btn btn-primary change-status-project"
                     >
@@ -440,6 +440,7 @@
                   {# Imprimir #}
                   <button
                     type="button"
+                    id="print{{ project.id }}"
                     class="my-2 btn btn-primary"
                     data-toggle="modal"
                     data-target="#modifyModal"

@@ -35,7 +35,7 @@ def create_app(test_config=None):
 
     with app.app_context():
         # Registra las vistas
-        from SAGTMA.routes import home, auth, errors, admin, manager
+        from SAGTMA.routes import home, auth, errors, admin, manager, api
 
         # Registra los comandos
         from SAGTMA import commands
