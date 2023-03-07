@@ -24,10 +24,61 @@ class ClientNotFoundError(ClientError):
 
 # ========== Validaciones ==========
 
-# ========== Anadidura ==========
+# ========== Registrar ==========
+def register_client(
+    id_number: str, 
+    names: str, 
+    surnames: str, 
+    birthdate: str,
+    phone_number: str, 
+    email: str, 
+    address: str
+):
+    """
+    Crea y anade un cliente en la base de datos.
+
+    Lanza una excepción ClientError si hubo algún error.
+    """
+    # Elimina espacios al comienzo y final del input del form
+    names = names.strip()
+    surnames = surnames.strip()
+    phone_number = phone_number.strip()
+    email = email.strip()
+    address = address.strip()
+
+    if not all(
+        [id_number, names, surnames, birthdate, phone_number, email, address]
+    ):
+        raise MissingFieldError("Todos los campos son obligatorios")
+
+    # ---------------------------------
+    # FALTA VERIFICAR TODOS LOS PARAMETROS
+    # ---------------------------------
+
+    # Verifica si ya existe un cliente con el mismo id_number
+    stmt = db.select(Client).where(Client.id_number == id_number)
+    if db.session.execute(stmt).first():
+        raise AlreadyExistingClientError("El cliente ya existe")
+
+    # Convert birthdate a tipo Date usando la libreria datetime
+    y, m, d = birthdate.split("-")
+    birthdate_t = date(int(y), int(m), int(d))
+
+    # Crea el cliente en la base de datos
+    new_client = Client(
+                    id_number, names, surnames, birthdate_t, phone_number, email, address
+                )
+
+    db.session.add(new_client)
+
+    # Registra el evento en la base de datos
+    events.add_client(new_client.id_number)
+
+
+# ========== Modificar ==========
 def modify_client(
     client_id: int,
-    id_number: int, 
+    id_number: str, 
     names: str, 
     surnames: str, 
     birthdate: str,
@@ -40,6 +91,14 @@ def modify_client(
 
     Lanza una excepción ClientError si hubo algún error.
     """
+    # Elimina espacios al comienzo y final del input del form
+    names = names.strip()
+    surnames = surnames.strip()
+    phone_number = phone_number.strip()
+    email = email.strip()
+    address = address.strip()
+
+    # Verifica si todos los campos fueron ingresados
     if not all(
         [id_number, names, surnames, birthdate, phone_number, email, address]
     ):
@@ -78,6 +137,4 @@ def modify_client(
     client_query[0].address = address.strip()
 
     # Registra el evento en la base de datos
-    # events.add_modify_client(id_number)
-
-    db.session.commit()
+    events.add_modify_client(id_number)

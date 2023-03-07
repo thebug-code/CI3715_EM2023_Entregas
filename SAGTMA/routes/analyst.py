@@ -48,6 +48,7 @@ def client_details() -> Response:
 
     result = db.session.execute(stmt).fetchall()
     _clients = [r for r, in result]
+    print(_clients)
 
     return render_template("analyst/clients.html", clients=_clients)
 
@@ -66,7 +67,7 @@ def register_client() -> Response:
 
     try:
         clients.register_client(
-            id_number, names, surnames, phone_number, email, address
+            id_number, names, surnames, birthdate, phone_number, email, address
         )
     except clients.ClientError as e:
         flash(f"{e}")
