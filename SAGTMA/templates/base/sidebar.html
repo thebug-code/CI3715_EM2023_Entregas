@@ -47,7 +47,7 @@
         {% elif session['role'] == 'Analista de Operaciones' %}
           <li>
             <a
-              href="{{ url_for('clients_details') }}"
+              href="{{ url_for('client_details') }}"
               class="nav-link link {% if active_page == 'clients' %}
                 active fw-bold
               {% endif %}"

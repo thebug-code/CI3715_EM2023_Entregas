@@ -20,7 +20,7 @@ $(document).ready(function () {
         $("#modifyAddress").val(client.address);
         $("#modifyClientForm").attr(
           "action",
-          "/clients-details/modify/" + id + "/"
+          "/client-details/modify/" + id + "/"
         );
       },
     });

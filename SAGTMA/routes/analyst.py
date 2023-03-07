@@ -14,9 +14,9 @@ from SAGTMA.utils.decorators import login_required, requires_roles
 from SAGTMA.models import Client, db
 
 
-@current_app.route("/clients-details/", methods=["GET", "POST"])
+@current_app.route("/client-details/", methods=["GET", "POST"])
 @requires_roles("Analista de Operaciones")
-def clients_details() -> Response:
+def client_details() -> Response:
     """Muestra la lista de clientes añadidos en el sistema"""
     # SELECT * FROM client
     stmt = db.select(Client)
@@ -52,7 +52,7 @@ def clients_details() -> Response:
     return render_template("analyst/clients.html", clients=_clients)
 
 
-@current_app.route("/clients-details/register/", methods=["POST"])
+@current_app.route("/client-details/register/", methods=["POST"])
 @requires_roles("Analista de Operaciones")
 def register_client() -> Response:
     """Registra un cliente en la base de datos."""
@@ -73,10 +73,10 @@ def register_client() -> Response:
 
     # Se permanece en la página
     flash("Cliente añadido exitosamente")
-    return redirect(url_for("clients_details"))
+    return redirect(url_for("client_details"))
 
 
-@current_app.route("/clients-details/modify/<int:client_id>/", methods=["POST"])
+@current_app.route("/client-details/modify/<int:client_id>/", methods=["POST"])
 @login_required
 @requires_roles("Analista de Operaciones")
 def modify_client(client_id):
@@ -99,4 +99,4 @@ def modify_client(client_id):
 
     # Se permanece en la página
     flash("Cliente modificado exitosamente")
-    return redirect(url_for("clients_details"))
+    return redirect(url_for("client_details"))
