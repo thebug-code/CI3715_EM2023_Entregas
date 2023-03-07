@@ -9,7 +9,7 @@ from flask import (
 )
 
 from SAGTMA.utils import clients, events
-from SAGTMA.utils.decorators import requires_roles
+from SAGTMA.utils.decorators import login_required, requires_roles
 
 from SAGTMA.models import Client, db
 
@@ -73,4 +73,30 @@ def register_client() -> Response:
 
     # Se permanece en la página
     flash("Cliente añadido exitosamente")
+    return redirect(url_for("clients_details"))
+
+
+@current_app.route("/clients-details/modify/<int:client_id>/", methods=["POST"])
+@login_required
+@requires_roles("Analista de Operaciones")
+def modify_client(client_id):
+    """Modifica los datos de un cliente en la base de datos"""
+    id_number = request.form.get("id-number")
+    names = request.form.get("names")
+    surnames = request.form.get("surnames")
+    birthdate = request.form.get("birthdate")
+    phone_number = request.form.get("phone-number")
+    email = request.form.get("email")
+    address = request.form.get("address")
+
+    try:
+        clients.modify_client(
+            client_id, id_number, names, surnames, birthdate, \
+                phone_number, email, address
+        )
+    except clients.ClientError as e:
+        flash(f"{e}")
+
+    # Se permanece en la página
+    flash("Cliente modificado exitosamente")
     return redirect(url_for("clients_details"))
