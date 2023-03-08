@@ -101,3 +101,17 @@ def modify_client(client_id):
     # Se permanece en la página
     flash("Cliente modificado exitosamente")
     return redirect(url_for("client_details"))
+
+@current_app.route("/client-details/delete/<int:client_id>/", methods=["POST"])
+@login_required
+@requires_roles("Analista de Operaciones")
+def delete_client(client_id) -> Response:
+    """Elimina un cliente de la base de datos"""
+    try:
+        clients.delete_client(client_id)
+    except clients.ClientError as e:
+        flash(f"{e}")
+
+    # Se permanece en la pagina
+    flash("Cliente eliminado exitosamente")
+    return redirect(url_for("client_details"))

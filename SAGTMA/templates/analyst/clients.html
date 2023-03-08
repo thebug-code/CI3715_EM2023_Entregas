@@ -272,6 +272,44 @@
     </div>
   </div>
 
+{# Modal confirmar eliminar cliente #}
+  <div
+    class="modal fade"
+    id="deleteModal"
+    tabindex="-1"
+    aria-labelledby="deleteModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">Eliminar cliente</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <p>¿Está seguro que desea eliminar este cliente?</p>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Cerrar
+          </button>
+          <form method="post" class="d-inline" id="deleteClientForm">
+            <button type="submit" class="btn btn-danger">Eliminar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="container">
     {# Barra de filtro de clientes #}
     <form
@@ -345,57 +383,7 @@
           </thead>
           <tbody>
             {% for client in clients %}
-              <!-- Modal confirmar eliminar cliente -->
-              <div
-                class="modal fade"
-                id="deleteModal{{ client.id }}"
-                tabindex="-1"
-                aria-labelledby="deleteModalLabel{{ client.id }}}"
-                aria-hidden="true"
-              >
-                <div class="modal-dialog modal-dialog-centered">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5
-                        class="modal-title"
-                        id="deleteModalLabel{{ client.id }}"
-                      >
-                        Eliminar cliente
-                      </h5>
-                      <button
-                        type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal"
-                        aria-label="Close"
-                      ></button>
-                    </div>
-                    <div class="modal-body">
-                      <p>¿Está seguro que desea eliminar este cliente?</p>
-                    </div>
-                    <div class="modal-footer">
-                      <button
-                        type="button"
-                        class="btn btn-secondary"
-                        data-bs-dismiss="modal"
-                      >
-                        Cerrar
-                      </button>
-                      {# <form
-                        action="{{ url_for('delete_user', user_id=client.id) }}"
-                        method="post"
-                        class="d-inline"
-                      >
-                        <input type="hidden" name="client-id" id="client-id" />
-                        <button type="submit" class="btn btn-danger">
-                          Eliminar
-                        </button>
-                      </form> #}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Filas de la tabla -->
+              {# Filas de la tabla #}
               <tr>
                 <td>{{ client.id_number }}</td>
                 <td>{{ client.names }}</td>
@@ -424,12 +412,12 @@
                     />
                   </button>
 
-                  <!-- Botón de eliminar -->
+                  {# Botón de eliminar #}
                   <button
+                    id="delete{{ client.id }}"
                     type="button"
-                    class="btn btn-primary"
+                    class="btn btn-primary delete-client"
                     data-bs-toggle="modal"
-                    data-bs-target="#deleteModal{{ client.id }}"
                   >
                     <img
                       src="{{ url_for('static', filename='img/delete.svg') }}"

@@ -27,14 +27,14 @@ $(document).ready(function () {
   });
 
   // Eliminar cliente
-  //$(document).on("click", ".delete-client", function () {
-  //  var form = $(this);
-  //  id = form.attr("id").match(/\d+/)[0];
+  $(document).on("click", ".delete-client", function () {
+    var form = $(this);
+    id = form.attr("id").match(/\d+/)[0];
 
-  //  $("#deleteModal").modal("show");
-  //  $("#deleteProjectForm").attr(
-  //    "action",
-  //    "/project-portfolio/delete/" + id + "/"
-  //  );
-  //});
+    $("#deleteModal").modal("show");
+    $("#deleteClientForm").attr(
+      "action",
+      "/client-details/delete/" + id + "/"
+    );
+  });
 });

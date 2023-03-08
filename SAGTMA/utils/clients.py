@@ -24,7 +24,7 @@ class ClientNotFoundError(ClientError):
 
 # ========== Validaciones ==========
 
-# ========== Registrar ==========
+# ========== Registro ==========
 def register_client(
     id_number: str, 
     names: str, 
@@ -75,7 +75,7 @@ def register_client(
     events.add_client(new_client.id_number)
 
 
-# ========== Modificar ==========
+# ========== Edicion de datos ==========
 def modify_client(
     client_id: int,
     id_number: str, 
@@ -138,3 +138,23 @@ def modify_client(
 
     # Registra el evento en la base de datos
     events.add_modify_client(id_number)
+
+
+# ========== Eliminacion de clientes ==========
+def delete_client(client_id: int):
+    """
+    Elimina un cliente de la base de datos
+
+    Lanza una excepción ClientError si hubo algún error.
+    """
+    # Busca el cliente con el id indicado y verifica si existe
+    stmt = db.select(Client).where(Client.id == client_id)
+    result = db.session.execute(stmt).first()
+    if not result:
+        raise ClientNotFoundError("El cliente indicado no existe")
+
+    # Elimina el cliente de la base de datos
+    db.session.delete(result[0])
+
+    # Registra el evento en la base de datos
+    events.add_delete_client(result[0].id_number)
