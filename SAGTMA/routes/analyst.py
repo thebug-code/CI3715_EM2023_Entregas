@@ -84,7 +84,7 @@ def register_client() -> Response:
 
 @current_app.route("/clients-details/<int:client_id>/", methods=["GET", "POST"])
 @requires_roles("Analista de Operaciones")
-def vehicle_details(client_id: int) -> Response:
+def client_vehicles(client_id: int) -> Response:
     """Muestra la lista de clientes añadidos en el sistema"""
     # SELECT * FROM client
     stmt = db.select(Client)
@@ -117,12 +117,12 @@ def vehicle_details(client_id: int) -> Response:
     result = db.session.execute(stmt).fetchall()
     _clients = [r for r, in result]
 
-    return render_template("analyst/clients.html", clients=_clients)
+    return render_template("analyst/cars.html", clients=_clients)
 
 
 @current_app.route("/clients-details/<int:client_id>/register/", methods=["POST"])
 @requires_roles("Analista de Operaciones")
-def register_vehicle(client_id: int) -> Response:
+def register_client_vehicle(client_id: int) -> Response:
     """Registra un cliente en la base de datos."""
     id_number = request.form.get("id-number")
     names = request.form.get("names")

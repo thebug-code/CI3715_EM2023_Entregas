@@ -1,13 +1,13 @@
 {% extends 'base/base.html' %}
 {% set active_page = "clients" %}
-{% block title %}Datos del Vehículo{% endblock %}
+{% block title %}Vehículos del Cliente{% endblock %}
 {% block content %}
   <!-- Título de la página centrado en una barra -->
   <div class="d-flex justify-content-center my-4">
-    <h1 class="title-container">Datos de Vehículos</h1>
+    <h1 class="title-container">Vehículos del Cliente</h1>
   </div>
 
-  <!-- Modal de agregar vehículo -->
+  <!-- Modal de agregar cliente -->
   <div
     class="modal fade"
     id="addModal"
@@ -18,7 +18,7 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="addModalLabel">Agregar vehículo</h5>
+          <h5 class="modal-title" id="addModalLabel">Agregar cliente</h5>
           <button
             type="button"
             class="btn-close"
@@ -37,7 +37,7 @@
                 class="form-control"
                 id="id-number"
                 name="id-number"
-                placeholder="Ingrese la cédula del vehículo (X-XXXXXXXX)"
+                placeholder="Ingrese la cédula del cliente (X-XXXXXXXX)"
                 required
                 autofocus
               />
@@ -49,7 +49,7 @@
                 class="form-control"
                 id="names"
                 name="names"
-                placeholder="Ingrese los nombres del vehículo"
+                placeholder="Ingrese los nombres del cliente"
                 required
               />
             </div>
@@ -60,7 +60,7 @@
                 class="form-control"
                 id="surnames"
                 name="surnames"
-                placeholder="Ingrese los apellidos del vehículo"
+                placeholder="Ingrese los apellidos del cliente"
                 required
               />
             </div>
@@ -73,7 +73,7 @@
                 class="form-control"
                 id="birthdate"
                 name="birthdate"
-                placeholder="Ingrese la fecha de nacimiento del vehículo"
+                placeholder="Ingrese la fecha de nacimiento del cliente"
                 required
               />
             </div>
@@ -86,7 +86,7 @@
                 class="form-control"
                 id="phone-number"
                 name="phone-number"
-                placeholder="Ingrese el contacto del vehículo (+58XXXXXXXXXXX)"
+                placeholder="Ingrese el contacto del cliente (+58XXXXXXXXXXX)"
                 required
               />
             </div>
@@ -97,7 +97,7 @@
                 class="form-control"
                 id="email"
                 name="email"
-                placeholder="Ingrese el correo electrónico del vehículo"
+                placeholder="Ingrese el correo electrónico del cliente"
                 required
               />
             </div>
@@ -108,7 +108,7 @@
                 class="form-control"
                 id="address"
                 name="address"
-                placeholder="Ingrese la dirección del vehículo"
+                placeholder="Ingrese la dirección del cliente"
                 required
               />
             </div>
@@ -141,7 +141,7 @@
             name="client-filter"
             type="text"
             class="form-control"
-            placeholder="Buscar vehículo"
+            placeholder="Buscar cliente"
           />
           <button type="submit" class="btn btn-primary">
             <img
@@ -149,7 +149,7 @@
               width="34"
               height="34"
               style="border-radius: 1rem;"
-              title="Buscar vehículo"
+              title="Buscar cliente"
             />
           </button>
           <button
@@ -163,7 +163,7 @@
               width="34"
               height="34"
               style="border-radius: 1rem;"
-              title="Agregar vehículo"
+              title="Agregar cliente"
             />
           </button>
         </div>
@@ -181,15 +181,14 @@
     {% else %}
       <!-- Tabla de clientes -->
       <div class="container table-container">
-        <!-- Letra pequeña -->
+        <!-- Centrado verticalmente -->
         <table
-          class="table table-striped table-hover"
-          style="font-size: 0.8rem;"
+          class="table table-striped table-hover align-middle"
         >
           <!-- Header de la tabla -->
           <thead>
             <tr>
-              <th>Cédula</th>
+              <th style="width: 8.1rem;">Cédula</th>
               <th>Nombres</th>
               <th>Apellidos</th>
               <th>Nacimiento</th>
@@ -201,7 +200,7 @@
           </thead>
           <tbody>
             {% for client in clients %}
-              <!-- Modal de modificar vehículo -->
+              <!-- Modal de modificar cliente -->
               <div
                 class="modal fade"
                 id="modifyModal{{ client.id }}"
@@ -216,7 +215,7 @@
                         class="modal-title"
                         id="editModalLabel{{ client.id }}"
                       >
-                        Modificar vehículo
+                        Modificar cliente
                       </h5>
                       <button
                         type="button"
@@ -241,7 +240,7 @@
                             class="form-control"
                             id="modifyUsername{{ client.id }}"
                             name="username"
-                            placeholder="Ingrese el login del vehículo"
+                            placeholder="Ingrese el login del cliente"
                             value="{{ client.username }}"
                             required
                           />
@@ -255,7 +254,7 @@
                             class="form-control"
                             id="modifyNames{{ client.id }}}"
                             name="names"
-                            placeholder="Ingrese los nombres del vehículo"
+                            placeholder="Ingrese los nombres del cliente"
                             value="{{ client.names }}"
                             required
                           />
@@ -271,7 +270,7 @@
                             class="form-control"
                             id="modifySurnames{{ client.id }}}"
                             name="surnames"
-                            placeholder="Ingrese los apellidos del vehículo"
+                            placeholder="Ingrese los apellidos del cliente"
                             value="{{ client.surnames }}"
                             required
                           />
@@ -313,7 +312,7 @@
                 </div>
               </div>
 
-              <!-- Modal confirmar eliminar vehículo -->
+              <!-- Modal confirmar eliminar cliente -->
               <div
                 class="modal fade"
                 id="deleteModal{{ client.id }}"
@@ -328,7 +327,7 @@
                         class="modal-title"
                         id="deleteModalLabel{{ client.id }}"
                       >
-                        Eliminar vehículo
+                        Eliminar cliente
                       </h5>
                       <button
                         type="button"
@@ -338,7 +337,7 @@
                       ></button>
                     </div>
                     <div class="modal-body">
-                      <p>¿Está seguro que desea eliminar este vehículo?</p>
+                      <p>¿Está seguro que desea eliminar este cliente?</p>
                     </div>
                     <div class="modal-footer">
                       <button
@@ -373,6 +372,24 @@
                 <td>{{ client.email }}</td>
                 <td>{{ client.address }}</td>
                 <td>
+                  <!-- Botón de ir a detalles -->
+                  <a href="{{ url_for('client_vehicles', client_id=client.id) }}">
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                  >
+                    <img
+                      src="{{ url_for('static', filename='img/detail.svg') }}"
+                      width="24"
+                      height="24"
+                      fill="white"
+                      class="table-button"
+                      style="border-radius: 5px;"
+                      title="Ver vehículos"
+                    />
+                  </button>
+                  </a>
+
                   <!-- Botón de modificar -->
                   <button
                     type="button"
@@ -389,7 +406,7 @@
                       class="table-button"
                       value="submit"
                       style="border-radius: 5px;"
-                      title="Modificar vehículo"
+                      title="Modificar cliente"
                     />
                   </button>
 
@@ -408,7 +425,7 @@
                       class="table-button"
                       value="submit"
                       style="border-radius: 5px;"
-                      title="Eliminar vehículo"
+                      title="Eliminar cliente"
                     />
                   </button>
                 </td>
