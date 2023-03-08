@@ -7,7 +7,7 @@
     <h1 class="title-container">Vehículos del Cliente</h1>
   </div>
 
-  <!-- Modal de agregar cliente -->
+  <!-- Modal de agregar vehíclo -->
   <div
     class="modal fade"
     id="addModal"
@@ -18,7 +18,7 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="addModalLabel">Agregar cliente</h5>
+          <h5 class="modal-title" id="addModalLabel">Agregar vehículo</h5>
           <button
             type="button"
             class="btn-close"
@@ -27,88 +27,107 @@
           ></button>
         </div>
         <div class="modal-body">
-          <form action="{{ url_for('register_client') }}" method="post">
+          <form
+            action="{{ url_for('register_client_vehicle', client_id=client.id) }}"
+            method="post"
+          >
             <div class="mb-3">
-              <label for="id-number" class="form-label"
-                >Cédula de Identidad</label
-              >
+              <label for="license-plate" class="form-label">Placa</label>
               <input
                 type="text"
                 class="form-control"
-                id="id-number"
-                name="id-number"
-                placeholder="Ingrese la cédula del cliente (X-XXXXXXXX)"
+                id="license-plate"
+                name="license-plate"
+                placeholder="Ingrese la placa del vehículo"
                 required
                 autofocus
               />
             </div>
             <div class="mb-3">
-              <label for="names" class="form-label">Nombres</label>
+              <label for="brand" class="form-label">Marca</label>
               <input
                 type="text"
                 class="form-control"
-                id="names"
-                name="names"
-                placeholder="Ingrese los nombres del cliente"
+                id="brand"
+                name="brand"
+                placeholder="Ingrese la marca del vehículo"
                 required
               />
             </div>
             <div class="mb-3">
-              <label for="surnames" class="form-label">Apellidos</label>
+              <label for="model" class="form-label">Modelo</label>
               <input
                 type="text"
                 class="form-control"
-                id="surnames"
-                name="surnames"
-                placeholder="Ingrese los apellidos del cliente"
+                id="model"
+                name="model"
+                placeholder="Ingrese el modelo del vehículo"
                 required
               />
             </div>
             <div class="mb-3">
-              <label for="birthdate" class="form-label"
-                >Fecha de Nacimiento</label
+              <label for="year" class="form-label">Año</label>
+              <!-- Rango [1900..2023] -->
+              <input
+                type="number"
+                class="form-control"
+                id="year"
+                name="year"
+                placeholder="Ingrese el año del vehículo"
+                min="1900"
+                max="2023"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="body-number" class="form-label"
+                >Serial de carrocería</label
               >
               <input
-                type="date"
-                class="form-control"
-                id="birthdate"
-                name="birthdate"
-                placeholder="Ingrese la fecha de nacimiento del cliente"
-                required
-              />
-            </div>
-            <div class="mb-3">
-              <label for="phone-number" class="form-label"
-                >Número de teléfono</label
-              >
-              <input
                 type="text"
                 class="form-control"
-                id="phone-number"
-                name="phone-number"
-                placeholder="Ingrese el contacto del cliente (+58XXXXXXXXXXX)"
+                id="body-number"
+                name="body-number"
+                placeholder="Ingrese el serial de carrocería del vehículo"
                 required
               />
             </div>
             <div class="mb-3">
-              <label for="email" class="form-label">Correo electrónico</label>
+              <label for="engine-number" class="form-label"
+                >Serial de motor</label
+              >
               <input
                 type="email"
                 class="form-control"
-                id="email"
-                name="email"
-                placeholder="Ingrese el correo electrónico del cliente"
+                id="engine-number"
+                name="engine-number"
+                placeholder="Ingrese el serial de motor del vehículo"
                 required
               />
             </div>
             <div class="mb-3">
-              <label for="address" class="form-label">Dirección</label>
+              <label for="color" class="form-label">Color</label>
+              <select
+                class="form-select"
+                aria-label="Default select example"
+                name="color"
+                id="color"
+              >
+                {% for color in colors %}
+                  <option value="{{ color }}">
+                    {{ color }}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="problem" class="form-label">Problema</label>
               <input
-                type="text"
+                type="email"
                 class="form-control"
-                id="address"
-                name="address"
-                placeholder="Ingrese la dirección del cliente"
+                id="problem"
+                name="proble"
+                placeholder="Ingrese el problema del vehículo"
                 required
               />
             </div>
@@ -129,19 +148,19 @@
   </div>
 
   <div class="container">
-    <!-- Barra de filtro de clientes -->
+    <!-- Barra de filtro de vehículos -->
     <form
       class="row search-filter"
-      action="{{ url_for('clients_details') }}"
+      action="{{ url_for('client_vehicles', client_id=client.id) }}"
       method="post"
     >
       <div class="col-6 mx-3 my-4">
         <div class="input-group">
           <input
-            name="client-filter"
+            name="vehicle-filter"
             type="text"
             class="form-control"
-            placeholder="Buscar cliente"
+            placeholder="Buscar vehículo"
           />
           <button type="submit" class="btn btn-primary">
             <img
@@ -149,7 +168,7 @@
               width="34"
               height="34"
               style="border-radius: 1rem;"
-              title="Buscar cliente"
+              title="Buscar vehículo"
             />
           </button>
           <button
@@ -163,7 +182,7 @@
               width="34"
               height="34"
               style="border-radius: 1rem;"
-              title="Agregar cliente"
+              title="Agregar vehículo"
             />
           </button>
         </div>
@@ -172,38 +191,37 @@
     </form>
 
     <!-- Si no hay clientes o no se encontraron en la busqueda -->
-    {% if clients|length == 0 %}
+    {% if vehicles|length == 0 %}
       <div class="d-flex justify-content-center my-4">
         <div class="alert alert-danger" role="alert">
-          No se encontraron clientes
+          No se encontraron vehículos
         </div>
       </div>
     {% else %}
-      <!-- Tabla de clientes -->
+      <!-- Tabla de vehículoss -->
       <div class="container table-container">
         <!-- Centrado verticalmente -->
-        <table
-          class="table table-striped table-hover align-middle"
-        >
+        <table class="table table-striped table-hover align-middle">
           <!-- Header de la tabla -->
           <thead>
             <tr>
-              <th style="width: 8.1rem;">Cédula</th>
-              <th>Nombres</th>
-              <th>Apellidos</th>
-              <th>Nacimiento</th>
-              <th>Contacto</th>
-              <th>Email</th>
-              <th>Dirección</th>
+              <th style="width: 6rem;">Placa</th>
+              <th>Marca</th>
+              <th>Modelo</th>
+              <th>Año</th>
+              <th>Serial Carrocería</th>
+              <th>Serial Motor</th>
+              <th>Color</th>
+              <th>Problema</th>
               <th>Acción</th>
             </tr>
           </thead>
           <tbody>
-            {% for client in clients %}
-              <!-- Modal de modificar cliente -->
+            {% for vehicle in vehicles %}
+              <!-- Modal de modificar vehículo -->
               <div
                 class="modal fade"
-                id="modifyModal{{ client.id }}"
+                id="modifyModal{{ vehicle.id }}"
                 tabindex="-1"
                 aria-labelledby="editModalLabel"
                 aria-hidden="true"
@@ -213,9 +231,9 @@
                     <div class="modal-header">
                       <h5
                         class="modal-title"
-                        id="editModalLabel{{ client.id }}"
+                        id="editModalLabel{{ vehicle.id }}"
                       >
-                        Modificar cliente
+                        Modificar vehículo
                       </h5>
                       <button
                         type="button"
@@ -312,12 +330,12 @@
                 </div>
               </div>
 
-              <!-- Modal confirmar eliminar cliente -->
+              <!-- Modal confirmar eliminar vehículo -->
               <div
                 class="modal fade"
-                id="deleteModal{{ client.id }}"
+                id="deleteModal{{ vehicle.id }}"
                 tabindex="-1"
-                aria-labelledby="deleteModalLabel{{ client.id }}}"
+                aria-labelledby="deleteModalLabel{{ vehicle.id }}}"
                 aria-hidden="true"
               >
                 <div class="modal-dialog modal-dialog-centered">
@@ -325,9 +343,9 @@
                     <div class="modal-header">
                       <h5
                         class="modal-title"
-                        id="deleteModalLabel{{ client.id }}"
+                        id="deleteModalLabel{{ vehicle.id }}"
                       >
-                        Eliminar cliente
+                        Eliminar vehículo
                       </h5>
                       <button
                         type="button"
@@ -337,7 +355,10 @@
                       ></button>
                     </div>
                     <div class="modal-body">
-                      <p>¿Está seguro que desea eliminar este cliente?</p>
+                      <p>
+                        ¿Está seguro que desea eliminar este vehículo del
+                        cliente?
+                      </p>
                     </div>
                     <div class="modal-footer">
                       <button
@@ -364,39 +385,22 @@
 
               <!-- Filas de la tabla -->
               <tr>
-                <td>{{ client.id_number }}</td>
-                <td>{{ client.names }}</td>
-                <td>{{ client.surnames }}</td>
-                <td>{{ client.birthdate }}</td>
-                <td>{{ client.phone_number }}</td>
-                <td>{{ client.email }}</td>
-                <td>{{ client.address }}</td>
+                <td>{{ vehicle.license_plate }}</td>
+                <td>{{ vehicle.brand }}</td>
+                <td>{{ vehicle.model }}</td>
+                <td>{{ vehicle.year }}</td>
+                <td>{{ vehicle.body_number }}</td>
+                <td>{{ vehicle.engine_number }}</td>
+                <td>{{ vehicle.color }}</td>
+                <td>{{ vehicle.problem }}</td>
                 <td>
-                  <!-- Botón de ir a detalles -->
-                  <a href="{{ url_for('client_vehicles', client_id=client.id) }}">
-                  <button
-                    type="button"
-                    class="btn btn-primary"
-                  >
-                    <img
-                      src="{{ url_for('static', filename='img/detail.svg') }}"
-                      width="24"
-                      height="24"
-                      fill="white"
-                      class="table-button"
-                      style="border-radius: 5px;"
-                      title="Ver vehículos"
-                    />
-                  </button>
-                  </a>
-
                   <!-- Botón de modificar -->
                   <button
                     type="button"
                     class="btn btn-primary my-2"
                     data-bs-toggle="modal"
-                    data-bs-target="#modifyModal{{ client.id }}"
-                    data-bs-whatever="{{ client.id }}"
+                    data-bs-target="#modifyModal{{ vehicle.id }}"
+                    data-bs-whatever="{{ vehicle.id }}"
                   >
                     <img
                       src="{{ url_for('static', filename='img/edit.svg') }}"
@@ -406,7 +410,7 @@
                       class="table-button"
                       value="submit"
                       style="border-radius: 5px;"
-                      title="Modificar cliente"
+                      title="Modificar vehículo"
                     />
                   </button>
 
@@ -415,7 +419,7 @@
                     type="button"
                     class="btn btn-primary"
                     data-bs-toggle="modal"
-                    data-bs-target="#deleteModal{{ client.id }}"
+                    data-bs-target="#deleteModal{{ vehicle.id }}"
                   >
                     <img
                       src="{{ url_for('static', filename='img/delete.svg') }}"
@@ -425,7 +429,7 @@
                       class="table-button"
                       value="submit"
                       style="border-radius: 5px;"
-                      title="Eliminar cliente"
+                      title="Eliminar vehículo"
                     />
                   </button>
                 </td>

@@ -155,7 +155,6 @@ class Vehicle(db.Model):
         engine_number: str,
         color: str,
         problem: str,
-        owner: Client,
     ):
         self.license_plate = license_plate
         self.brand = brand
@@ -165,7 +164,6 @@ class Vehicle(db.Model):
         self.engine_number = engine_number
         self.color = color
         self.problem = problem
-        self.owner = owner
 
     def __repr__(self) -> str:
         return f"Vehicle<{self.license_plate}: {self.brand} {self.model}>"

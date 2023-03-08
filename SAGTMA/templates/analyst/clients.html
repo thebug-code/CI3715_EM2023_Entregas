@@ -182,9 +182,7 @@
       <!-- Tabla de clientes -->
       <div class="container table-container">
         <!-- Centrado verticalmente -->
-        <table
-          class="table table-striped table-hover align-middle"
-        >
+        <table class="table table-striped table-hover align-middle">
           <!-- Header de la tabla -->
           <thead>
             <tr>
@@ -373,21 +371,20 @@
                 <td>{{ client.address }}</td>
                 <td>
                   <!-- Botón de ir a detalles -->
-                  <a href="{{ url_for('client_vehicles', client_id=client.id) }}">
-                  <button
-                    type="button"
-                    class="btn btn-primary"
+                  <a
+                    href="{{ url_for('client_vehicles', client_id=client.id) }}"
                   >
-                    <img
-                      src="{{ url_for('static', filename='img/detail.svg') }}"
-                      width="24"
-                      height="24"
-                      fill="white"
-                      class="table-button"
-                      style="border-radius: 5px;"
-                      title="Ver vehículos"
-                    />
-                  </button>
+                    <button type="button" class="btn btn-primary">
+                      <img
+                        src="{{ url_for('static', filename='img/detail.svg') }}"
+                        width="24"
+                        height="24"
+                        fill="white"
+                        class="table-button"
+                        style="border-radius: 5px;"
+                        title="Ver vehículos"
+                      />
+                    </button>
                   </a>
 
                   <!-- Botón de modificar -->

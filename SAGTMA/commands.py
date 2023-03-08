@@ -3,7 +3,7 @@ from datetime import date
 
 from flask import current_app
 
-from SAGTMA.models import Project, Role, User, Client, Event, db
+from SAGTMA.models import Project, Role, User, Client, Vehicle, db
 from SAGTMA.utils import profiles
 
 
@@ -93,14 +93,29 @@ def populate_db():
         "La Castellana, Caracas, Al lado del portón rojo",
     )
 
+    car1 = Vehicle(
+        "ABC-123",
+        "Tesla",
+        "Model S",
+        2022,
+        "123456789",
+        "987654321",
+        "Rojo",
+        "El carro no arranca",
+    )
+    car2 = Vehicle(
+        "BAR-12Y",
+        "Toyota",
+        "Festiva",
+        1998,
+        "Negro",
+        "XTYVFUYYJNNVVG98KJ",
+        "XT78FUYYJNNVVG98KJ",
+        "El carro vuela",
+    )
+
+    client.vehicles.append(car1)
+    client.vehicles.append(car2)
+
     db.session.add(client)
-
-    # Crea eventos de prueba
-    stmt = db.select(User)
-    for (user,) in db.session.execute(stmt):
-        new_event = Event(
-            user, "Perfiles de Usuarios", f"Agregar usuario '{user.username}'"
-        )
-        db.session.add(new_event)
-
     db.session.commit()

@@ -11,7 +11,7 @@ from flask import (
 from SAGTMA.utils import clients, events
 from SAGTMA.utils.decorators import requires_roles
 
-from SAGTMA.models import Client, db
+from SAGTMA.models import Client, Vehicle, db
 
 
 # ========== CLIENTES ==========
@@ -81,43 +81,65 @@ def register_client() -> Response:
 
 # ========== VEHÍCULOS ==========
 
+colors = [
+    "Amarillo",
+    "Azul",
+    "Blanco",
+    "Café",
+    "Gris",
+    "Morado",
+    "Negro",
+    "Naranja",
+    "Rojo",
+    "Verde",
+]
+
 
 @current_app.route("/clients-details/<int:client_id>/", methods=["GET", "POST"])
 @requires_roles("Analista de Operaciones")
 def client_vehicles(client_id: int) -> Response:
     """Muestra la lista de clientes añadidos en el sistema"""
-    # SELECT * FROM client
-    stmt = db.select(Client)
+    # Obtiene los datos del cliente
+    stmt = db.select(Client).where(Client.id == client_id)
+    result = db.session.execute(stmt).fetchone()
+    client = result[0]  # Verificar que no sea None
+
+    # Obtiene los vehículos del cliente
+    stmt = db.select(Vehicle).where(Vehicle.owner_id == client_id)
 
     if request.method == "POST":
         # Obtiene los datos del formulario
-        client = request.form.get("client-filter")
+        vehicle = request.form.get("vehicle-filter")
 
-        if client:
-            # WHERE (names || surnames) LIKE '%client%' OR
-            #     id_number LIKE '%client%' OR
-            #     phone_number LIKE '%client%' OR
-            #     email LIKE '%client%' OR
-            #     address LIKE '%client%'
+        if vehicle:
+            # WHERE (license_plate) LIKE '%vehicle%' OR
+            #     (brand || model) LIKE '%vehicle%' OR
+            #     color LIKE '%vehicle%' OR
+            #     body_number LIKE '%vehicle%' OR
+            #     engine_number LIKE '%vehicle%' OR
+            #     problem LIKE '%vehicle%'
             stmt = stmt.where(
                 db.or_(
-                    db.func.lower(Client.names + " " + Client.surnames).like(
-                        f"%{client}%"
+                    Vehicle.license_plate.like(f"%{vehicle}%"),
+                    db.func.lower(Vehicle.brand + " " + Vehicle.model).like(
+                        f"%{vehicle}%"
                     ),
-                    Client.id_number.like(f"%{client}%"),
-                    Client.phone_number.like(f"%{client}%"),
-                    Client.email.like(f"%{client}%"),
-                    Client.address.like(f"%{client}%"),
+                    Vehicle.color.like(f"%{vehicle}%"),
+                    Vehicle.body_number.like(f"%{vehicle}%"),
+                    Vehicle.engine_number.like(f"%{vehicle}%"),
+                    Vehicle.problem.like(f"%{vehicle}%"),
                 )
             )
 
         # Añade el evento de búsqueda
-        events.add_search_client(client)
+        events.add_search_vehicle(vehicle, client.names, client.surnames)
 
     result = db.session.execute(stmt).fetchall()
-    _clients = [r for r, in result]
+    _vehicles = [r for r, in result]
 
-    return render_template("analyst/cars.html", clients=_clients)
+    return render_template(
+        "analyst/cars.html", vehicles=_vehicles, client=client, colors=colors
+    )
 
 
 @current_app.route("/clients-details/<int:client_id>/register/", methods=["POST"])

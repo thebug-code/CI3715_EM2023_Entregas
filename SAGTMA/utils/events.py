@@ -75,9 +75,20 @@ def delete_event(event_id: int):
     _add_event("Logger de eventos", f"Eliminar '{deleted_event.description}'")
 
 
+# =========== Vehículos de los Clientes ===========
+def add_search_vehicle(search: str, client_names: str, client_surnames: str):
+    _add_event(
+        "Vehículos de los Clientes",
+        f"Buscar '{search}' del cliente '{client_names} {client_surnames}'",
+    )
+
+
 # =========== Detalles de los Clientes ===========
 def add_search_client(search: str):
     _add_event("Detalles de los Clientes", f"Buscar '{search}'")
+
+
+# =========== Funciones Auxiliares ==========
 
 
 def _add_event(module: str, description: str):
