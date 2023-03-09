@@ -5,7 +5,7 @@ from SAGTMA.utils.decorators import login_required
 dispatcher = {
     "Administrador": "users_profiles",
     "Gerente de Operaciones": "portfolio",
-    "Analista de Operaciones": "clients_details",
+    "Analista de Operaciones": "client_details",
 }
 
 

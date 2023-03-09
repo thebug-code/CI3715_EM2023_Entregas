@@ -84,6 +84,18 @@ def add_search_vehicle(search: str, client_names: str, client_surnames: str):
 
 
 # =========== Detalles de los Clientes ===========
+def add_client(id_number: str):
+    _add_event("Detalles de los Clientes", f"Agregar cliente '{id_number}'")
+
+
+def add_delete_client(id_number: str):
+    _add_event("Detalles de los Clientes", f"Eliminar cliente '{id_number}'")
+
+
+def add_modify_client(id_number: str):
+    _add_event("Detalles de los Clientes", f"Modificar cliente '{id_number}'")
+
+
 def add_search_client(search: str):
     _add_event("Detalles de los Clientes", f"Buscar '{search}'")
 

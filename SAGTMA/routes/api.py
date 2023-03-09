@@ -2,7 +2,7 @@ from flask import current_app, request, json
 
 from SAGTMA.utils.decorators import login_required, requires_roles
 
-from SAGTMA.models import Project, db
+from SAGTMA.models import Project, Client, db
 
 
 @current_app.route("/api/v1/projects")
@@ -30,3 +30,34 @@ def api_projects():
     ]
 
     return projects
+
+
+@current_app.route("/api/v1/clients")
+@login_required
+@requires_roles("Analista de Operaciones")
+def api_clients():
+    stmt = db.select(Client)
+
+    # Obtiene los parámetros de la request para filtrar por id
+    # y filtra de ser necesario
+    client_id = request.args.get("id")
+    if client_id:
+        stmt = stmt.where(Client.id == client_id)
+
+    # Consulta los clientes requeridos
+    result = db.session.execute(stmt).fetchall()
+    clients = [
+        {
+            "id": client.id,
+            "id_number": client.id_number,
+            "names": client.names,
+            "surnames": client.surnames,
+            "birthdate": client.birthdate.strftime("%Y-%m-%d"),
+            "phone_number": client.phone_number,
+            "email": client.email,
+            "address": client.address
+        }
+        for client, in result
+    ]
+
+    return clients
