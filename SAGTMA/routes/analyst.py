@@ -8,7 +8,7 @@ from flask import (
     url_for,
 )
 
-from SAGTMA.utils import clients, events
+from SAGTMA.utils import clients, events, vehicles
 from SAGTMA.utils.decorators import login_required, requires_roles
 
 from SAGTMA.models import Client, Vehicle, db
@@ -103,6 +103,7 @@ def modify_client(client_id):
     # Se permanece en la página
     flash("Cliente modificado exitosamente")
     return redirect(url_for("client_details"))
+
 
 @current_app.route("/client-details/delete/<int:client_id>/", methods=["POST"])
 @login_required
@@ -204,3 +205,23 @@ def register_client_vehicle(client_id: int) -> Response:
     # Se permanece en la página
     flash("Cliente añadido exitosamente")
     return redirect(url_for("client_details"))
+
+
+@current_app.route("/client-details/<int:vehicle_id>/delete/", methods=["POST"])
+@login_required
+@requires_roles("Analista de Operaciones")
+def delete_vehicle(vehicle_id) -> Response:
+    """Elimina un vehiculo de un cliente de la base de datos"""
+    # Obtiene el vehiculo indicado MOSCA CON ESTO NO ESTOY CLARO
+    stmt = db.select(Vehicle).where(Vehicle.id == vehicle_id)
+    result = db.session.execute(stmt).fetchone()
+    client_id = result[0].id  # Verificar que no sea None
+
+    try:
+        vehicles.delete_vehicle(vehicle_id)
+    except vehicles.ClientError as e:
+        flash(f"{e}")
+
+    # Se permanece en la pagina
+    flash("Vehiculo eliminado exitosamente")
+    return redirect(url_for("client_vehicles", client_id=client_id))
