@@ -90,6 +90,13 @@ def add_search_vehicle(search: str, client_names: str, client_surnames: str):
     )
 
 
+def add_modify_vehicle(brand: str, client_names: str, client_surnames: str):
+    _add_event(
+        "Vehículos de los Clientes",
+        f"Modificar vehiculo '{brand}' del cliente '{client_names} {client_surnames}'",
+    )
+
+
 def add_delete_vehicle(brand: str, client_names: str, client_surnames: str):
     _add_event(
         "Vehículos de los Clientes",

@@ -145,6 +145,140 @@
     </div>
   </div>
 
+  {# Modal de modificar vehículo #}
+  <div
+    class="modal fade"
+    id="modifyModal"
+    tabindex="-1"
+    aria-labelledby="editModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editModalLabel">Modificar vehículo</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <form id="modify-client-vehicle-form" method="post">
+            <div class="mb-3">
+              <label for="modify-license-plate" class="form-label">Placa</label>
+              <input
+                type="text"
+                class="form-control"
+                id="modify-license-plate"
+                name="license-plate"
+                placeholder="Ingrese la placa del vehículo"
+                required
+                autofocus
+              />
+            </div>
+            <div class="mb-3">
+              <label for="modify-brand" class="form-label">Marca</label>
+              <input
+                type="text"
+                class="form-control"
+                id="modify-brand"
+                name="brand"
+                placeholder="Ingrese la marca del vehículo"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="modify-model" class="form-label">Modelo</label>
+              <input
+                type="text"
+                class="form-control"
+                id="modify-model"
+                name="model"
+                placeholder="Ingrese el modelo del vehículo"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="modify-year" class="form-label">Año</label>
+              {# Rango [1900..2023] #}
+              <input
+                type="number"
+                class="form-control"
+                id="modify-year"
+                name="year"
+                placeholder="Ingrese el año del vehículo"
+                min="1900"
+                max="2023"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="modify-body-number" class="form-label"
+                >Serial de carrocería</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="modify-body-number"
+                name="body-number"
+                placeholder="Ingrese el serial de carrocería del vehículo"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="modify-engine-number" class="form-label"
+                >Serial de motor</label
+              >
+              <input
+                class="form-control"
+                id="modify-engine-number"
+                name="engine-number"
+                placeholder="Ingrese el serial de motor del vehículo"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="modify-color" class="form-label">Color</label>
+              <select
+                class="form-select"
+                aria-label="Default select example"
+                name="color"
+                id="modify-color"
+              >
+                {% for color in colors %}
+                  <option value="{{ color }}">
+                    {{ color }}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="modify-problem" class="form-label">Problema</label>
+              <input
+                class="form-control"
+                id="modify-problem"
+                name="problem"
+                placeholder="Ingrese el problema del vehículo"
+                required
+              />
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Cerrar
+              </button>
+              <button type="submit" class="btn btn-primary">Modificar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
   {# Modal confirmar eliminar vehículo #}
   <div
     class="modal fade"
@@ -259,117 +393,7 @@
           </thead>
           <tbody>
             {% for vehicle in vehicles %}
-              {# Modal de modificar vehículo #}
-              <div
-                class="modal fade"
-                id="modifyModal{{ vehicle.id }}"
-                tabindex="-1"
-                aria-labelledby="editModalLabel"
-                aria-hidden="true"
-              >
-                <div class="modal-dialog modal-dialog-centered">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5
-                        class="modal-title"
-                        id="editModalLabel{{ vehicle.id }}"
-                      >
-                        Modificar vehículo
-                      </h5>
-                      <button
-                        type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal"
-                        aria-label="Close"
-                      ></button>
-                    </div>
-                    <div class="modal-body">
-                      {# <form
-                        action="{{ url_for('edit_user', user_id=client.id) }}"
-                        method="post"
-                      >
-                        <div class="mb-3">
-                          <label
-                            for="modifyUsername{{ client.id }}"
-                            class="form-label"
-                            >Login</label
-                          >
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="modifyUsername{{ client.id }}"
-                            name="username"
-                            placeholder="Ingrese el login del cliente"
-                            value="{{ client.username }}"
-                            required
-                          />
-                        </div>
-                        <div class="mb-3">
-                          <label for="modifyNames" class="form-label"
-                            >Nombres</label
-                          >
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="modifyNames{{ client.id }}}"
-                            name="names"
-                            placeholder="Ingrese los nombres del cliente"
-                            value="{{ client.names }}"
-                            required
-                          />
-                        </div>
-                        <div class="mb-3">
-                          <label
-                            for="modifySurnames{{ client.id }}"
-                            class="form-label"
-                            >Apellidos</label
-                          >
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="modifySurnames{{ client.id }}}"
-                            name="surnames"
-                            placeholder="Ingrese los apellidos del cliente"
-                            value="{{ client.surnames }}"
-                            required
-                          />
-                        </div>
-                        <div class="mb-3">
-                          <label
-                            for="modifyRole{{ client.id }}"
-                            class="form-label"
-                            >Rol</label
-                          >
-                          <select class="form-select" name="role">
-                            {% for role in roles %}
-                        <option
-                          value="{{ role.id }}"
-                          {% if role.id == client.role.id %}
-                            selected="selected"
-                          {% endif %}
-                        >
-                          {{ role.name }}
-                        </option>
-                      {% endfor %}
-                          </select>
-                        </div>
-                        <div class="modal-footer">
-                          <button
-                            type="button"
-                            class="btn btn-secondary"
-                            data-bs-dismiss="modal"
-                          >
-                            Cerrar
-                          </button>
-                          <button type="submit" class="btn btn-primary">
-                            Modificar
-                          </button>
-                        </div>
-                      </form> #}
-                    </div>
-                  </div>
-                </div>
-              </div>
+              
 
               {# Filas de la tabla #}
               <tr>
@@ -384,8 +408,9 @@
                 <td>
                   {# Botón de modificar #}
                   <button
+                    id="modify{{ vehicle.id }}"
                     type="button"
-                    class="btn btn-primary my-2"
+                    class="btn btn-primary my-2 modify-client-vehicle"
                     data-bs-toggle="modal"
                   >
                     <img

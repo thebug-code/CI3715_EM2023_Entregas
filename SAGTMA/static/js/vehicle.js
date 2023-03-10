@@ -1,30 +1,31 @@
 $(document).ready(function () {
-  // Modificar cliente
-  //$(document).on("click", ".modify-client", function () {
-  //  var form = $(this);
-  //  id = form.attr("id").match(/\d+/)[0];
+  // Modificar vehiculo de cliente
+  $(document).on("click", ".modify-client-vehicle", function () {
+    var form = $(this);
+    id = form.attr("id").match(/\d+/)[0];
 
-  //  $.getJSON({
-  //    url: "/api/v1/clients",
-  //    data: { id },
-  //    success: function (data) {
-  //      $("#modifyModal").modal("show");
-  //      var client = data[0];
+    $.getJSON({
+      url: "/api/v1/vehicles",
+      data: { id },
+      success: function (data) {
+        $("#modifyModal").modal("show");
+        var client = data[0];
 
-  //      $("#modifyIdNumber").val(client.id_number);
-  //      $("#modifyNames").val(client.names);
-  //      $("#modifySurnames").val(client.surnames);
-  //      $("#modifyBirthdate").val(client.birthdate);
-  //      $("#modifyPhoneNumber").val(client.phone_number);
-  //      $("#modifyEmail").val(client.email);
-  //      $("#modifyAddress").val(client.address);
-  //      $("#modifyClientForm").attr(
-  //        "action",
-  //        "/client-details/modify/" + id + "/"
-  //      );
-  //    },
-  //  });
-  //});
+        $("#modify-license-plate ").val(client.license_plate);
+        $("#modify-brand").val(client.brand);
+        $("#modify-model").val(client.model);
+        $("#modify-year").val(client.year);
+        $("#modify-body-number").val(client.body_number);
+        $("#modify-engine-number").val(client.engine_number);
+        $("#modify-color").val(client.color);
+        $("#modify-problem").val(client.problem);
+        $("#modify-client-vehicle-form").attr(
+          "action",
+          "/client-details/" + id + "/modify"
+        );
+      },
+    });
+  });
 
   // Eliminar vehiculo
   $(document).on("click", ".delete-vehicle", function () {

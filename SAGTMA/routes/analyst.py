@@ -216,6 +216,42 @@ def register_client_vehicle(client_id: int) -> Response:
     return redirect(url_for("client_vehicles", client_id=client_id))
 
 
+@current_app.route("/client-details/<int:vehicle_id>/modify/", methods=["POST"])
+@login_required
+@requires_roles("Analista de Operaciones")
+def modify_client_vehicle(vehicle_id) -> Response:
+    """Modifica los datos de un vehiculo de un cliente de la base de datos"""
+    license_plate = request.form.get("license-plate")
+    brand = request.form.get("brand")
+    model = request.form.get("model")
+    year = int(request.form.get("year"))
+    body_number = request.form.get("body-number")
+    engine_number = request.form.get("engine-number")
+    color = request.form.get("color")
+    problem = request.form.get("problem")
+
+    try:
+        client_id = vehicles.modify_vehicle(
+                  vehicle_id,
+                  license_plate,
+                  brand, 
+                  model, 
+                  year, 
+                  body_number,
+                  engine_number, 
+                  color, 
+                  problem)
+    except vehicles.VehicleError as e:
+        # El vehiculo indicado no existe
+        flash(f"{e}")
+        return redirect(url_for("client_details"))
+
+
+    # Se permanece en la pagina
+    flash("Vehiculo modificado exitosamente")
+    return redirect(url_for("client_vehicles", client_id=client_id))
+
+
 @current_app.route("/client-details/<int:vehicle_id>/delete/", methods=["POST"])
 @login_required
 @requires_roles("Analista de Operaciones")
