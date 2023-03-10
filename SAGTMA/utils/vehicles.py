@@ -30,7 +30,7 @@ def register_client_vehicle(
         license_plate: str, 
         brand: str, 
         model: str, 
-        year: str, 
+        year: int, 
         body_number: str,
         engine_number: str, 
         color: str, 
@@ -45,7 +45,6 @@ def register_client_vehicle(
     license_plate = license_plate.strip()
     brand = brand.strip()
     model = model.strip()
-    year = year.strip()
     body_number = body_number.strip()
     engine_number = engine_number.strip()
     color = color.strip()

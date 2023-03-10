@@ -190,7 +190,7 @@ def register_client_vehicle(client_id: int) -> Response:
     license_plate = request.form.get("license-plate")
     brand = request.form.get("brand")
     model = request.form.get("model")
-    year = request.form.get("year")
+    year = int(request.form.get("year"))
     body_number = request.form.get("body-number")
     engine_number = request.form.get("engine-number")
     color = request.form.get("color")
