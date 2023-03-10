@@ -186,25 +186,33 @@ def client_vehicles(client_id: int) -> Response:
 @current_app.route("/clients-details/<int:client_id>/register/", methods=["POST"])
 @requires_roles("Analista de Operaciones")
 def register_client_vehicle(client_id: int) -> Response:
-    """Registra un cliente en la base de datos."""
-    id_number = request.form.get("id-number")
-    names = request.form.get("names")
-    surnames = request.form.get("surnames")
-    birthdate = request.form.get("birthdate")
-    phone_number = request.form.get("phone-number")
-    email = request.form.get("email")
-    address = request.form.get("address")
+    """Registra un vehiculo de un cliente en la base de datos."""
+    license_plate = request.form.get("license-plate")
+    brand = request.form.get("brand")
+    model = request.form.get("model")
+    year = request.form.get("year")
+    body_number = request.form.get("body-number")
+    engine_number = request.form.get("engine-number")
+    color = request.form.get("color")
+    problem = request.form.get("problem")
 
     try:
-        clients.register_client(
-            id_number, names, surnames, birthdate, phone_number, email, address
-        )
-    except clients.ClientError as e:
+        client_id = vehicles.register_client_vehicle(
+                  client_id,
+                  license_plate,
+                  brand, 
+                  model, 
+                  year, 
+                  body_number,
+                  engine_number, 
+                  color, 
+                  problem)
+    except vehicles.VehicleError as e:
         flash(f"{e}")
 
     # Se permanece en la página
-    flash("Cliente añadido exitosamente")
-    return redirect(url_for("client_details"))
+    flash("Vehiculo añadido exitosamente")
+    return redirect(url_for("client_vehicles", client_id=client_id))
 
 
 @current_app.route("/client-details/<int:vehicle_id>/delete/", methods=["POST"])

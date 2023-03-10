@@ -7,7 +7,7 @@
     <h1 class="title-container">Vehículos del Cliente</h1>
   </div>
 
-  <!-- Modal de agregar vehíclo -->
+  {# Modal de agregar vehíclo #}
   <div
     class="modal fade"
     id="addModal"
@@ -67,7 +67,7 @@
             </div>
             <div class="mb-3">
               <label for="year" class="form-label">Año</label>
-              <!-- Rango [1900..2023] -->
+              {# Rango [1900..2023] #}
               <input
                 type="number"
                 class="form-control"
@@ -97,7 +97,6 @@
                 >Serial de motor</label
               >
               <input
-                type="email"
                 class="form-control"
                 id="engine-number"
                 name="engine-number"
@@ -123,10 +122,9 @@
             <div class="mb-3">
               <label for="problem" class="form-label">Problema</label>
               <input
-                type="email"
                 class="form-control"
                 id="problem"
-                name="proble"
+                name="problem"
                 placeholder="Ingrese el problema del vehículo"
                 required
               />

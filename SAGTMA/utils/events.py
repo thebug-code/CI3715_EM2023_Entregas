@@ -76,6 +76,13 @@ def delete_event(event_id: int):
 
 
 # =========== Vehículos de los Clientes ===========
+def add_vehicle(brand: str, client_names: str, client_surnames: str):
+    _add_event(
+        "Vehículos de los Clientes",
+        f"Anadir '{brand}' al cliente '{client_names} {client_surnames}'",
+    )
+
+
 def add_search_vehicle(search: str, client_names: str, client_surnames: str):
     _add_event(
         "Vehículos de los Clientes",
