@@ -100,7 +100,7 @@ def register_client_vehicle(
 
 
 # ========== Eliminacion de vehiculos ==========
-def delete_vehicle(vehicle_id: int):
+def delete_vehicle(vehicle_id: int) -> int:
     """
     Elimina un vehiculo de un cliente de la base de datos
 
@@ -111,11 +111,17 @@ def delete_vehicle(vehicle_id: int):
     result = db.session.execute(stmt).first()
     if not result:
         raise VehicleNotFoundError("El vehiculo indicado no existe")
+    
+    client_id = result[0].owner.id 
 
     # Elimina el vehiculo de la base de datos
     db.session.delete(result[0])
 
     # Registra el evento en la base de datos
     events.add_delete_vehicle(
-        result[0].brand, result[0].owner.names, result[0].owner.surnames
+        result[0].brand, 
+        result[0].owner.names, 
+        result[0].owner.surnames
     )
+
+    return client_id

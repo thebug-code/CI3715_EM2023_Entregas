@@ -209,6 +209,7 @@ def register_client_vehicle(client_id: int) -> Response:
                   problem)
     except vehicles.VehicleError as e:
         flash(f"{e}")
+        return redirect(url_for("client_details"))
 
     # Se permanece en la página
     flash("Vehiculo añadido exitosamente")
@@ -218,17 +219,16 @@ def register_client_vehicle(client_id: int) -> Response:
 @current_app.route("/client-details/<int:vehicle_id>/delete/", methods=["POST"])
 @login_required
 @requires_roles("Analista de Operaciones")
-def delete_vehicle(vehicle_id) -> Response:
+def delete_client_vehicle(vehicle_id) -> Response:
     """Elimina un vehiculo de un cliente de la base de datos"""
-    # Obtiene el vehiculo indicado MOSCA CON ESTO NO ESTOY CLARO
-    stmt = db.select(Vehicle).where(Vehicle.id == vehicle_id)
-    result = db.session.execute(stmt).fetchone()
-    client_id = result[0].id  # Verificar que no sea None
 
     try:
-        vehicles.delete_vehicle(vehicle_id)
-    except vehicles.ClientError as e:
+        client_id = vehicles.delete_vehicle(vehicle_id)
+    except vehicles.VehicleError as e:
+        # El vehiculo indicado no existe
         flash(f"{e}")
+        return redirect(url_for("client_details"))
+
 
     # Se permanece en la pagina
     flash("Vehiculo eliminado exitosamente")
