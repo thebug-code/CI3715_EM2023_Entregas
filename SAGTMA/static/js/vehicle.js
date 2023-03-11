@@ -33,9 +33,6 @@ $(document).ready(function () {
     id = form.attr("id").match(/\d+/)[0];
 
     $("#deleteModal").modal("show");
-    $("#deleteVehicleForm").attr(
-      "action",
-      "/client-details/" + id + "/delete"
-    );
+    $("#deleteVehicleForm").attr("action", "/client-details/" + id + "/delete");
   });
 });

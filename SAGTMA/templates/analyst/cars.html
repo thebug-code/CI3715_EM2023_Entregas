@@ -7,7 +7,7 @@
     <h1 class="title-container">Vehículos del Cliente</h1>
   </div>
 
-  {# Modal de agregar vehíclo #}
+  {# Modal de agregar vehículo #}
   <div
     class="modal fade"
     id="addModal"
@@ -38,7 +38,7 @@
                 class="form-control"
                 id="license-plate"
                 name="license-plate"
-                placeholder="Ingrese la placa del vehículo"
+                placeholder="Ingrese la placa del vehículo (XXX-XXX)"
                 required
                 autofocus
               />
@@ -279,6 +279,7 @@
       </div>
     </div>
   </div>
+
   {# Modal confirmar eliminar vehículo #}
   <div
     class="modal fade"
@@ -309,11 +310,7 @@
           >
             Cerrar
           </button>
-          <form
-            method="post"
-            id="deleteVehicleForm"
-            class="d-inline"
-          >
+          <form method="post" id="deleteVehicleForm" class="d-inline">
             <input type="hidden" name="client-id" id="client-id" />
             <button type="submit" class="btn btn-danger">Eliminar</button>
           </form>
@@ -393,8 +390,6 @@
           </thead>
           <tbody>
             {% for vehicle in vehicles %}
-              
-
               {# Filas de la tabla #}
               <tr>
                 <td>{{ vehicle.license_plate }}</td>
