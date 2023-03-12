@@ -1,6 +1,8 @@
-from SAGTMA.models import Role
-from SAGTMA.utils import profiles
 from tests import BaseTestClass
+
+# Import selenium stuff
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
 
 
 class TestAuth(BaseTestClass):
@@ -157,19 +159,35 @@ class TestAuth(BaseTestClass):
         # test_register_user(".@example.")
         # test_register_user(".@example.com")
 
+    def try_login(self, username: str, password: str):
+        self.driver.get(f"{self.base_url}/login")
+        username_form = self.driver.find_element(By.ID, "username")
+        password_form = self.driver.find_element(By.ID, "password")
+
+        username_form.send_keys(username)
+        password_form.send_keys(password)
+        password_form.send_keys(Keys.RETURN)
+
+    def test_login_incorrect_user(self):
+        self.try_login("chus", "contraseña falsa")
+
+        self.assertIn("Iniciar Sesión", self.driver.title)
+        self.assertIn("El usuario ingresado no existe", self.driver.page_source)
+        self.assertNotIn("Cerrar sesión", self.driver.page_source)
+
     def test_login_incorrect_password(self):
         """Testea el inicio de sesión con contraseña incorrecta"""
-        # users.register_user(
-        #     "Alice", "Alice@example.com", "Alice123.", "Alice123.", Role.USER
-        # )
+        self.try_login("admin", "Admin123")
 
-        # with self.assertRaises(users.IncorrectPasswordError):
-        #     users.log_user("Alice", "Alice12.")
+        self.assertIn("Iniciar Sesión", self.driver.title)
+        self.assertIn(
+            "Las credenciales ingresadas son incorrectas", self.driver.page_source
+        )
+        self.assertNotIn("Cerrar sesión", self.driver.page_source)
 
     def test_login_correct_password(self):
         """Testea el inicio de sesión con contraseña correcta"""
-        # users.register_user(
-        #     "Alice", "Alice@example.com", "Alice123.", "Alice123.", Role.USER
-        # )
+        self.try_login("admin", "Admin123.")
 
-        # self.assertIsNotNone(users.log_user("Alice", "Alice123."))
+        self.assertIn("Perfiles de Usuarios", self.driver.title)
+        self.assertIn("Cerrar sesión", self.driver.page_source)

@@ -24,15 +24,16 @@ class ClientNotFoundError(ClientError):
 
 # ========== Validaciones ==========
 
+
 # ========== Registro ==========
 def register_client(
-    id_number: str, 
-    names: str, 
-    surnames: str, 
+    id_number: str,
+    names: str,
+    surnames: str,
     birthdate: str,
-    phone_number: str, 
-    email: str, 
-    address: str
+    phone_number: str,
+    email: str,
+    address: str,
 ):
     """
     Crea y anade un cliente en la base de datos.
@@ -46,9 +47,7 @@ def register_client(
     email = email.strip()
     address = address.strip()
 
-    if not all(
-        [id_number, names, surnames, birthdate, phone_number, email, address]
-    ):
+    if not all([id_number, names, surnames, birthdate, phone_number, email, address]):
         raise MissingFieldError("Todos los campos son obligatorios")
 
     # ---------------------------------
@@ -66,8 +65,8 @@ def register_client(
 
     # Crea el cliente en la base de datos
     new_client = Client(
-                    id_number, names, surnames, birthdate_t, phone_number, email, address
-                )
+        id_number, names, surnames, birthdate_t, phone_number, email, address
+    )
 
     db.session.add(new_client)
 
@@ -78,13 +77,13 @@ def register_client(
 # ========== Edicion de datos ==========
 def modify_client(
     client_id: int,
-    id_number: str, 
-    names: str, 
-    surnames: str, 
+    id_number: str,
+    names: str,
+    surnames: str,
     birthdate: str,
-    phone_number: str, 
-    email: str, 
-    address: str
+    phone_number: str,
+    email: str,
+    address: str,
 ):
     """
     Modifica los datos de un cliente en la base de datos
@@ -99,9 +98,7 @@ def modify_client(
     address = address.strip()
 
     # Verifica si todos los campos fueron ingresados
-    if not all(
-        [id_number, names, surnames, birthdate, phone_number, email, address]
-    ):
+    if not all([id_number, names, surnames, birthdate, phone_number, email, address]):
         raise MissingFieldError("Todos los campos son obligatorios")
 
     # ---------------------------------

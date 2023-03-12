@@ -94,8 +94,14 @@ def modify_client(client_id):
 
     try:
         clients.modify_client(
-            client_id, id_number, names, surnames, birthdate, \
-                phone_number, email, address
+            client_id,
+            id_number,
+            names,
+            surnames,
+            birthdate,
+            phone_number,
+            email,
+            address,
         )
     except clients.ClientError as e:
         flash(f"{e}")
@@ -198,15 +204,16 @@ def register_client_vehicle(client_id: int) -> Response:
 
     try:
         client_id = vehicles.register_client_vehicle(
-                  client_id,
-                  license_plate,
-                  brand, 
-                  model, 
-                  year, 
-                  body_number,
-                  engine_number, 
-                  color, 
-                  problem)
+            client_id,
+            license_plate,
+            brand,
+            model,
+            year,
+            body_number,
+            engine_number,
+            color,
+            problem,
+        )
     except vehicles.VehicleError as e:
         flash(f"{e}")
         return redirect(url_for("client_details"))
@@ -232,20 +239,20 @@ def modify_client_vehicle(vehicle_id) -> Response:
 
     try:
         client_id = vehicles.modify_vehicle(
-                  vehicle_id,
-                  license_plate,
-                  brand, 
-                  model, 
-                  year, 
-                  body_number,
-                  engine_number, 
-                  color, 
-                  problem)
+            vehicle_id,
+            license_plate,
+            brand,
+            model,
+            year,
+            body_number,
+            engine_number,
+            color,
+            problem,
+        )
     except vehicles.VehicleError as e:
         # El vehiculo indicado no existe
         flash(f"{e}")
         return redirect(url_for("client_details"))
-
 
     # Se permanece en la pagina
     flash("Vehiculo modificado exitosamente")
@@ -264,7 +271,6 @@ def delete_client_vehicle(vehicle_id) -> Response:
         # El vehiculo indicado no existe
         flash(f"{e}")
         return redirect(url_for("client_details"))
-
 
     # Se permanece en la pagina
     flash("Vehiculo eliminado exitosamente")

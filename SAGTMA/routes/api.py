@@ -55,7 +55,7 @@ def api_clients():
             "birthdate": client.birthdate.strftime("%Y-%m-%d"),
             "phone_number": client.phone_number,
             "email": client.email,
-            "address": client.address
+            "address": client.address,
         }
         for client, in result
     ]
@@ -86,7 +86,7 @@ def api_vehicles():
             "body_number": vehicle.body_number,
             "engine_number": vehicle.engine_number,
             "color": vehicle.color,
-            "problem": vehicle.problem
+            "problem": vehicle.problem,
         }
         for vehicle, in result
     ]
