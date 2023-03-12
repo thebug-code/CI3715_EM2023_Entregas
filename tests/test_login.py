@@ -5,7 +5,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 
 
-class TestAuth(BaseTestClass):
+class TestLogin(BaseTestClass):
     def test_register_invalid_password(self):
         """Testea la creación de usuarios con la contraseñas inválidas.
 
@@ -159,17 +159,8 @@ class TestAuth(BaseTestClass):
         # test_register_user(".@example.")
         # test_register_user(".@example.com")
 
-    def try_login(self, username: str, password: str):
-        self.driver.get(f"{self.base_url}/login")
-        username_form = self.driver.find_element(By.ID, "username")
-        password_form = self.driver.find_element(By.ID, "password")
-
-        username_form.send_keys(username)
-        password_form.send_keys(password)
-        password_form.send_keys(Keys.RETURN)
-
     def test_login_incorrect_user(self):
-        self.try_login("chus", "contraseña falsa")
+        self._login("chus", "contraseña falsa")
 
         self.assertIn("Iniciar Sesión", self.driver.title)
         self.assertIn("El usuario ingresado no existe", self.driver.page_source)
@@ -177,7 +168,7 @@ class TestAuth(BaseTestClass):
 
     def test_login_incorrect_password(self):
         """Testea el inicio de sesión con contraseña incorrecta"""
-        self.try_login("admin", "Admin123")
+        self._login("admin", "Admin123")
 
         self.assertIn("Iniciar Sesión", self.driver.title)
         self.assertIn(
@@ -187,7 +178,28 @@ class TestAuth(BaseTestClass):
 
     def test_login_correct_password(self):
         """Testea el inicio de sesión con contraseña correcta"""
-        self.try_login("admin", "Admin123.")
+        self._login("admin", "Admin123.")
 
         self.assertIn("Perfiles de Usuarios", self.driver.title)
         self.assertIn("Cerrar sesión", self.driver.page_source)
+    
+    def test_login_empty_fields(self):
+        """Testea el inicio de sesión con campos vacíos"""
+        self._login("", "")
+
+        self.assertIn("Iniciar Sesión", self.driver.title)
+        self.assertIn("Necesitas iniciar sesión primero", self.driver.page_source)
+        self.assertNotIn("Cerrar sesión", self.driver.page_source)
+
+    def test_logout(self):
+        """Testea el cierre de sesión"""
+        self._login("admin", "Admin123.")
+
+        self.assertIn("Perfiles de Usuarios", self.driver.title)
+        self.assertIn("Cerrar sesión", self.driver.page_source)
+
+        self._logout()
+
+        self.assertIn("Iniciar Sesión", self.driver.title)
+        self.assertIn("Iniciar sesión", self.driver.page_source)
+        self.assertNotIn("Cerrar sesión", self.driver.page_source)
