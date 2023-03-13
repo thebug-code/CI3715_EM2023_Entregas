@@ -1,11 +1,11 @@
 from tests import BaseTestClass
 
-# Import selenium stuff
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 
 
 class TestLogin(BaseTestClass):
+
     def test_login(self):
         '''Testea el login con credenciales correctas.'''
         self.driver.get("http://localhost:5001/login/")

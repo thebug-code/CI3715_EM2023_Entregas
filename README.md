@@ -43,6 +43,32 @@ flask --app SAGTMA --debug run
 
 5. ¡Listo! La aplicación ahora debería estar en funcionamiento en <http://localhost:5000>.
 
+## Tests
+
+Luego, para correr las pruebas:
+
+1. Inicie el servidor para pruebas automatizadas:
+
+```bash
+flask --app SAGTMA:test_app init-db
+flask --app SAGTMA:test_app run --host 5001
+```
+
+2. Configure las variables de entorno para las pruebas:
+
+```bash
+export HEADLESS=1 # Omita esto si desea ver el navegador en ejecución, set en Windows
+# unset HEADLESS # Si desea luego deshabilitar el modo headless
+
+export WEBDRIVER=Firefox # Cambie a Chrome o Edge según su preferencia, set en Windows
+```
+
+3. En otra terminal, ejecute las pruebas:
+
+```bash
+python -m unittest -v
+```
+
 ## Construido con
 
 - [Flask](https://flask.palletsprojects.com/en/2.0.x/) - El framework utilizado.

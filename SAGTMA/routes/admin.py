@@ -69,6 +69,7 @@ def register() -> Response:
         )
     except profiles.AuthenticationError as e:
         flash(f"{e}")
+        return redirect(url_for("users_profiles"))
 
     # Se permanece en la página
     flash("Usuario registrado exitosamente")
