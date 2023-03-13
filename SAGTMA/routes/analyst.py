@@ -185,7 +185,7 @@ def client_vehicles(client_id: int) -> Response:
     _vehicles = [r for r, in result]
 
     return render_template(
-        "analyst/cars.html", vehicles=_vehicles, client=client, colors=colors
+        "analyst/vehicles.html", vehicles=_vehicles, client=client, colors=colors
     )
 
 
