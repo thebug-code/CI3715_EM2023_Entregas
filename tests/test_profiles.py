@@ -149,7 +149,6 @@ class TestProfiles(BaseTestClass):
         -No tiene caracteres especiales distintos de '_' (guión bajo)
         -No comienza con un caracter numérico
         """
-        
 
     def test_register_mismatched_password(self):
         """Testea la creación de usuarios cuando la contraseña y su
@@ -157,9 +156,7 @@ class TestProfiles(BaseTestClass):
 
         self._login_admin()
 
-        self._register_user(
-            "test1", "Alice123.", "Alice123", "Alicia", "Maravilla"
-        )
+        self._register_user("test1", "Alice123.", "Alice123", "Alicia", "Maravilla")
         WebDriverWait(self.driver, 1).until(
             expected_conditions.visibility_of_element_located(
                 (By.CSS_SELECTOR, ".toast-body")
@@ -172,6 +169,7 @@ class TestProfiles(BaseTestClass):
         self.assertNotIn(
             "test1", self.driver.find_element(By.CSS_SELECTOR, ".table").text
         )
+
 
 #     # def test_register_user(username: str):
 #     #     with self.assertRaises(users.InvalidUsernameError):

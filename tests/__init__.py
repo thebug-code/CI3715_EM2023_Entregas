@@ -6,6 +6,7 @@ import SAGTMA
 from SAGTMA.models import Role, User, db
 from SAGTMA.utils.profiles import hash_password
 
+
 class BaseTestClass(unittest.TestCase):
     def setUp(self):
         # Puebla la base de datos para el conjunto de tests, si es necesario
@@ -80,7 +81,7 @@ class BaseTestClass(unittest.TestCase):
         db.session.add(admin_user)
 
         db.session.commit()
-    
+
     def tearDown(self):
         # Cierra el driver de Selenium
         self.driver.close()
