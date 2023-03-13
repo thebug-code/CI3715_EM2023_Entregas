@@ -179,10 +179,8 @@ def register_client_vehicle(
 
     # Registra el evento en la base de datos
     events.add_vehicle(
-        new_vehicle.brand, new_vehicle.owner.names, new_vehicle.owner.surnames
+        new_vehicle.brand, new_vehicle.owner.id_number
     )
-
-    return new_vehicle.owner.id
 
 
 # ========== Modicar datos de Vehiculos ==========
@@ -196,7 +194,7 @@ def modify_vehicle(
     engine_number: str,
     color: str,
     problem: str,
-) -> int:
+):
     """
     Modifica los datos un vehiculo de un cliente de la base de datos
 
@@ -258,12 +256,9 @@ def modify_vehicle(
 
     # Registra el evento en la base de datos
     events.add_modify_vehicle(
-        vehicle_query[0].brand,
-        vehicle_query[0].owner.names,
-        vehicle_query[0].owner.surnames,
+        edited_vehicle.brand,
+        edited_vehicle.owner.id_number
     )
-
-    return vehicle_query[0].owner.id
 
 
 def delete_vehicle(vehicle_id: int) -> int:
@@ -278,14 +273,10 @@ def delete_vehicle(vehicle_id: int) -> int:
     if not result:
         raise VehicleNotFoundError("El vehiculo indicado no existe")
 
-    client_id = result[0].owner.id
-
     # Elimina el vehiculo de la base de datos
     db.session.delete(result[0])
 
     # Registra el evento en la base de datos
     events.add_delete_vehicle(
-        result[0].brand, result[0].owner.names, result[0].owner.surnames
+        result[0].brand, result[0].owner.id_number
     )
-
-    return client_id

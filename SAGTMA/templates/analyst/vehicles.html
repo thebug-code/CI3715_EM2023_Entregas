@@ -129,6 +129,10 @@
                 required
               />
             </div>
+
+            <!-- Id del cliente -->
+            <input type="hidden" name="client-id" value="{{ client.id }}" />
+
             <div class="modal-footer">
               <button
                 type="button"
@@ -264,6 +268,15 @@
                 required
               />
             </div>
+
+            <!-- Id del cliente invisible -->
+            <input
+              type="hidden"
+              id="modify-client-id"
+              name="client-id"
+              value="{{ client.id }}"
+            />
+
             <div class="modal-footer">
               <button
                 type="button"
@@ -311,6 +324,7 @@
             Cerrar
           </button>
           <form method="post" id="deleteVehicleForm" class="d-inline">
+            <!-- Id de cliente invisible -->
             <input type="hidden" name="client-id" id="client-id" />
             <button type="submit" class="btn btn-danger">Eliminar</button>
           </form>

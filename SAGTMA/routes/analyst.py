@@ -179,7 +179,7 @@ def client_vehicles(client_id: int) -> Response:
             )
 
         # Añade el evento de búsqueda
-        events.add_search_vehicle(vehicle, client.names, client.surnames)
+        events.add_search_vehicle(vehicle, client.id_number)
 
     result = db.session.execute(stmt).fetchall()
     _vehicles = [r for r, in result]
@@ -187,7 +187,6 @@ def client_vehicles(client_id: int) -> Response:
     return render_template(
         "analyst/vehicles.html", vehicles=_vehicles, client=client, colors=colors
     )
-
 
 @current_app.route("/clients-details/<int:client_id>/register/", methods=["POST"])
 @requires_roles("Analista de Operaciones")
@@ -203,7 +202,7 @@ def register_client_vehicle(client_id: int) -> Response:
     problem = request.form.get("problem")
 
     try:
-        client_id = vehicles.register_client_vehicle(
+        vehicles.register_client_vehicle(
             client_id,
             license_plate,
             brand,
@@ -216,7 +215,7 @@ def register_client_vehicle(client_id: int) -> Response:
         )
     except vehicles.VehicleError as e:
         flash(f"{e}")
-        return redirect(url_for("client_details"))
+        return redirect(url_for("client_vehicles", client_id=client_id))
 
     # Se permanece en la página
     flash("Vehiculo añadido exitosamente")
@@ -236,9 +235,10 @@ def modify_client_vehicle(vehicle_id) -> Response:
     engine_number = request.form.get("engine-number")
     color = request.form.get("color")
     problem = request.form.get("problem")
+    client_id = int(request.form.get("client-id"))
 
     try:
-        client_id = vehicles.modify_vehicle(
+        vehicles.modify_vehicle(
             vehicle_id,
             license_plate,
             brand,
@@ -252,7 +252,7 @@ def modify_client_vehicle(vehicle_id) -> Response:
     except vehicles.VehicleError as e:
         # El vehiculo indicado no existe
         flash(f"{e}")
-        return redirect(url_for("client_details"))
+        return redirect(url_for("client_vehicles", client_id=client_id))
 
     # Se permanece en la pagina
     flash("Vehiculo modificado exitosamente")
@@ -264,13 +264,14 @@ def modify_client_vehicle(vehicle_id) -> Response:
 @requires_roles("Analista de Operaciones")
 def delete_client_vehicle(vehicle_id) -> Response:
     """Elimina un vehiculo de un cliente de la base de datos"""
+    client_id = int(request.form.get("client-id"))
 
     try:
-        client_id = vehicles.delete_vehicle(vehicle_id)
+        vehicles.delete_vehicle(vehicle_id)
     except vehicles.VehicleError as e:
         # El vehiculo indicado no existe
         flash(f"{e}")
-        return redirect(url_for("client_details"))
+        return redirect(url_for("client_vehicles", client_id=client_id))
 
     # Se permanece en la pagina
     flash("Vehiculo eliminado exitosamente")

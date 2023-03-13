@@ -76,31 +76,31 @@ def delete_event(event_id: int):
 
 
 # =========== Vehículos de los Clientes ===========
-def add_vehicle(brand: str, client_names: str, client_surnames: str):
+def add_vehicle(brand: str, id_number: str):
     _add_event(
         "Vehículos de los Clientes",
-        f"Anadir '{brand}' al cliente '{client_names} {client_surnames}'",
+        f"Anadir '{brand}' al cliente '{id_number}'",
     )
 
 
-def add_search_vehicle(search: str, client_names: str, client_surnames: str):
+def add_search_vehicle(search: str, id_number: str):
     _add_event(
         "Vehículos de los Clientes",
-        f"Buscar '{search}' del cliente '{client_names} {client_surnames}'",
+        f"Buscar '{search}' del cliente '{id_number}'",
     )
 
 
-def add_modify_vehicle(brand: str, client_names: str, client_surnames: str):
+def add_modify_vehicle(brand: str, id_number: str):
     _add_event(
         "Vehículos de los Clientes",
-        f"Modificar vehiculo '{brand}' del cliente '{client_names} {client_surnames}'",
+        f"Modificar vehiculo '{brand}' del cliente '{id_number}'",
     )
 
 
-def add_delete_vehicle(brand: str, client_names: str, client_surnames: str):
+def add_delete_vehicle(brand: str, id_number: str):
     _add_event(
         "Vehículos de los Clientes",
-        f"Eliminar vehiculo '{brand}' del cliente '{client_names} {client_surnames}'",
+        f"Eliminar vehiculo '{brand}' del cliente '{id_number}'",
     )
 
 
