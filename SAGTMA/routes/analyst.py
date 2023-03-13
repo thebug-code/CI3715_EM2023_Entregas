@@ -73,6 +73,7 @@ def register_client() -> Response:
         )
     except clients.ClientError as e:
         flash(f"{e}")
+        return redirect(url_for("client_details"))
 
     # Se permanece en la página
     flash("Cliente añadido exitosamente")
@@ -105,6 +106,7 @@ def modify_client(client_id):
         )
     except clients.ClientError as e:
         flash(f"{e}")
+        return redirect(url_for("client_details"))
 
     # Se permanece en la página
     flash("Cliente modificado exitosamente")
@@ -120,6 +122,7 @@ def delete_client(client_id) -> Response:
         clients.delete_client(client_id)
     except clients.ClientError as e:
         flash(f"{e}")
+        return redirect(url_for("client_details"))
 
     # Se permanece en la pagina
     flash("Cliente eliminado exitosamente")
