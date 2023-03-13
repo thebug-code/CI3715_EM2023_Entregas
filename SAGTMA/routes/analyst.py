@@ -188,6 +188,7 @@ def client_vehicles(client_id: int) -> Response:
         "analyst/vehicles.html", vehicles=_vehicles, client=client, colors=colors
     )
 
+
 @current_app.route("/clients-details/<int:client_id>/register/", methods=["POST"])
 @requires_roles("Analista de Operaciones")
 def register_client_vehicle(client_id: int) -> Response:

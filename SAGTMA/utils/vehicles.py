@@ -178,9 +178,7 @@ def register_client_vehicle(
     client_query[0].vehicles.append(new_vehicle)
 
     # Registra el evento en la base de datos
-    events.add_vehicle(
-        new_vehicle.brand, new_vehicle.owner.id_number
-    )
+    events.add_vehicle(new_vehicle.brand, new_vehicle.owner.id_number)
 
 
 # ========== Modicar datos de Vehiculos ==========
@@ -255,10 +253,7 @@ def modify_vehicle(
     edited_vehicle.problem = problem
 
     # Registra el evento en la base de datos
-    events.add_modify_vehicle(
-        edited_vehicle.brand,
-        edited_vehicle.owner.id_number
-    )
+    events.add_modify_vehicle(edited_vehicle.brand, edited_vehicle.owner.id_number)
 
 
 def delete_vehicle(vehicle_id: int) -> int:
@@ -277,6 +272,4 @@ def delete_vehicle(vehicle_id: int) -> int:
     db.session.delete(result[0])
 
     # Registra el evento en la base de datos
-    events.add_delete_vehicle(
-        result[0].brand, result[0].owner.id_number
-    )
+    events.add_delete_vehicle(result[0].brand, result[0].owner.id_number)
