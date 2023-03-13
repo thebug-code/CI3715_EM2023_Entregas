@@ -3,6 +3,7 @@ from datetime import date
 from SAGTMA.models import Vehicle, Client, db
 from SAGTMA.utils import events
 from datetime import date
+from SAGTMA.utils.profiles import validate_names
 
 
 # ========== Excepciones ==========
@@ -22,7 +23,98 @@ class VehicleNotFoundError(VehicleError):
     pass
 
 
+class InvalidLicensePlateError(VehicleError):
+    pass
+
+
+class InvalidSerialNumberError(VehicleError):
+    pass
+
+
+class InvalidColorError(VehicleError):
+    pass
+
+
+class InvalidYearError(VehicleError):
+    pass
+
+
 # ========== Validaciones ==========
+def validate_license_plate(license_plate: str) -> bool:
+    """Lanza una excepción si la placa de un vehiculo no es válida.
+
+    Una placa es válida si:
+      -Tiene al menos 5 caracteres y a lo sumo 10 caracteres
+      -No tiene caracteres especiales distintos de '- ' (guión y espacio)
+      -No tiene espacios/guiones consecutivos
+    """
+    if len(license_plate) < 5 or len(license_plate) > 10:
+        raise InvalidLicensePlateError("La placa debe tener entre 5 y 10 caracteres")
+
+    if not license_plate[0].isalpha():
+        raise InvalidLicensePlateError(
+            "La placa debe comenzar con un caracter alfanumérico"
+        )
+
+    # Chequea que no haya caracteres especiales más que guiones o espacios, y que no haya espacios consecutivos
+    for i, char in enumerate(license_plate):
+        if not char.isalnum() and char not in "- ":
+            raise InvalidLicensePlateError(
+                "La placa solo puede contener caracteres alfanuméricos, guiones y espacios"
+            )
+        if char in "- " and license_plate[i - 1] in "- ":
+            raise InvalidLicensePlateError(
+                "La placa no puede contener espacios/guiones consecutivos"
+            )
+
+
+def validate_serial_number(serial_number: str) -> bool:
+    """Lanza una excepción si el número de serie no es válido.
+
+    Un número de serie es válido si:
+      -Tiene al menos 5 caracteres y a lo sumo 20 caracteres
+      -Solo tiene caracteres alfanuméricos o guiones
+    """
+    if len(serial_number) < 5 or len(serial_number) > 20:
+        raise InvalidSerialNumberError(
+            "El número de serie debe tener entre 5 y 20 caracteres"
+        )
+
+    for char in serial_number:
+        if not char.isalnum() and char != "-":
+            raise InvalidSerialNumberError(
+                "El número de serie solo puede contener caracteres alfanuméricos y guiones"
+            )
+
+
+def validate_color(color: str) -> bool:
+    """Lanza una excepción si el color no es válido.
+
+    Un color es válido si:
+      -Tiene al menos 2 caracteres y a lo sumo 20 caracteres
+      -Solo tiene caracteres alfanuméricos o espacios
+    """
+    if len(color) < 2 or len(color) > 20:
+        raise InvalidColorError("El color debe tener entre 2 y 20 caracteres")
+
+    for char in color:
+        if not char.isalnum() and char != " ":
+            raise InvalidColorError(
+                "El color solo puede contener caracteres alfanuméricos y espacios"
+            )
+
+
+def validate_year(year: int):
+    """Lanza una excepción si el año no es válido.
+
+    Un año es válido si:
+      -Es un número entero
+      -Es menor o igual al año actual
+    """
+    if year < 1900 or year > date.today().year + 1:
+        raise InvalidYearError(
+            "El año debe ser un número entero entre 1900 y el año actual + 1"
+        )
 
 
 # ========== Registro de Vehiculos ==========
@@ -48,7 +140,6 @@ def register_client_vehicle(
     model = model.strip()
     body_number = body_number.strip()
     engine_number = engine_number.strip()
-    color = color.strip()
     problem = problem.strip()
 
     # Verifica si no hay campos vacios
@@ -57,9 +148,19 @@ def register_client_vehicle(
     ):
         raise MissingFieldError("Todos los campos son obligatorios")
 
-    # ---------------------------------
-    # FALTA VERIFICAR TODOS LOS PARAMETROS
-    # ---------------------------------
+    # Chequea si los campos son válidos
+    validate_license_plate(license_plate)
+    validate_names(brand)
+    validate_names(model)
+    validate_serial_number(body_number)
+    validate_serial_number(engine_number)
+    validate_color(color)
+    validate_year(year)
+
+    if len(problem) > 120:
+        raise VehicleError(
+            "La descripción del problema no puede tener más de 120 caracteres"
+        )
 
     # Verifica si ya existe un vehiculo con la misma placa
     stmt = db.select(Vehicle).where(Vehicle.license_plate == license_plate)
@@ -71,7 +172,7 @@ def register_client_vehicle(
         license_plate, brand, model, year, body_number, engine_number, color, problem
     )
 
-    # Busca al cliente y le anade su nuevo vehiculo
+    # Busca al cliente y le añade su nuevo vehiculo
     stmt = db.select(Client).where(Client.id == client_id)
     client_query = db.session.execute(stmt).first()
     client_query[0].vehicles.append(new_vehicle)
@@ -101,15 +202,12 @@ def modify_vehicle(
 
     Lanza una excepción VehicleError si hubo algún error.
     """
-    print("fjffjfjfjfjfj")
-
     # Elimina espacios al comienzo y final del input del form
     license_plate = license_plate.strip()
     brand = brand.strip()
     model = model.strip()
     body_number = body_number.strip()
     engine_number = engine_number.strip()
-    color = color.strip()
     problem = problem.strip()
 
     # Verifica si no hay campos vacios
@@ -118,9 +216,19 @@ def modify_vehicle(
     ):
         raise MissingFieldError("Todos los campos son obligatorios")
 
-    # ---------------------------------
-    # FALTA VERIFICAR TODOS LOS PARAMETROS
-    # ---------------------------------
+    # Chequea si los campos son válidos
+    validate_license_plate(license_plate)
+    validate_names(brand)
+    validate_names(model)
+    validate_serial_number(body_number)
+    validate_serial_number(engine_number)
+    validate_color(color)
+    validate_year(year)
+
+    if len(problem) > 120:
+        raise VehicleError(
+            "La descripción del problema no puede tener más de 120 caracteres"
+        )
 
     # Verifica si ya existe un vehiculo con la misma placa
     stmt = (
@@ -136,16 +244,17 @@ def modify_vehicle(
     vehicle_query = db.session.execute(stmt).first()
     if not vehicle_query:
         raise VehicleNotFoundError("El vehiculo indicado no existe")
+    (edited_vehicle,) = vehicle_query
 
     # Actualiza los datos del vehiculo
-    vehicle_query[0].license_plate = license_plate
-    vehicle_query[0].brand = brand
-    vehicle_query[0].model = model
-    vehicle_query[0].year = year
-    vehicle_query[0].body_number = body_number
-    vehicle_query[0].engine_number = engine_number
-    vehicle_query[0].color = color
-    vehicle_query[0].problem = problem
+    edited_vehicle.license_plate = license_plate
+    edited_vehicle.brand = brand
+    edited_vehicle.model = model
+    edited_vehicle.year = year
+    edited_vehicle.body_number = body_number
+    edited_vehicle.engine_number = engine_number
+    edited_vehicle.color = color
+    edited_vehicle.problem = problem
 
     # Registra el evento en la base de datos
     events.add_modify_vehicle(
