@@ -8,7 +8,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 class TestProfiles(BaseTestClass):
     def _login_admin(self):
-        self.driver.get("http://localhost:5001/login/")
+        self.driver.get("http://localhost:5000/login/")
 
         self.driver.find_element(By.ID, "username").click()
         self.driver.find_element(By.ID, "username").send_keys("admin")
