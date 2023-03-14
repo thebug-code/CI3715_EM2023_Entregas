@@ -62,7 +62,9 @@ def validate_id(id_number: str) -> str:
     # Expresión regular para validar cédulas de identidad
     regex = r"[V|E|J|G|C]-\d{7,8}"
     if not re.fullmatch(regex, id_number):
-        raise InvalidIdNumberError("La cédula ingresada es inválida, debe tener el formato V-12345678")
+        raise InvalidIdNumberError(
+            "La cédula ingresada es inválida, debe tener el formato V-12345678"
+        )
 
     return id_number
 
@@ -154,7 +156,8 @@ def register_client(
 
     # Convert birthdate a tipo Date usando la libreria datetime
     y, m, d = birthdate.split("-")
-    birthdate_t = date(int(y), int(m), int(d))
+    y, m, d = int(y), int(m), int(d)
+    birthdate_t = date(y, m, d)
 
     if y < 1907:
         raise ClientError("El año de nacimiento es inválido")
@@ -226,7 +229,11 @@ def modify_client(
 
     # Convert birthdate a tipo Date usando la libreria datetime
     y, m, d = birthdate.split("-")
-    birthdate_t = date(int(y), int(m), int(d))
+    y, m, d = int(y), int(m), int(d)
+    birthdate_t = date(y, m, d)
+
+    if y < 1907:
+        raise ClientError("El año de nacimiento es inválido")
 
     # Actualiza los datos del cliente
     client_query[0].id_number = id_number

@@ -68,8 +68,7 @@ class TestPortfolio(BaseTestClass):
             )
 
             self.assertIn(
-                description,
-                self.driver.find_element(By.CSS_SELECTOR, ".table").text
+                description, self.driver.find_element(By.CSS_SELECTOR, ".table").text
             )
 
         self._login_manager()
