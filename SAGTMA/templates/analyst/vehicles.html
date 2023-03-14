@@ -325,7 +325,12 @@
           </button>
           <form method="post" id="deleteVehicleForm" class="d-inline">
             <!-- Id de cliente invisible -->
-            <input type="hidden" name="client-id" id="client-id" />
+            <input
+              type="hidden"
+              name="client-id"
+              id="client-id"
+              value="{{ client.id }}"
+            />
             <button type="submit" class="btn btn-danger">Eliminar</button>
           </form>
         </div>
