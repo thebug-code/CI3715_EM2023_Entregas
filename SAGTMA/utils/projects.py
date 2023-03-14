@@ -44,7 +44,7 @@ def validate_descrip_project(description: str) -> bool:
         )
 
     for char in description:
-        if not char.isalnum() and char not in " -_?¿¡!:":
+        if not char.isalnum() and char not in " -_?¿¡!:.,":
             raise InvalidDescripProjectError(
                 "La descripción de un proyecto no puede contener caracteres especiales."
             )

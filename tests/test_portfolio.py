@@ -74,5 +74,11 @@ class TestPortfolio(BaseTestClass):
 
         self._login_manager()
 
-        # Proyecto válido
-        _test_register_project_valid("¡Pr!")
+        # Proyecto válido con descripción corta
+        _test_register_project_valid("Proyec")
+
+        # Proyecto válido con descripción larga
+        _test_register_project_valid(
+            "Esta es la descripción de proyecto automotriz válido más largo que"
+            " puede darse según el sistema, si."
+        )
