@@ -104,8 +104,8 @@ class Client(db.Model):
     names = db.Column(db.String(50), nullable=False)
     surnames = db.Column(db.String(50), nullable=False)
     birthdate = db.Column(db.Date, nullable=False)
-    phone_number = db.Column(db.String(20), unique=True, nullable=False)
-    email = db.Column(db.String(80), unique=True, nullable=False)
+    phone_number = db.Column(db.String(20), nullable=False)
+    email = db.Column(db.String(80), nullable=False)
     address = db.Column(db.String(120), nullable=False)
     vehicles = db.relationship("Vehicle", backref="owner", cascade="all, delete-orphan")
 
