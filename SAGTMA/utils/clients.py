@@ -156,7 +156,7 @@ def register_client(
     y, m, d = birthdate.split("-")
     birthdate_t = date(int(y), int(m), int(d))
 
-    if y < 1907:
+    if int(y) < 1907:
         raise ClientError("El año de nacimiento es inválido")
 
     # Crea el cliente en la base de datos

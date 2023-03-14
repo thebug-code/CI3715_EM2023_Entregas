@@ -108,9 +108,9 @@ def populate_db():
         "Toyota",
         "Festiva",
         1998,
-        "Negro",
         "XTYVFUYYJNNVVG98KJ",
         "XT78FUYYJNNVVG98KJ",
+        "Negro",
         "El carro vuela",
     )
 
