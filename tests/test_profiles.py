@@ -45,6 +45,11 @@ class TestProfiles(BaseTestClass):
             By.CSS_SELECTOR, ".modal-footer:nth-child(7) > .btn-primary"
         ).click()
         self.driver.find_element(By.CSS_SELECTOR, ".toast-body").click()
+        WebDriverWait(self.driver, 1).until(
+            expected_conditions.visibility_of_element_located(
+                (By.CSS_SELECTOR, ".toast-body")
+            )
+        )
 
     def test_register_invalid_password(self):
         """Testea registros de usuarios con contraseñas inválidas.
@@ -60,11 +65,6 @@ class TestProfiles(BaseTestClass):
 
         def _test_register_invalid_password(password: str, message: str):
             self._register_user("test1", password, password, "Alicia", "Maravilla")
-            WebDriverWait(self.driver, 1).until(
-                expected_conditions.visibility_of_element_located(
-                    (By.CSS_SELECTOR, ".toast-body")
-                )
-            )
 
             self.assertEqual(
                 self.driver.find_element(By.CSS_SELECTOR, ".toast-body").text, message
@@ -120,11 +120,7 @@ class TestProfiles(BaseTestClass):
                 f"Alicia{id}",
                 f"Maravilla{id}",
             )
-            WebDriverWait(self.driver, 1).until(
-                expected_conditions.visibility_of_element_located(
-                    (By.CSS_SELECTOR, ".toast-body")
-                )
-            )
+
             self.assertEqual(
                 self.driver.find_element(By.CSS_SELECTOR, ".toast-body").text,
                 "Usuario registrado exitosamente",
@@ -150,6 +146,40 @@ class TestProfiles(BaseTestClass):
         -No comienza con un caracter numérico
         """
 
+        def _test_register_invalid_user(username: str, message: str):
+            self._register_user(username, "Pass123.", "Pass123.", "Ca", "Rlos")
+
+            self.assertEqual(
+                self.driver.find_element(By.CSS_SELECTOR, ".toast-body").text,
+                message,
+            )
+            self.assertNotIn(
+                "ca", self.driver.find_element(By.CSS_SELECTOR, ".table").text
+            )
+
+        self._login_admin()
+
+        # Usuario con menos de 3 caracteres
+        _test_register_invalid_user(
+            "ca", "El nombre de usuario debe tener entre 3 y 20 caracteres."
+        )
+
+        # Usuario con más de 20 caracteres
+        _test_register_invalid_user(
+            "John_Doe_The_Best_Username",
+            "El nombre de usuario debe tener entre 3 y 20 caracteres.",
+        )
+
+        # Usuario con caracteres especiales
+        _test_register_invalid_user(
+            "wal.", "El nombre de usuario no puede contener caracteres especiales."
+        )
+
+        # Usuario que comienza con número
+        _test_register_invalid_user(
+            "1test", "El nombre de usuario no puede comenzar con un número."
+        )
+
     def test_register_mismatched_password(self):
         """Testea la creación de usuarios cuando la contraseña y su
         verificacion no coinciden"""
@@ -157,11 +187,7 @@ class TestProfiles(BaseTestClass):
         self._login_admin()
 
         self._register_user("test1", "Alice123.", "Alice123", "Alicia", "Maravilla")
-        WebDriverWait(self.driver, 1).until(
-            expected_conditions.visibility_of_element_located(
-                (By.CSS_SELECTOR, ".toast-body")
-            )
-        )
+
         self.assertEqual(
             self.driver.find_element(By.CSS_SELECTOR, ".toast-body").text,
             "Las contraseñas ingresadas no coinciden",
@@ -170,71 +196,13 @@ class TestProfiles(BaseTestClass):
             "test1", self.driver.find_element(By.CSS_SELECTOR, ".table").text
         )
 
+    def test_register_duplicated_username(self):
+        """Testea la creación de usuarios con nombre de usuario ya registrado"""
+        self._login_admin()
 
-#     # def test_register_user(username: str):
-#     #     with self.assertRaises(users.InvalidUsernameError):
-#     #         users.register_user(
-#     #             username,
-#     #             f"{username}@example.com",
-#     #             "Hola123.",
-#     #             "Hola123.",
-#     #             Role.USER,
-#     #         )
-
-#     # # Con menos de 3 caracteres
-#     # test_register_user("ka")
-
-#     # # Con más de 20 caracteres
-#     # test_register_user("John_Doe_The_Best_Username")
-
-#     # # Con caracteres especiales
-#     # test_register_user("val.")
-
-#     # # Empieza con un número
-#     # test_register_user("1user")
-
-# def test_register_mismatched_password(self):
-#     """Testea la creación de usuarios cuando la contraseña y su
-#     verificacion no coinciden
-#     """
-#     # with self.assertRaises(users.PasswordMismatchError):
-#     #     users.register_user(
-#     #         "Alice", "Alice@example.com", "Alice123.", "Alice12.", Role.USER
-#     #     )
-
-# def test_register_duplicated_username(self):
-#     """Testea la creación de usuarios con nombre de usuario o correo ya
-#     registrados
-#     """
-#     # # Crea el usuario base
-#     # users.register_user(
-#     #     "Alice", "Alice@example.com", "Alice123.", "Alice123.", Role.USER
-#     # )
-
-#     # with self.assertRaises(users.AlreadyExistingUserError):
-#     #     # Usuario ya registrado
-#     #     users.register_user(
-#     #         "Alice", "Alice_dup@example.com", "Alice123.", "Alice123.", Role.USER
-#     #     )
-
-#     # with self.assertRaises(users.AlreadyExistingUserError):
-#     #     # Correo ya registrado
-#     #     users.register_user(
-#     #         "Alice_dup", "Alice@example.com", "Alice123.", "Alice123.", Role.USER
-#     #     )
-
-# def test_register_invalid_email(self):
-#     """Se testea la creación de usuarios con correos inválidos"""
-
-#     # def test_register_user(email: str):
-#     #     with self.assertRaises(users.InvalidEmailError):
-#     #         users.register_user(
-#     #             "generic_user", email, "Hola123.", "Hola123.", Role.USER
-#     #         )
-
-#     # test_register_user("Aliceexample.com")
-#     # test_register_user("Alice@examplecom")
-#     # test_register_user("Alice@example.a")
-#     # test_register_user("Alice@example.")
-#     # test_register_user(".@example.")
-#     # test_register_user(".@example.com")
+        self._register_user("test1", "Pass123.", "Pass123.", "UsuarioPrueba", "Uno")
+        self._register_user("test1", "Pass123.", "Pass123.", "UsuarioPrueba", "Uno")
+        self.assertEqual(
+            self.driver.find_element(By.CSS_SELECTOR, ".toast-body").text,
+            "El nombre de usuario ya existe",
+        )
