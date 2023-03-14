@@ -138,7 +138,7 @@ def register_client(
         raise MissingFieldError("Todos los campos son obligatorios")
 
     # Chequea si los campos son válidos
-    validate_id(id_number)
+    id_number = validate_id(id_number)
     validate_names(names)
     validate_names(surnames)
     phone_number = validate_phone_number(phone_number)
@@ -201,7 +201,7 @@ def modify_client(
         raise MissingFieldError("Todos los campos son obligatorios")
 
     # Chequea si los campos son válidos
-    validate_id(id_number)
+    id_number = validate_id(id_number)
     validate_names(names)
     validate_names(surnames)
     phone_number = validate_phone_number(phone_number)

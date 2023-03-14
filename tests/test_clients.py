@@ -73,7 +73,6 @@ class TestClients(BaseTestClass):
             )
         )
 
-
     def test_register_client_valid(self):
         """Testea la creación de clientes válidos."""
 
@@ -110,7 +109,7 @@ class TestClients(BaseTestClass):
             "alanturing@usb.ve",
             "Chacaito",
         )
-        
+
         # Cédula distinta
         _test_register_client_valid(
             "j-1234567",
@@ -121,10 +120,10 @@ class TestClients(BaseTestClass):
             "alanturing@usb.ve",
             "Chacaito",
         )
-        
+
         # Nombres y apellidos corto/largo
         _test_register_client_valid(
-            "V-12345678",
+            "V-92345678",
             "Ka",
             "Bolivar Palacios y Blanco de la Santisima Trinid",
             "06/23/1912",
@@ -133,3 +132,54 @@ class TestClients(BaseTestClass):
             "Charallave",
         )
 
+        # Fecha de nacimiento al límite
+        _test_register_client_valid(
+            "V-1234678",
+            "Chavez",
+            "Maduro",
+            "01/01/1907",
+            "0412 345. 6789",
+            "chav@ez.co",
+            "San Antonio de los Altos",
+        )
+
+        # Otros formatos de teléfono
+        _test_register_client_valid(
+            "V-2234678",
+            "Nombre",
+            "Generico",
+            "01/01/1907",
+            "412 (345) 67.89",
+            "chav@ez.co",
+            "No Sé",
+        )
+
+        _test_register_client_valid(
+            "V-3234678",
+            "Jesus",
+            "David",
+            "01/01/1907",
+            "58 412 345 6789",
+            "jdavis@isb.co",
+            "La Victoria",
+        )
+
+        _test_register_client_valid(
+            "V-4234678",
+            "Perez",
+            "Rodriguez",
+            "01/01/1907",
+            "+58412-345.6789",
+            "perez@rod.net",
+            "Bajo un Puente",
+        )
+
+        _test_register_client_valid(
+            "V-2346789",
+            "Nombre",
+            "Extraño",
+            "01/01/1907",
+            "0058.412(345)67-89",
+            "nombre@gmail.com",
+            "Sambil",
+        )
