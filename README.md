@@ -51,7 +51,7 @@ Luego, para correr las pruebas:
 
 ```bash
 flask --app SAGTMA:test_app init-db
-flask --app SAGTMA:test_app run --host 5001
+flask --app SAGTMA:test_app run --port 5001
 ```
 
 2. Configure las variables de entorno para las pruebas:

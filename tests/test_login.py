@@ -7,7 +7,7 @@ from selenium.webdriver.common.by import By
 class TestLogin(BaseTestClass):
     def test_login(self):
         """Testea el login con credenciales correctas."""
-        self.driver.get("http://localhost:5000/login/")
+        self.driver.get("http://localhost:5001/login/")
         self.driver.find_element(By.ID, "username").send_keys("admin")
         self.driver.find_element(By.ID, "password").click()
         self.driver.find_element(By.ID, "password").send_keys("Admin123.")
@@ -18,7 +18,7 @@ class TestLogin(BaseTestClass):
 
     def test_login_incorrect_password(self):
         """Testea el login con credenciales incorrectas."""
-        self.driver.get("http://localhost:5000/login/")
+        self.driver.get("http://localhost:5001/login/")
         self.driver.find_element(By.ID, "username").send_keys("admin")
         self.driver.find_element(By.ID, "username").send_keys(Keys.ENTER)
         self.driver.find_element(By.ID, "password").click()
@@ -31,7 +31,7 @@ class TestLogin(BaseTestClass):
 
     def test_logout(self):
         """Testea el cierre de sesión"""
-        self.driver.get("http://localhost:5000/login/")
+        self.driver.get("http://localhost:5001/login/")
         self.driver.find_element(By.ID, "username").send_keys("admin")
         self.driver.find_element(By.ID, "password").click()
         self.driver.find_element(By.ID, "password").send_keys("Admin123.")

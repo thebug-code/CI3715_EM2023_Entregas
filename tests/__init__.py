@@ -46,7 +46,7 @@ class BaseTestClass(unittest.TestCase):
         if headless:
             options.add_argument("-headless")
         self.driver = getattr(webdriver, webdriver_name)(options=options)
-        self.base_url = "http://localhost:5000"
+        self.base_url = "http://localhost:5001"
 
     def populate_db(self):
         # Crea los roles
