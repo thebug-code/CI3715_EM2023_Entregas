@@ -165,7 +165,7 @@ def register_client_vehicle(
     # Verifica si ya existe un vehiculo con la misma placa
     stmt = db.select(Vehicle).where(Vehicle.license_plate == license_plate)
     if db.session.execute(stmt).first():
-        raise AlreadyExistingVehicleError("El vehiculo indicado ya existe")
+        raise AlreadyExistingVehicleError("El vehículo indicado ya existe")
 
     # Crea el Vehiculo en la base de datos
     new_vehicle = Vehicle(
@@ -233,13 +233,13 @@ def modify_vehicle(
         .where(Vehicle.id != vehicle_id)
     )
     if db.session.execute(stmt).first():
-        raise AlreadyExistingVehicleError("El vehiculo ya existe")
+        raise AlreadyExistingVehicleError("El vehículo ya existe")
 
     # Busca el vehiculo con el id indicado y verifica si existe
     stmt = db.select(Vehicle).where(Vehicle.id == vehicle_id)
     vehicle_query = db.session.execute(stmt).first()
     if not vehicle_query:
-        raise VehicleNotFoundError("El vehiculo indicado no existe")
+        raise VehicleNotFoundError("El vehículo indicado no existe")
     (edited_vehicle,) = vehicle_query
 
     # Actualiza los datos del vehiculo
@@ -266,7 +266,7 @@ def delete_vehicle(vehicle_id: int) -> int:
     stmt = db.select(Vehicle).where(Vehicle.id == vehicle_id)
     result = db.session.execute(stmt).first()
     if not result:
-        raise VehicleNotFoundError("El vehiculo indicado no existe")
+        raise VehicleNotFoundError("El vehículo indicado no existe")
 
     # Elimina el vehiculo de la base de datos
     db.session.delete(result[0])

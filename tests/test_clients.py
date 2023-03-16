@@ -23,7 +23,7 @@ class TestClients(BaseTestClass):
         db.session.commit()
 
     def _login_analyst(self):
-        self.driver.get("http://localhost:5001/login/")
+        self.driver.get(f"{self.base_url}/login/")
 
         self.driver.find_element(By.ID, "username").click()
         self.driver.find_element(By.ID, "username").send_keys("analyst")

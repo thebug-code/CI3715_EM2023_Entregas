@@ -222,7 +222,7 @@ def register_client_vehicle(client_id: int) -> Response:
         return redirect(url_for("client_vehicles", client_id=client_id))
 
     # Se permanece en la página
-    flash("Vehiculo añadido exitosamente")
+    flash("Vehículo añadido exitosamente")
     return redirect(url_for("client_vehicles", client_id=client_id))
 
 
@@ -259,7 +259,7 @@ def modify_client_vehicle(vehicle_id) -> Response:
         return redirect(url_for("client_vehicles", client_id=client_id))
 
     # Se permanece en la pagina
-    flash("Vehiculo modificado exitosamente")
+    flash("Vehículo modificado exitosamente")
     return redirect(url_for("client_vehicles", client_id=client_id))
 
 
@@ -278,5 +278,5 @@ def delete_client_vehicle(vehicle_id) -> Response:
         return redirect(url_for("client_vehicles", client_id=client_id))
 
     # Se permanece en la pagina
-    flash("Vehiculo eliminado exitosamente")
+    flash("Vehículo eliminado exitosamente")
     return redirect(url_for("client_vehicles", client_id=client_id))
