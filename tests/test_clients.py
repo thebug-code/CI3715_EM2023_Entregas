@@ -135,7 +135,9 @@ class TestClients(BaseTestClass):
 
         # Fecha de nacimiento al límite
         eighteen_years_ago = datetime.date.today() - datetime.timedelta(days=19 * 365)
-        one_hundred_years_ago = datetime.date.today() - datetime.timedelta(days=99 * 365)
+        one_hundred_years_ago = datetime.date.today() - datetime.timedelta(
+            days=99 * 365
+        )
         _test_register_client_valid(
             "V-1234678",
             "Chavez",
@@ -145,7 +147,7 @@ class TestClients(BaseTestClass):
             "chav@ez.co",
             "San Antonio de los Altos",
         )
-        
+
         _test_register_client_valid(
             "V-1234178",
             "Raul",
@@ -260,23 +262,55 @@ class TestClients(BaseTestClass):
 
         # Mayor a 100 años
         one_hundred_years_ago = datetime.date.today() - datetime.timedelta(
-            days=365 * 102 
+            days=365 * 102
         )
         _test_register_client_invalid_birthdate(
-            one_hundred_years_ago.strftime("%m/%d/%Y"),  "La edad máxima para registrarse es 100 años"
+            one_hundred_years_ago.strftime("%m/%d/%Y"),
+            "La edad máxima para registrarse es 100 años",
         )
 
         # Menor a 18 años
         eighteen_years_ago = datetime.date.today() - datetime.timedelta(
             days=365 * 18 + 1
         )
-        
+
         _test_register_client_invalid_birthdate(
-            eighteen_years_ago.strftime("%m/%d/%Y"), "La edad mínima para registrarse es 18 años"
+            eighteen_years_ago.strftime("%m/%d/%Y"),
+            "La edad mínima para registrarse es 18 años",
         )
 
         # Hoy
         _test_register_client_invalid_birthdate(
             datetime.date.today().strftime("%m/%d/%Y"),
             "La edad mínima para registrarse es 18 años",
+        )
+
+    def test_register_client_already_registered(self):
+        """Testea la creación de clientes con cédula ya registrada."""
+
+        self._login_analyst()
+
+        self._register_client(
+            "V-12345678",
+            "UsuarioPrueba",
+            "Hola",
+            "01/01/2001",
+            "+584244444444",
+            "hola@hol.aaa",
+            "República Popular China",
+        )
+        
+        self._register_client(
+            "V-12345678",
+            "UsuarioPrueba2",
+            "Hola3",
+            "01/01/2002",
+            "+58-424 444 4555",
+            "hola@hal.ooo",
+            "Taiwán",
+        )
+        
+        self.assertEqual(
+            self.driver.find_element(By.CSS_SELECTOR, ".toast-body").text,
+            "Ya existe un cliente con la misma cédula",
         )

@@ -5,6 +5,7 @@ from SAGTMA.models import Client, db
 from SAGTMA.utils import events
 from SAGTMA.utils.profiles import validate_names
 
+
 # ========== Excepciones ==========
 class ClientError(ValueError):
     pass
@@ -110,6 +111,7 @@ def validate_email(email: str):
     if not re.fullmatch(regex, email):
         raise InvalidEmailError("El correo electrónico ingresado es inválido")
 
+
 def validate_birthdate(birthdate: datetime.date):
     """Lanza una excepción si la fecha de nacimiento no es válida
 
@@ -117,12 +119,17 @@ def validate_birthdate(birthdate: datetime.date):
     La edad máxima es 100 años.
     """
     today = datetime.date.today()
-    age = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
+    age = (
+        today.year
+        - birthdate.year
+        - ((today.month, today.day) < (birthdate.month, birthdate.day))
+    )
 
     if age < 18:
         raise ClientError("La edad mínima para registrarse es 18 años")
     elif age > 100:
         raise ClientError("La edad máxima para registrarse es 100 años")
+
 
 # ========== Registro ==========
 def register_client(
@@ -164,7 +171,7 @@ def register_client(
     # Verifica si ya existe un cliente con el mismo id_number
     stmt = db.select(Client).where(Client.id_number == id_number)
     if db.session.execute(stmt).first():
-        raise AlreadyExistingClientError("El cliente ya existe")
+        raise AlreadyExistingClientError("Ya existe un cliente con la misma cédula")
 
     # Convert birthdate a tipo Date usando la libreria datetime
     y, m, d = birthdate.split("-")
@@ -231,7 +238,7 @@ def modify_client(
         .where(Client.id != client_id)
     )
     if db.session.execute(stmt).first():
-        raise AlreadyExistingClientError("El cliente ya existe")
+        raise AlreadyExistingClientError("Ya existe un cliente con la misma cédula")
 
     # Busca el cliente con el id indicado y verifica si existe
     stmt = db.select(Client).where(Client.id == client_id)

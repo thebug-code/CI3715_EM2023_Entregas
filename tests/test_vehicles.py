@@ -187,3 +187,79 @@ class TestClients(BaseTestClass):
             "El problema más largo que vas a poder imaginarte que un carro "
             "puede tener, no sé ni cómo pudiera describirlo pero aja.",
         )
+
+    def test_register_vehicle_invalid_license_plate(self):
+        """Testea la creación de vehículos con placas inválidas."""
+
+        def _test_register_vehicle_invalid_license_plate(
+            license_plate: str, message: str
+        ):
+            self._register_vehicle(
+                license_plate,
+                "Tesla",
+                "Model S",
+                "2023",
+                "ABCDEF1234",
+                "1234ABCDEF",
+                "No sirve el cargador",
+            )
+            self.assertEqual(
+                self.driver.find_element(By.CSS_SELECTOR, ".toast-body").text,
+                message,
+            )
+
+        self._login_analyst()
+
+        # Placa muy corta
+        _test_register_vehicle_invalid_license_plate(
+            "NR16", "La placa debe tener entre 5 y 10 caracteres"
+        )
+
+        # Placa muy larga
+        _test_register_vehicle_invalid_license_plate(
+            "NR2160DAAC1", "La placa debe tener entre 5 y 10 caracteres"
+        )
+
+        # Placa con dos guiones o espacios juntos
+        _test_register_vehicle_invalid_license_plate(
+            "NR--16D", "La placa no puede contener espacios/guiones consecutivos"
+        )
+
+        _test_register_vehicle_invalid_license_plate(
+            "NR  16D", "La placa no puede contener espacios/guiones consecutivos"
+        )
+
+        # Placa comienza con guión
+        _test_register_vehicle_invalid_license_plate(
+            "-NR116D", "La placa debe comenzar con un caracter alfanumérico"
+        )
+        
+    def test_vehicle_already_exists(self):
+        """Testea la creación de vehículos que ya existen."""
+
+        self._login_analyst()
+
+        self._register_vehicle(
+            "NRR-16D",
+            "Chevrolet",
+            "Aveo",
+            "1978",
+            "ABCDEFG01234567",
+            "1234567ABCDEFG",
+            "Se le dañó la caja!",
+        )
+
+        self._register_vehicle(
+            "NRR-16D",
+            "Chevrolet",
+            "Aveo",
+            "1978",
+            "ABCDEFG01234567",
+            "1234567ABCDEFG",
+            "Se le dañó la caja!",
+        )
+
+        self.assertEqual(
+            self.driver.find_element(By.CSS_SELECTOR, ".toast-body").text,
+            "El vehículo indicado ya existe",
+        )
