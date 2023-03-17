@@ -87,7 +87,7 @@ def validate_serial_number(serial_number: str):
             )
 
         if char in "- " and serial_number[i - 1] in "- ":
-            raise InvalidLicensePlateError(
+            raise InvalidSerialNumberError(
                 "La placa no puede contener espacios/guiones consecutivos"
             )
 
