@@ -68,7 +68,7 @@ def validate_license_plate(license_plate: str) -> bool:
             )
 
 
-def validate_serial_number(serial_number: str) -> bool:
+def validate_serial_number(serial_number: str):
     """Lanza una excepción si el número de serie no es válido.
 
     Un número de serie es válido si:
@@ -86,8 +86,13 @@ def validate_serial_number(serial_number: str) -> bool:
                 "El número de serie solo puede contener caracteres alfanuméricos y guiones"
             )
 
+        if char in "- " and serial_number[i - 1] in "- ":
+            raise InvalidLicensePlateError(
+                "La placa no puede contener espacios/guiones consecutivos"
+            )
 
-def validate_color(color: str) -> bool:
+
+def validate_color(color: str):
     """Lanza una excepción si el color no es válido.
 
     Un color es válido si:
