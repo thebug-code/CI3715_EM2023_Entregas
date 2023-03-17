@@ -3,7 +3,7 @@ from tests import BaseTestClass
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
-from SAGTMA.models import User, Role, db
+from SAGTMA.models import User, Role, Client, Vehicle, db
 from SAGTMA.utils.profiles import hash_password
 import datetime
 
@@ -19,8 +19,32 @@ class TestClients(BaseTestClass):
         analyst_user = User(
             "analyst", "Bad", "Bunny", hash_password("Analyst123."), analyst
         )
-        db.session.add(analyst_user)
 
+        # Añade un cliente y un vehículo
+        client = Client(
+            "V-11122345",
+            "Cliente",
+            "De Prueba",
+            datetime.date(1974, 3, 16),
+            "+584254635122",
+            "testclient@locatel.com.ve",
+            "Wock to Poland",
+        )
+
+        car = Vehicle(
+            "ABC-123",
+            "Toyota",
+            "Corolla",
+            2018,
+            "A123456789",
+            "987654321B",
+            "Negro",
+            "Clutch no funciona",
+        )
+        client.vehicles.append(car)
+        client.id = 0
+
+        db.session.add_all([analyst_user, client])
         db.session.commit()
 
     def _login_analyst(self):
@@ -285,13 +309,41 @@ class TestClients(BaseTestClass):
             "La edad mínima para registrarse es 18 años",
         )
 
+    def test_register_client_invalid_phone(self):
+        """Testea la creación de clientes con teléfono inválido."""
+
+        def _test_register_client_invalid_phone(phone: str):
+            self._register_client(
+                "V-12345678",
+                "UsuarioPrueba",
+                "Hola",
+                "01/01/2001",
+                phone,
+                "usb@usb.usb",
+                "Universida Simo Boliva",
+            )
+
+            self.assertEqual(
+                self.driver.find_element(By.CSS_SELECTOR, ".toast-body").text,
+                "El número de teléfono ingresado no tiene un formato válido",
+            )
+
+        self._login_analyst()
+
+        # Con codigo de otro país
+        _test_register_client_invalid_phone("+14244444444")
+
+        # Distinto de 10 digitos
+        _test_register_client_invalid_phone("412 123.456")
+        _test_register_client_invalid_phone("412 123.4567.8")
+
     def test_register_client_already_registered(self):
         """Testea la creación de clientes con cédula ya registrada."""
 
         self._login_analyst()
 
         self._register_client(
-            "V-12345678",
+            "V-11122345",
             "UsuarioPrueba",
             "Hola",
             "01/01/2001",
@@ -300,17 +352,58 @@ class TestClients(BaseTestClass):
             "República Popular China",
         )
 
-        self._register_client(
-            "V-12345678",
-            "UsuarioPrueba2",
-            "Hola3",
-            "01/01/2002",
-            "+58-424 444 4555",
-            "hola@hal.ooo",
-            "Taiwán",
+        self.assertEqual(
+            self.driver.find_element(By.CSS_SELECTOR, ".toast-body").text,
+            "Ya existe un cliente con la misma cédula",
+        )
+
+    def test_delete_client(self):
+        """Testea la eliminación de clientes."""
+
+        self._login_analyst()
+
+        self.driver.find_element(By.CSS_SELECTOR, "#delete0 > .table-button").click()
+
+        WebDriverWait(self.driver, 1).until(
+            expected_conditions.visibility_of_element_located(
+                (By.CSS_SELECTOR, "#deleteModal .modal-header")
+            )
+        )
+
+        # Cancela la eliminación
+        self.driver.find_element(
+            By.CSS_SELECTOR, ".modal-footer:nth-child(3) > .btn"
+        ).click()
+
+        self.assertIn(
+            "testclient@locatel.com.ve",
+            self.driver.find_element(By.CSS_SELECTOR, ".table").text,
+        )
+
+        self.driver.find_element(By.CSS_SELECTOR, "#delete0 > .table-button").click()
+
+        WebDriverWait(self.driver, 1).until(
+            expected_conditions.visibility_of_element_located(
+                (By.CSS_SELECTOR, "#deleteModal .modal-header")
+            )
+        )
+
+        self.driver.find_element(By.CSS_SELECTOR, ".btn-danger").click()
+
+        # Assert that the client was deleted
+        WebDriverWait(self.driver, 1).until(
+            expected_conditions.visibility_of_element_located(
+                (By.CSS_SELECTOR, ".toast-body")
+            )
         )
 
         self.assertEqual(
             self.driver.find_element(By.CSS_SELECTOR, ".toast-body").text,
-            "Ya existe un cliente con la misma cédula",
+            "Cliente eliminado exitosamente",
+        )
+
+        # Assert that the client is not in the table
+        self.assertEqual(
+            "No se encontraron clientes",
+            self.driver.find_element(By.CSS_SELECTOR, ".alert").text,
         )

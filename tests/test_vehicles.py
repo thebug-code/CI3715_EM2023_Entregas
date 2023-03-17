@@ -3,7 +3,7 @@ from tests import BaseTestClass
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
-from SAGTMA.models import User, Role, Client, db
+from SAGTMA.models import User, Role, Client, Vehicle, db
 from SAGTMA.utils.profiles import hash_password
 import datetime
 
@@ -29,6 +29,20 @@ class TestClients(BaseTestClass):
             "ChuS@usb.ve",
             "Por ahi en un lugar",
         )
+        
+        new_car = Vehicle(
+            "AAA-111",
+            "Toyota",
+            "Corolla",
+            2010,
+            "123456789A",
+            "A987654321",
+            "Gris",
+            "Caja dañada (como siempre)",
+        )
+        new_car.id = 0
+
+        new_client.vehicles.append(new_car)
 
         db.session.add_all([analyst_user, new_client])
 
@@ -43,6 +57,7 @@ class TestClients(BaseTestClass):
         self.driver.find_element(By.ID, "password").click()
         self.driver.find_element(By.ID, "password").send_keys("Analyst123.")
         self.driver.find_element(By.CSS_SELECTOR, ".btn-primary").click()
+        self.driver.get(f"{self.base_url}/clients-details/1/")
 
     def _register_vehicle(
         self,
@@ -54,7 +69,6 @@ class TestClients(BaseTestClass):
         engine_number: str,
         problem: str,
     ):
-        self.driver.get(f"{self.base_url}/clients-details/1/")
         self.driver.find_element(
             By.CSS_SELECTOR, ".input-group > .btn:nth-child(3)"
         ).click()
@@ -365,4 +379,71 @@ class TestClients(BaseTestClass):
         self.assertEqual(
             self.driver.find_element(By.CSS_SELECTOR, ".toast-body").text,
             "El vehículo indicado ya existe",
+        )
+
+    def test_delete_vehicle(self):
+        """Testea la eliminación de vehículos."""
+
+        self._login_analyst()
+
+        self._register_vehicle(
+            "NRR-16D",
+            "Chevrolet",
+            "Aveo",
+            "1978",
+            "ABCDEFG01234567",
+            "1234567ABCDEFG",
+            "Se le dañó la caja!",
+        )
+
+    def test_delete_vehicle(self):
+        """Testea la eliminación de vehículos."""
+
+        self._login_analyst()
+
+        self
+        self.driver.find_element(By.CSS_SELECTOR, "#delete0 > .table-button").click()
+
+        WebDriverWait(self.driver, 1).until(
+            expected_conditions.visibility_of_element_located(
+                (By.CSS_SELECTOR, "#deleteModal .modal-header")
+            )
+        )
+
+        # Cancela la eliminación
+        self.driver.find_element(
+            By.CSS_SELECTOR, ".modal-footer:nth-child(3) > .btn"
+        ).click()
+
+        self.assertIn(
+            "AAA-111",
+            self.driver.find_element(By.CSS_SELECTOR, ".table").text,
+        )
+
+        self.driver.find_element(By.CSS_SELECTOR, "#delete0 > .table-button").click()
+
+        WebDriverWait(self.driver, 1).until(
+            expected_conditions.visibility_of_element_located(
+                (By.CSS_SELECTOR, "#deleteModal .modal-header")
+            )
+        )
+
+        self.driver.find_element(By.CSS_SELECTOR, ".btn-danger").click()
+
+        # Assert that the client was deleted
+        WebDriverWait(self.driver, 1).until(
+            expected_conditions.visibility_of_element_located(
+                (By.CSS_SELECTOR, ".toast-body")
+            )
+        )
+
+        self.assertEqual(
+            self.driver.find_element(By.CSS_SELECTOR, ".toast-body").text,
+            "Vehículo eliminado exitosamente",
+        )
+
+        # Assert that the client is not in the table
+        self.assertEqual(
+            "No se encontraron vehículos",
+            self.driver.find_element(By.CSS_SELECTOR, ".alert").text,
         )
