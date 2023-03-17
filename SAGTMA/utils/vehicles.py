@@ -74,10 +74,17 @@ def validate_serial_number(serial_number: str):
     Un número de serie es válido si:
       -Tiene al menos 5 caracteres y a lo sumo 20 caracteres
       -Solo tiene caracteres alfanuméricos o guiones
+      -No tiene guiones consecutivos
+      -No comienza ni termina con un guión
     """
     if len(serial_number) < 5 or len(serial_number) > 20:
         raise InvalidSerialNumberError(
             "El número de serie debe tener entre 5 y 20 caracteres"
+        )
+
+    if serial_number[0] == "-" or serial_number[-1] == "-":
+        raise InvalidSerialNumberError(
+            "El número de serie no puede comenzar ni terminar con un guión"
         )
 
     for i, char in enumerate(serial_number):
@@ -88,7 +95,7 @@ def validate_serial_number(serial_number: str):
 
         if char in "- " and serial_number[i - 1] in "- ":
             raise InvalidSerialNumberError(
-                "La placa no puede contener espacios/guiones consecutivos"
+                "El número de serie no puede contener guiones consecutivos"
             )
 
 
@@ -118,7 +125,7 @@ def validate_year(year: int):
     """
     if year < 1900 or year > date.today().year + 1:
         raise InvalidYearError(
-            "El año debe ser un número entero entre 1900 y el año actual + 1"
+            "El año debe ser un número entero entre 1900 y el año posterior al actual"
         )
 
 

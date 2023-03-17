@@ -5,7 +5,7 @@ from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 from SAGTMA.models import User, Role, Client, db
 from SAGTMA.utils.profiles import hash_password
-from datetime import date
+import datetime
 
 
 class TestClients(BaseTestClass):
@@ -24,7 +24,7 @@ class TestClients(BaseTestClass):
             "V-11111111",
             "Chus",
             "Chriscris",
-            date(2001, 1, 1),
+            datetime.date(2001, 1, 1),
             "+584445555555",
             "ChuS@usb.ve",
             "Por ahi en un lugar",
@@ -185,7 +185,7 @@ class TestClients(BaseTestClass):
             "ABCDE",
             "1234567ABCDEFG123456",
             "El problema más largo que vas a poder imaginarte que un carro "
-            "puede tener, no sé ni cómo pudiera describirlo pero aja.",
+            "puede tener, no sé ni cómo pudiera describirlo pero aja...",
         )
 
     def test_register_vehicle_invalid_license_plate(self):
@@ -233,7 +233,110 @@ class TestClients(BaseTestClass):
         _test_register_vehicle_invalid_license_plate(
             "-NR116D", "La placa debe comenzar con un caracter alfanumérico"
         )
-        
+
+    def test_vehicle_year_invalid(self):
+        """Testea la creación de vehículos con años inválidos."""
+
+        def _test_vehicle_year_invalid(year: str):
+            self._register_vehicle(
+                "NRR-16D",
+                "Chevrolet",
+                "Aveo",
+                year,
+                "ABCDEFG01234567",
+                "1234567ABCDEFG",
+                "Se le dañó la caja!",
+            )
+            self.assertEqual(
+                self.driver.find_element(By.CSS_SELECTOR, ".toast-body").text,
+                "El año debe ser un número entero entre 1900 y el año posterior al actual",
+            )
+
+        self._login_analyst()
+
+        # Año anterior a 1900
+        _test_vehicle_year_invalid("1899")
+
+        # Año posterior al actual + 1
+        actual_year = datetime.datetime.now().year
+        _test_vehicle_year_invalid(str(actual_year + 2))
+
+    def test_vehicle_serial_invalid(self):
+        """Testea la creación de vehículos con seriales inválidos."""
+
+        def _test_vehicle_serial_invalid(serial: str, message: str):
+            self._register_vehicle(
+                "NRR-16D",
+                "Chevrolet",
+                "Aveo",
+                "1978",
+                serial,
+                "1234567ABCDEFG",
+                "Se le dañó la caja!",
+            )
+            self.assertEqual(
+                self.driver.find_element(By.CSS_SELECTOR, ".toast-body").text,
+                message,
+            )
+
+        self._login_analyst()
+
+        # Serial muy corto
+        _test_vehicle_serial_invalid(
+            "AB12", "El número de serie debe tener entre 5 y 20 caracteres"
+        )
+
+        # Serial muy largo
+        _test_vehicle_serial_invalid(
+            "ABCDEFG0-1234567-8F-A",
+            "El número de serie debe tener entre 5 y 20 caracteres",
+        )
+
+        # Serial con caracteres inválidos
+        _test_vehicle_serial_invalid(
+            "ABCDEFG0126@7",
+            "El número de serie solo puede contener caracteres alfanuméricos y guiones",
+        )
+
+        # Serial con dos guiones consecutivos
+        _test_vehicle_serial_invalid(
+            "A--B12", "El número de serie no puede contener guiones consecutivos"
+        )
+
+        # Serial comienza o termina con guión
+        _test_vehicle_serial_invalid(
+            "-AB12", "El número de serie no puede comenzar ni terminar con un guión"
+        )
+        _test_vehicle_serial_invalid(
+            "AB12-", "El número de serie no puede comenzar ni terminar con un guión"
+        )
+
+    def test_vehicle_problem_invalid(self):
+        """Testea la creación de vehículos con problemas inválidos."""
+
+        def _test_vehicle_problem_invalid(problem: str):
+            self._register_vehicle(
+                "NRR-16D",
+                "Chevrolet",
+                "Aveo",
+                "1978",
+                "ABCDEFG01234567",
+                "1234567ABCDEFG",
+                problem,
+            )
+            self.assertEqual(
+                self.driver.find_element(By.CSS_SELECTOR, ".toast-body").text,
+                "La descripción del problema no puede tener más de 120 caracteres",
+            )
+
+        self._login_analyst()
+
+        # Problema muy largo
+        _test_vehicle_problem_invalid(
+            "El problema más largo que vas a poder imaginarte que un carrot "
+            "puede tener, no sé ni cómo pudiera describirlo pero aja..."
+        )
+
     def test_vehicle_already_exists(self):
         """Testea la creación de vehículos que ya existen."""
 

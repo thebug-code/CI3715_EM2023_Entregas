@@ -299,7 +299,7 @@ class TestClients(BaseTestClass):
             "hola@hol.aaa",
             "República Popular China",
         )
-        
+
         self._register_client(
             "V-12345678",
             "UsuarioPrueba2",
@@ -309,7 +309,7 @@ class TestClients(BaseTestClass):
             "hola@hal.ooo",
             "Taiwán",
         )
-        
+
         self.assertEqual(
             self.driver.find_element(By.CSS_SELECTOR, ".toast-body").text,
             "Ya existe un cliente con la misma cédula",
