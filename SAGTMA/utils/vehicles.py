@@ -80,7 +80,7 @@ def validate_serial_number(serial_number: str):
             "El número de serie debe tener entre 5 y 20 caracteres"
         )
 
-    for char in serial_number:
+    for i, char in enumerate(serial_number):
         if not char.isalnum() and char != "-":
             raise InvalidSerialNumberError(
                 "El número de serie solo puede contener caracteres alfanuméricos y guiones"

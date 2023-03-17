@@ -5,6 +5,7 @@ from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 from SAGTMA.models import User, Role, db
 from SAGTMA.utils.profiles import hash_password
+import datetime
 
 
 class TestClients(BaseTestClass):
@@ -104,7 +105,7 @@ class TestClients(BaseTestClass):
             "V-12345678",
             "Alan",
             "Turing",
-            "06/23/1912",
+            "06/23/2000",
             "04123456789",
             "alanturing@usb.ve",
             "Chacaito",
@@ -115,7 +116,7 @@ class TestClients(BaseTestClass):
             "j-1234567",
             "Alan",
             "Turing",
-            "06/23/1912",
+            "06/23/2000",
             "04123456789",
             "alanturing@usb.ve",
             "Chacaito",
@@ -126,18 +127,30 @@ class TestClients(BaseTestClass):
             "V-92345678",
             "Ka",
             "Bolivar Palacios y Blanco de la Santisima Trinid",
-            "06/23/1912",
+            "06/23/2000",
             "04123456789",
             "uncorreo@usb.ve",
             "Charallave",
         )
 
         # Fecha de nacimiento al límite
+        eighteen_years_ago = datetime.date.today() - datetime.timedelta(days=19 * 365)
+        one_hundred_years_ago = datetime.date.today() - datetime.timedelta(days=99 * 365)
         _test_register_client_valid(
             "V-1234678",
             "Chavez",
             "Maduro",
-            "01/01/1907",
+            eighteen_years_ago.strftime("%m/%d/%Y"),
+            "0412 345. 6789",
+            "chav@ez.co",
+            "San Antonio de los Altos",
+        )
+        
+        _test_register_client_valid(
+            "V-1234178",
+            "Raul",
+            "Siete",
+            one_hundred_years_ago.strftime("%m/%d/%Y"),
             "0412 345. 6789",
             "chav@ez.co",
             "San Antonio de los Altos",
@@ -148,7 +161,7 @@ class TestClients(BaseTestClass):
             "V-2234678",
             "Nombre",
             "Generico",
-            "01/01/1907",
+            "01/01/2000",
             "412 (345) 67.89",
             "chav@ez.co",
             "No Sé",
@@ -158,7 +171,7 @@ class TestClients(BaseTestClass):
             "V-3234678",
             "Jesus",
             "David",
-            "01/01/1907",
+            "01/01/2000",
             "58 412 345 6789",
             "jdavis@isb.co",
             "La Victoria",
@@ -168,7 +181,7 @@ class TestClients(BaseTestClass):
             "V-4234678",
             "Perez",
             "Rodriguez",
-            "01/01/1907",
+            "01/01/2000",
             "+58412-345.6789",
             "perez@rod.net",
             "Bajo un Puente",
@@ -178,8 +191,92 @@ class TestClients(BaseTestClass):
             "V-2346789",
             "Nombre",
             "Extraño",
-            "01/01/1907",
+            "01/01/2000",
             "0058.412(345)67-89",
             "nombre@gmail.com",
             "Sambil",
+        )
+
+    def test_register_client_invalid_id(self):
+        """Testea la creación de clientes con cédula inválida."""
+
+        def _test_register_client_invalid_id(id_number: str):
+            self._register_client(
+                id_number,
+                "UsuarioPrueba",
+                "Hola",
+                "01/01/2001",
+                "+584244444444",
+                "aaa@aaa.aa",
+                "Por ahí",
+            )
+            self.assertEqual(
+                self.driver.find_element(By.CSS_SELECTOR, ".toast-body").text,
+                "La cédula ingresada es inválida, debe tener el formato V-12345678",
+            )
+
+        self._login_analyst()
+
+        # Sin guión
+        _test_register_client_invalid_id("V2346789")
+
+        # Sin letra
+        _test_register_client_invalid_id("2346789")
+
+        # Menor a 7 dígitos
+        _test_register_client_invalid_id("V-234678")
+
+        # Mayor a 8 dígitos
+        _test_register_client_invalid_id("V-123456789")
+
+        # Más de un guión
+        _test_register_client_invalid_id("V--123456789")
+
+        # Más de dos letras al comienzo
+        _test_register_client_invalid_id("VV-123456789")
+
+        # Letra al final
+        _test_register_client_invalid_id("V-123456789a")
+
+    def test_register_invalid_birthdate(self):
+        """Testea la creación de clientes con fecha de nacimiento inválido."""
+
+        def _test_register_client_invalid_birthdate(birthdate: str, message: str):
+            self._register_client(
+                "V-12345678",
+                "UsuarioPrueba",
+                "Hola",
+                birthdate,
+                "+584244444444",
+                "aaa@aaa.aa",
+                "Por ahí",
+            )
+            self.assertEqual(
+                self.driver.find_element(By.CSS_SELECTOR, ".toast-body").text,
+                message,
+            )
+
+        self._login_analyst()
+
+        # Mayor a 100 años
+        one_hundred_years_ago = datetime.date.today() - datetime.timedelta(
+            days=365 * 102 
+        )
+        _test_register_client_invalid_birthdate(
+            one_hundred_years_ago.strftime("%m/%d/%Y"),  "La edad máxima para registrarse es 100 años"
+        )
+
+        # Menor a 18 años
+        eighteen_years_ago = datetime.date.today() - datetime.timedelta(
+            days=365 * 18 + 1
+        )
+        
+        _test_register_client_invalid_birthdate(
+            eighteen_years_ago.strftime("%m/%d/%Y"), "La edad mínima para registrarse es 18 años"
+        )
+
+        # Hoy
+        _test_register_client_invalid_birthdate(
+            datetime.date.today().strftime("%m/%d/%Y"),
+            "La edad mínima para registrarse es 18 años",
         )

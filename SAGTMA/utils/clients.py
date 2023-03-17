@@ -1,10 +1,9 @@
 import re
-from datetime import date
+import datetime
 
 from SAGTMA.models import Client, db
 from SAGTMA.utils import events
 from SAGTMA.utils.profiles import validate_names
-
 
 # ========== Excepciones ==========
 class ClientError(ValueError):
@@ -111,6 +110,19 @@ def validate_email(email: str):
     if not re.fullmatch(regex, email):
         raise InvalidEmailError("El correo electrónico ingresado es inválido")
 
+def validate_birthdate(birthdate: datetime.date):
+    """Lanza una excepción si la fecha de nacimiento no es válida
+
+    La edad mínima es 18 años.
+    La edad máxima es 100 años.
+    """
+    today = datetime.date.today()
+    age = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
+
+    if age < 18:
+        raise ClientError("La edad mínima para registrarse es 18 años")
+    elif age > 100:
+        raise ClientError("La edad máxima para registrarse es 100 años")
 
 # ========== Registro ==========
 def register_client(
@@ -157,10 +169,10 @@ def register_client(
     # Convert birthdate a tipo Date usando la libreria datetime
     y, m, d = birthdate.split("-")
     y, m, d = int(y), int(m), int(d)
-    birthdate_t = date(y, m, d)
+    birthdate_t = datetime.date(y, m, d)
 
-    if int(y) < 1907:
-        raise ClientError("El año de nacimiento es inválido")
+    # Chequea si la fecha de nacimiento es válida
+    validate_birthdate(birthdate_t)
 
     # Crea el cliente en la base de datos
     new_client = Client(
@@ -230,10 +242,9 @@ def modify_client(
     # Convert birthdate a tipo Date usando la libreria datetime
     y, m, d = birthdate.split("-")
     y, m, d = int(y), int(m), int(d)
-    birthdate_t = date(y, m, d)
+    birthdate_t = datetime.date(y, m, d)
 
-    if y < 1907:
-        raise ClientError("El año de nacimiento es inválido")
+    validate_birthdate(birthdate_t)
 
     # Actualiza los datos del cliente
     client_query[0].id_number = id_number
