@@ -8,7 +8,7 @@ from SAGTMA.utils.profiles import hash_password
 import datetime
 
 
-class TestClients(BaseTestClass):
+class TestVehicles(BaseTestClass):
     def populate_db(self):
         super().populate_db()
 
@@ -29,7 +29,7 @@ class TestClients(BaseTestClass):
             "ChuS@usb.ve",
             "Por ahi en un lugar",
         )
-        
+
         new_car = Vehicle(
             "AAA-111",
             "Toyota",
@@ -94,6 +94,52 @@ class TestClients(BaseTestClass):
         self.driver.find_element(By.ID, "problem").send_keys(problem)
 
         self.driver.find_element(By.CSS_SELECTOR, "#addModal .btn-primary").click()
+        WebDriverWait(self.driver, 1).until(
+            expected_conditions.visibility_of_element_located(
+                (By.CSS_SELECTOR, ".toast-body")
+            )
+        )
+
+    def _modify_vehicle(
+        self,
+        license_plate: str,
+        brand: str,
+        model: str,
+        year: str,
+        body_number: str,
+        engine_number: str,
+        problem: str,
+    ):
+        self.driver.find_element(By.CSS_SELECTOR, "#modify0 > .table-button").click()
+        WebDriverWait(self.driver, 1).until(
+            expected_conditions.visibility_of_element_located(
+                (By.CSS_SELECTOR, "#modifyModal .modal-header")
+            )
+        )
+
+        self.driver.find_element(By.ID, "modify-license-plate").click()
+        self.driver.find_element(By.ID, "modify-license-plate").clear()
+        self.driver.find_element(By.ID, "modify-license-plate").send_keys(license_plate)
+        self.driver.find_element(By.ID, "modify-brand").click()
+        self.driver.find_element(By.ID, "modify-brand").clear()
+        self.driver.find_element(By.ID, "modify-brand").send_keys(brand)
+        self.driver.find_element(By.ID, "modify-model").click()
+        self.driver.find_element(By.ID, "modify-model").clear()
+        self.driver.find_element(By.ID, "modify-model").send_keys(model)
+        self.driver.find_element(By.ID, "modify-year").click()
+        self.driver.find_element(By.ID, "modify-year").clear()
+        self.driver.find_element(By.ID, "modify-year").send_keys(year)
+        self.driver.find_element(By.ID, "modify-body-number").click()
+        self.driver.find_element(By.ID, "modify-body-number").clear()
+        self.driver.find_element(By.ID, "modify-body-number").send_keys(body_number)
+        self.driver.find_element(By.ID, "modify-engine-number").click()
+        self.driver.find_element(By.ID, "modify-engine-number").clear()
+        self.driver.find_element(By.ID, "modify-engine-number").send_keys(engine_number)
+        self.driver.find_element(By.ID, "modify-problem").click()
+        self.driver.find_element(By.ID, "modify-problem").clear()
+        self.driver.find_element(By.ID, "modify-problem").send_keys(problem)
+
+        self.driver.find_element(By.CSS_SELECTOR, "#modifyModal .btn-primary").click()
         WebDriverWait(self.driver, 1).until(
             expected_conditions.visibility_of_element_located(
                 (By.CSS_SELECTOR, ".toast-body")
@@ -446,4 +492,106 @@ class TestClients(BaseTestClass):
         self.assertEqual(
             "No se encontraron vehículos",
             self.driver.find_element(By.CSS_SELECTOR, ".alert").text,
+        )
+
+    def test_modify_vehicle_valid(self):
+        """Testea la creación de vehículos válidos."""
+
+        def _test_modify_modify_valid(
+            license_plate: str,
+            brand: str,
+            model: str,
+            year: str,
+            body_number: str,
+            engine_number: str,
+            problem: str,
+        ):
+            self._modify_vehicle(
+                license_plate, brand, model, year, body_number, engine_number, problem
+            )
+            self.assertEqual(
+                self.driver.find_element(By.CSS_SELECTOR, ".toast-body").text,
+                "Vehículo modificado exitosamente",
+            )
+
+            self.assertIn(
+                license_plate, self.driver.find_element(By.CSS_SELECTOR, ".table").text
+            )
+
+        self._login_analyst()
+
+        # Vehículo válido condiciones normales
+        _test_modify_modify_valid(
+            "NRR-16D",
+            "Chevrolet",
+            "Aveo",
+            "1978",
+            "ABCDEFG01234567",
+            "1234567ABCDEFG",
+            "Se le dañó la caja!",
+        )
+
+        # Longitud de placa al borde
+        _test_modify_modify_valid(
+            "NR216",
+            "Chevrolet",
+            "Aveo",
+            "2023",
+            "ABCDEFG01234567",
+            "1234567ABCDEFG",
+            "Se le dañó la caja!",
+        )
+
+        _test_modify_modify_valid(
+            "NR2160 DAA",
+            "Chevrolet",
+            "Aveo",
+            "2023",
+            "ABCDEFG01234567",
+            "1234567ABCDEFG",
+            "Se le dañó la caja!",
+        )
+
+        # Años al borde
+        _test_modify_modify_valid(
+            "NR1-16D",
+            "Chevrolet",
+            "Aveo",
+            "1900",
+            "ABCDEFG01234567",
+            "1234567ABCDEFG",
+            "Se le dañó la caja!",
+        )
+
+        _test_modify_modify_valid(
+            "NR2-16D",
+            "Chevrolet",
+            "Aveo",
+            "2023",
+            "ABCDEFG01234567",
+            "1234567ABCDEFG",
+            "Se le dañó la caja!",
+        )
+
+        # Seriales corto y largo
+        _test_modify_modify_valid(
+            "NR2-16A",
+            "Chevrolet",
+            "Aveo",
+            "2023",
+            "ABCDE",
+            "1234567ABCDEFG123456",
+            "Se le dañó la caja!",
+        )
+
+        # Problemas largo
+        _test_modify_modify_valid(
+            "NR3-16D",
+            "Chevrolet",
+            "Aveo",
+            "2023",
+            "ABCDE",
+            "1234567ABCDEFG123456",
+            "El problema más largo que vas a poder imaginarte que un carro "
+            "puede tener, no sé ni cómo pudiera describirlo pero aja...",
         )

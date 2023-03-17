@@ -235,27 +235,6 @@
                 required
               />
             </div>
-            {#
-            <div class="mb-3">
-              <label
-                for="modifyRole"
-                class="form-label"
-                >Rol</label
-              >
-              <select class="form-select" name="role">
-                {% for role in roles %}
-            <option
-              value="{{ role.id }}"
-              {% if role.id == client.role.id %}
-                selected="selected"
-              {% endif %}
-            >
-              {{ role.name }}
-            </option>
-          {% endfor %}
-              </select>
-            </div>
-            #}
             <div class="modal-footer">
               <button
                 type="button"

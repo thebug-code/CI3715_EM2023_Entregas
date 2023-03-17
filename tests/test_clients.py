@@ -98,6 +98,52 @@ class TestClients(BaseTestClass):
             )
         )
 
+    def _modify_client(
+        self,
+        id_number: str,
+        names: str,
+        surnames: str,
+        birthdate: str,
+        phone: str,
+        email: str,
+        address: str,
+    ):
+        self.driver.find_element(By.CSS_SELECTOR, "#modify0 > .table-button").click()
+        WebDriverWait(self.driver, 1).until(
+            expected_conditions.visibility_of_element_located(
+                (By.CSS_SELECTOR, "#modifyModal .modal-header")
+            )
+        )
+
+        self.driver.find_element(By.ID, "modifyIdNumber").click()
+        self.driver.find_element(By.ID, "modifyIdNumber").clear()
+        self.driver.find_element(By.ID, "modifyIdNumber").send_keys(id_number)
+        self.driver.find_element(By.ID, "modifyNames").click()
+        self.driver.find_element(By.ID, "modifyNames").clear()
+        self.driver.find_element(By.ID, "modifyNames").send_keys(names)
+        self.driver.find_element(By.ID, "modifySurnames").click()
+        self.driver.find_element(By.ID, "modifySurnames").clear()
+        self.driver.find_element(By.ID, "modifySurnames").send_keys(surnames)
+        self.driver.find_element(By.ID, "modifyBirthdate").click()
+        self.driver.find_element(By.ID, "modifyBirthdate").clear()
+        self.driver.find_element(By.ID, "modifyBirthdate").send_keys(birthdate)
+        self.driver.find_element(By.ID, "modifyPhoneNumber").click()
+        self.driver.find_element(By.ID, "modifyPhoneNumber").clear()
+        self.driver.find_element(By.ID, "modifyPhoneNumber").send_keys(phone)
+        self.driver.find_element(By.ID, "modifyEmail").click()
+        self.driver.find_element(By.ID, "modifyEmail").clear()
+        self.driver.find_element(By.ID, "modifyEmail").send_keys(email)
+        self.driver.find_element(By.ID, "modifyAddress").click()
+        self.driver.find_element(By.ID, "modifyAddress").clear()
+        self.driver.find_element(By.ID, "modifyAddress").send_keys(address)
+
+        self.driver.find_element(By.CSS_SELECTOR, "#modifyModal .btn-primary").click()
+        WebDriverWait(self.driver, 1).until(
+            expected_conditions.visibility_of_element_located(
+                (By.CSS_SELECTOR, ".toast-body")
+            )
+        )
+
     def test_register_client_valid(self):
         """Testea la creación de clientes válidos."""
 
@@ -406,4 +452,129 @@ class TestClients(BaseTestClass):
         self.assertEqual(
             "No se encontraron clientes",
             self.driver.find_element(By.CSS_SELECTOR, ".alert").text,
+        )
+
+    def test_modify_client_valid(self):
+        """Testea la creación de clientes válidos."""
+
+        def _test_modify_client_valid(
+            id_number: str,
+            names: str,
+            surnames: str,
+            birthdate: str,
+            phone: str,
+            email: str,
+            address: str,
+        ):
+            self._modify_client(
+                id_number, names, surnames, birthdate, phone, email, address
+            )
+            self.assertEqual(
+                self.driver.find_element(By.CSS_SELECTOR, ".toast-body").text,
+                "Cliente modificado exitosamente",
+            )
+
+            self.assertIn(
+                email, self.driver.find_element(By.CSS_SELECTOR, ".table").text
+            )
+
+        self._login_analyst()
+
+        # Cliente válido condiciones normales
+        _test_modify_client_valid(
+            "V-12345678",
+            "Alan",
+            "Turing",
+            "06/23/2000",
+            "04123456789",
+            "alanturing@usb.ve",
+            "Chacaito",
+        )
+
+        # Cédula distinta
+        _test_modify_client_valid(
+            "j-1234567",
+            "Alan",
+            "Turing",
+            "06/23/2000",
+            "04123456789",
+            "alanturing@usb.ve",
+            "Chacaito",
+        )
+
+        # Nombres y apellidos corto/largo
+        _test_modify_client_valid(
+            "V-92345678",
+            "Ka",
+            "Bolivar Palacios y Blanco de la Santisima Trinid",
+            "06/23/2000",
+            "04123456789",
+            "uncorreo@usb.ve",
+            "Charallave",
+        )
+
+        # Fecha de nacimiento al límite
+        eighteen_years_ago = datetime.date.today() - datetime.timedelta(days=19 * 365)
+        one_hundred_years_ago = datetime.date.today() - datetime.timedelta(
+            days=99 * 365
+        )
+        _test_modify_client_valid(
+            "V-1234678",
+            "Chavez",
+            "Maduro",
+            eighteen_years_ago.strftime("%m/%d/%Y"),
+            "0412 345. 6789",
+            "chav@ez.co",
+            "San Antonio de los Altos",
+        )
+
+        _test_modify_client_valid(
+            "V-1234178",
+            "Raul",
+            "Siete",
+            one_hundred_years_ago.strftime("%m/%d/%Y"),
+            "0412 345. 6789",
+            "chav@ez.co",
+            "San Antonio de los Altos",
+        )
+
+        # Otros formatos de teléfono
+        _test_modify_client_valid(
+            "V-2234678",
+            "Nombre",
+            "Generico",
+            "01/01/2000",
+            "412 (345) 67.89",
+            "chav@ez.co",
+            "No Sé",
+        )
+
+        _test_modify_client_valid(
+            "V-3234678",
+            "Jesus",
+            "David",
+            "01/01/2000",
+            "58 412 345 6789",
+            "jdavis@isb.co",
+            "La Victoria",
+        )
+
+        _test_modify_client_valid(
+            "V-4234678",
+            "Perez",
+            "Rodriguez",
+            "01/01/2000",
+            "+58412-345.6789",
+            "perez@rod.net",
+            "Bajo un Puente",
+        )
+
+        _test_modify_client_valid(
+            "V-2346789",
+            "Nombre",
+            "Extraño",
+            "01/01/2000",
+            "0058.412(345)67-89",
+            "nombre@gmail.com",
+            "Sambil",
         )
