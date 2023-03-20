@@ -215,7 +215,7 @@
             </tr>
           </thead>
           <tbody>
-            {% for department in departments %}
+            {% for dept in departments %}
               {# Filas de la tabla #}
               <tr>
                 <td>{{ departament.id }}</td>
@@ -224,7 +224,7 @@
                   {# Botón de modificar #}
                   <button
                     type="button"
-                    id="modify{{ department.id }}"
+                    id="modify{{ dept.id }}"
                     class="btn btn-primary modify-dept"
                     data-bs-toggle="modal"
                   >
@@ -242,7 +242,7 @@
 
                   {# Botón de eliminar #}
                   <button
-                    id="delete{{ department.id }}"
+                    id="delete{{ dept.id }}"
                     type="button"
                     class="btn btn-primary delete-dept"
                     data-bs-toggle="modal"
