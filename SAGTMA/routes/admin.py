@@ -9,7 +9,7 @@ from flask import (
     session,
 )
 
-from SAGTMA.models import Event, Role, User, db
+from SAGTMA.models import Event, Role, User, Department, db
 from SAGTMA.utils import events, profiles
 from SAGTMA.utils.decorators import requires_roles
 
@@ -160,3 +160,28 @@ def delete_event(event_id: int) -> Response:
 
     flash("Evento eliminado exitosamente")
     return redirect(url_for("logger"))
+
+
+# ========== Departamentos del taller ==========
+@current_app.route("/workshop-departments/", methods=["GET", "POST"])
+@requires_roles("Administrador")
+def ws_depts() -> Response:
+    """Muestra la lista de departamentos del taller anadidos en el sistema."""
+    # SELECT * FROM department
+    stmt = db.select(Department)
+
+    if request.method == "POST":
+        # Obtiene los datos del formulario
+        dept = request.form.get("dept-filter").lower().strip()
+
+        if dept:
+            # WHERE description LIKE '%dept%'
+            stmt = stmt.where(Department.description.like(f"%{dept}%"))
+
+        # Añade el evento de búsqueda
+        # events.add_search_dept(dept)
+
+    result = db.session.execute(stmt).fetchall()
+    _depts = [r for r, in result]
+
+    return render_template("admin/departments.html", departments=_depts)
