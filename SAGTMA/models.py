@@ -167,3 +167,16 @@ class Vehicle(db.Model):
 
     def __repr__(self) -> str:
         return f"Vehicle<{self.license_plate}: {self.brand} {self.model}>"
+
+class Department(db.Model):
+    """Modelo de Departamento."""
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    description = db.Column(db.String(100), unique=True, nullable=False)
+
+    def __init__(self, description: str):
+        self.description = description
+
+    def __repr__(self) -> str:
+        return f'Department<{self.description}>'
+
