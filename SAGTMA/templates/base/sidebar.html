@@ -43,7 +43,7 @@
               Portafolio de Proyectos
             </a>
           </li>
-          <!-- Si el usuario es analista -->
+        <!-- Si el usuario es analista -->
         {% elif session['role'] == 'Analista de Operaciones' %}
           <li>
             <a
@@ -57,7 +57,7 @@
             </a>
           </li>
 
-          <!-- Si el usuario es administrador -->
+        <!-- Si el usuario es administrador -->
         {% elif session['role'] == 'Administrador' %}
           <li>
             <a
@@ -67,6 +67,16 @@
               {% endif %}"
             >
               Perfiles de Usuarios
+            </a>
+          </li>
+          <li>
+            <a
+              href="{{ url_for('home') }}"
+              class="nav-link link {% if active_page == 'departments' %}
+                active fw-bold
+              {% endif %}"
+            >
+              Departamentos del Taller
             </a>
           </li>
           <li>

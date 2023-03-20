@@ -1,0 +1,269 @@
+{% extends 'base/base.html' %}
+{% set active_page = "departments" %}
+{% block title %}Departamentos del Taller{% endblock %}
+{% block content %}
+  {# Título de la página centrado en una barra #}
+  <div class="d-flex justify-content-center my-4">
+    <h1 class="title-container">Departamentos del Taller</h1>
+  </div>
+
+  {# Modal de registrar departamento #}
+  <div
+    class="modal fade"
+    id="addModal"
+    tabindex="-1"
+    aria-labelledby="addModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addModalLabel">Agregar departamento</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <form method="post">
+            <div class="mb-3">
+              <label for="description" class="form-label">Descripción</label>
+              <input
+                type="text"
+                class="form-control"
+                id="description"
+                name="description"
+                placeholder="Ingrese la descripción del departamento"
+                required
+                autofocus
+              />
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Cerrar
+              </button>
+              <button type="submit" class="btn btn-primary">Agregar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {# Modal confirmar eliminar departamento #}
+  <div
+    class="modal fade"
+    id="deleteModal"
+    tabindex="-1"
+    aria-labelledby="deleteModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5
+            class="modal-title"
+            id="deleteModalLabel"
+          >
+            Eliminar departamento
+          </h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <p>¿Está seguro que desea eliminar este departamento?</p>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Cerrar
+          </button>
+          <form method="post" class="d-inline">
+            <button type="submit" class="btn btn-danger">Eliminar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {# Modal de modificar Departamento #}
+  <div
+    class="modal fade"
+    id="modifyModal"
+    tabindex="-1"
+    aria-labelledby="editModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editModalLabel">
+            Modificar departamento
+          </h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <form method="post">
+            <div class="mb-3">
+              <label
+                for="modify-description"
+                class="form-label"
+                >Descripción</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="modify-description"
+                name="description"
+                placeholder="Ingrese la descripción del departamento"
+                required
+              />
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Cerrar
+              </button>
+              <button type="submit" class="btn btn-primary">Modificar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    {# Barra de filtro de usuarios #}
+    <form
+      class="row search-filter"
+      action="{{ url_for('ws_depts') }}"
+      method="post"
+    >
+      <div class="col-8 mx-3 my-4">
+        <div class="input-group">
+          <input
+            name="dept-filter"
+            type="text"
+            class="form-control"
+            placeholder="Buscar departamento"
+          />
+          <button type="submit" class="btn btn-primary">
+            <img
+              src="{{ url_for('static', filename='img/search.svg') }}"
+              width="34"
+              height="34"
+              style="border-radius: 1rem;"
+              title="Buscar departamento"
+            />
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#addModal"
+          >
+            <img
+              src="{{ url_for('static', filename='img/add.svg') }}"
+              width="34"
+              height="34"
+              style="border-radius: 1rem;"
+              title="Agregar departamento"
+            />
+          </button>
+        </div>
+      </div>
+      {# Botón de agregar #}
+    </form>
+
+    {# Si no hay departamentos o no se encontraron en la busqueda #}
+    {% if departments|length == 0 %}
+      <div class="d-flex justify-content-center my-4">
+        <div class="alert alert-danger" role="alert">
+          No se encontraron departamentos
+        </div>
+      </div>
+    {% else %}
+    {# Tabla de departamentos #}
+      <div class="container table-container">
+        <table class="table table-striped table-hover">
+          {# Header de la tabla #}
+          <thead>
+            <tr>
+              <th>Id</th>
+              <th>Descripción</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for department in departments %}
+              {# Filas de la tabla #}
+              <tr>
+                <td>{{ departament.id }}</td>
+                <td>{{ departament.description }}</td>
+                <td>
+                  {# Botón de modificar #}
+                  <button
+                    type="button"
+                    id="modify{{ department.id }}"
+                    class="btn btn-primary modify-dept"
+                    data-bs-toggle="modal"
+                  >
+                    <img
+                      src="{{ url_for('static', filename='img/edit.svg') }}"
+                      width="24"
+                      height="24"
+                      fill="white"
+                      class="table-button"
+                      value="submit"
+                      style="border-radius: 5px;"
+                      title="Modificar departamento"
+                    />
+                  </button>
+
+                  {# Botón de eliminar #}
+                  <button
+                    id="delete{{ department.id }}"
+                    type="button"
+                    class="btn btn-primary delete-dept"
+                    data-bs-toggle="modal"
+                  >
+                    <img
+                      src="{{ url_for('static', filename='img/delete.svg') }}"
+                      width="24"
+                      height="24"
+                      fill="white"
+                      class="table-button"
+                      value="submit"
+                      style="border-radius: 5px;"
+                      title="Eliminar departamento"
+                    />
+                  </button>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}
