@@ -10,7 +10,7 @@ from flask import (
 )
 
 from SAGTMA.models import Event, Role, User, Department, db
-from SAGTMA.utils import events, profiles
+from SAGTMA.utils import events, profiles, departments
 from SAGTMA.utils.decorators import requires_roles
 
 
@@ -185,3 +185,20 @@ def ws_depts() -> Response:
     _depts = [r for r, in result]
 
     return render_template("admin/departments.html", departments=_depts)
+
+
+@current_app.route("/workshop-departments/register/", methods=["POST"])
+@requires_roles("Administrador")
+def register_dept() -> Response:
+    """Registra un departamento en la base de datos."""
+    description = request.form.get("description")
+
+    try:
+        departments.register_dept(description)
+    except departments.DepartmentError as e:
+        flash(f"{e}")
+        return redirect(url_for("ws_depts"))
+
+    # Se permanece en la página
+    flash("Departamento añadido exitosamente")
+    return redirect(url_for("ws_depts"))

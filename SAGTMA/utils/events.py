@@ -121,6 +121,11 @@ def add_search_client(search: str):
     _add_event("Detalles de los Clientes", f"Buscar '{search}'")
 
 
+# =========== Departamentos del Taller ===========
+def add_dept(name: str):
+    _add_event("Departamentos del Taller", f"Agregar departamento '{name}'")
+
+
 # =========== Funciones Auxiliares ==========
 
 
