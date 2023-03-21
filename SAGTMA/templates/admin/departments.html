@@ -91,7 +91,7 @@
           >
             Cerrar
           </button>
-          <form method="post" class="d-inline">
+          <form method="post" class="d-inline" id="delete-dept-form">
             <button type="submit" class="btn btn-danger">Eliminar</button>
           </form>
         </div>
@@ -267,4 +267,6 @@
       </div>
     {% endif %}
   </div>
+
+  <script src="{{ url_for('static', filename='js/departments.js') }}"></script>
 {% endblock %}

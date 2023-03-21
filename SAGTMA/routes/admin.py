@@ -202,3 +202,19 @@ def register_dept() -> Response:
     # Se permanece en la página
     flash("Departamento añadido exitosamente")
     return redirect(url_for("ws_depts"))
+
+
+@current_app.route("/workshop-departments/delete/<int:dept_id>/", methods=["POST"])
+@requires_roles("Administrador")
+def delete_dept(dept_id: int) -> Response:
+    """Elimina un departamento de la base de datos."""
+    print("__________________-----------------")
+    print(dept_id)
+    try:
+        departments.delete_dept(dept_id)
+    except departments.DepartmentError as e:
+        flash(f"{e}")
+        return redirect(url_for("ws_depts"))
+
+    flash("Departamento eliminado exitosamente")
+    return redirect(url_for("ws_depts"))

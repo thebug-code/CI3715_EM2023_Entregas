@@ -76,3 +76,23 @@ def register_dept(description: str):
 
     # Registra el evento en la base de datos
     events.add_dept(new_dept.description)
+
+
+# ========== Eliminacion de un departamento ==========
+def delete_dept(dept_id: int):
+    """
+    Elimina un departamento de la base de datos
+
+    Lanza una excepción DepartmentError si hubo algún error.
+    """
+    # Busca el departamento con el id indicado y verifica si existe
+    stmt = db.select(Department).where(Department.id == dept_id)
+    result = db.session.execute(stmt).first()
+    if not result:
+        raise DepartmentNotFoundError("El departamento indicado no existe")
+
+    # Elimina el departamento de la base de datos
+    db.session.delete(result[0])
+
+    # Registra el evento en la base de datos
+    events.add_delete_dept(result[0].description)
