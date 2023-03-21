@@ -27,7 +27,7 @@
           ></button>
         </div>
         <div class="modal-body">
-          <form method="post">
+          <form action="{{ url_for('register_dept') }}" method="post">
             <div class="mb-3">
               <label for="description" class="form-label">Descripción</label>
               <input
@@ -160,7 +160,7 @@
       action="{{ url_for('ws_depts') }}"
       method="post"
     >
-      <div class="col-8 mx-3 my-4">
+      <div class="col-6 mx-3 my-4">
         <div class="input-group">
           <input
             name="dept-filter"
@@ -206,26 +206,27 @@
     {% else %}
     {# Tabla de departamentos #}
       <div class="container table-container">
-        <table class="table table-striped table-hover">
+        <table class="table table-striped table-hover align-middle">
           {# Header de la tabla #}
           <thead>
             <tr>
               <th>Id</th>
               <th>Descripción</th>
+              <th>Acción</th>
             </tr>
           </thead>
           <tbody>
             {% for dept in departments %}
               {# Filas de la tabla #}
               <tr>
-                <td>{{ departament.id }}</td>
-                <td>{{ departament.description }}</td>
+                <td>{{ dept.id }}</td>
+                <td>{{ dept.description }}</td>
                 <td>
                   {# Botón de modificar #}
                   <button
                     type="button"
                     id="modify{{ dept.id }}"
-                    class="btn btn-primary modify-dept"
+                    class="btn btn-primary my-2 modify-dept"
                     data-bs-toggle="modal"
                   >
                     <img
@@ -244,7 +245,7 @@
                   <button
                     id="delete{{ dept.id }}"
                     type="button"
-                    class="btn btn-primary delete-dept"
+                    class="btn btn-primary my-2 delete-dept"
                     data-bs-toggle="modal"
                   >
                     <img
