@@ -2,7 +2,7 @@ from flask import current_app, request, json
 
 from SAGTMA.utils.decorators import login_required, requires_roles
 
-from SAGTMA.models import Project, Client, Vehicle, db
+from SAGTMA.models import Project, Client, Vehicle, Department, db
 
 
 @current_app.route("/api/v1/projects")
@@ -92,3 +92,28 @@ def api_vehicles():
     ]
 
     return vehicles
+
+
+@current_app.route("/api/v1/departments")
+@login_required
+@requires_roles("Administrador")
+def api_departments():
+    stmt = db.select(Department)
+
+    # Obtiene los parámetros de la request para filtrar por id
+    # y filtra de ser necesario
+    dept_id = request.args.get("id")
+    if dept_id:
+        stmt = stmt.where(Department.id == dept_id)
+
+    # Consulta los departamentos requeridos
+    result = db.session.execute(stmt).fetchall()
+    depts = [
+        {
+            "id": dept.id,
+            "description": dept.description,
+        }
+        for dept, in result
+    ]
+
+    return depts

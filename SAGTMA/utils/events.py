@@ -129,6 +129,9 @@ def add_dept(name: str):
 def add_delete_dept(name: str):
     _add_event("Departamentos del Taller", f"Eliminar departamento '{name}'")
 
+def add_modify_dept(name: str):
+    _add_event("Departamentos del Taller", f"Modificar departamento '{name}'")
+
 
 # =========== Funciones Auxiliares ==========
 

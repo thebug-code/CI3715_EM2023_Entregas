@@ -238,7 +238,9 @@ def modify_client(
         .where(Client.id != client_id)
     )
     if db.session.execute(stmt).first():
-        raise AlreadyExistingClientError("Ya existe un cliente con la misma cédula")
+        raise AlreadyExistingClientError(
+            "Ya existe un cliente con la misma cédula"
+        )
 
     # Busca el cliente con el id indicado y verifica si existe
     stmt = db.select(Client).where(Client.id == client_id)

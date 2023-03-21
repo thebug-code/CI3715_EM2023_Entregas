@@ -96,3 +96,43 @@ def delete_dept(dept_id: int):
 
     # Registra el evento en la base de datos
     events.add_delete_dept(result[0].description)
+
+
+# ========== Modificacion de un departamento ==========
+def modify_dept(dept_id: int, description: str):
+    """
+    Modifica un departamento de la base de datos
+
+    Lanza una excepción DepartmentError si hubo algún error.
+    """
+    # Elimina espacios al comienzo y final del input del form
+    description = description.strip()
+
+    if not all([description]):
+        raise MissingFieldError("Todos los campos son obligatorios")
+
+    # Verifica si ya existe un departamento con la misma descripción
+    smt = ( 
+        db.select(Department)
+        .where(Department.description == description)
+        .where(Department.id != dept_id)
+    )
+    if db.session.execute(smt).first():
+        raise AlreadyExistingDepartmentError(
+            "Ya existe un departamento con la misma descripción"
+        )
+
+    # Busca el departamento con el id indicado y verifica si existe
+    stmt = db.select(Department).where(Department.id == dept_id)
+    result = db.session.execute(stmt).first()
+    if not result:
+        raise DepartmentNotFoundError("El departamento indicado no existe")
+
+    # Chequea si la descripción es válida
+    validate_descrip_dept(description)
+
+    # Modifica el departamento en la base de datos
+    result[0].description = description
+
+    # Registra el evento en la base de datos
+    events.add_modify_dept(result[0].description)
