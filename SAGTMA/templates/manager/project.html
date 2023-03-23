@@ -1,0 +1,469 @@
+{% extends 'base/base.html' %}
+{% set active_page = "portfolio" %}
+{% block title %}Portafolio de Proyectos{% endblock %}
+{% block content %}
+  <div class="d-flex justify-content-center my-4">
+    <h1 class="title-container">Portafolio de Proyectos</h1>
+  </div>
+
+  {# Modal confirmar status proyecto #}
+  <div
+    class="modal fade"
+    id="changeStatusModal"
+    tabindex="-1"
+    aria-labelledby="changeStatusModalModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">
+            Cambiar estatus de proyecto
+          </h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div id="modalBodyCS" class="modal-body"></div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Cerrar
+          </button>
+          <form method="post" id="changeStatusProjectForm" class="d-inline">
+            <button id="submitButtonCS" type="submit" class="btn"></button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {# Modal confirmar eliminar proyecto #}
+  <div
+    class="modal fade"
+    id="deleteModal"
+    tabindex="-1"
+    aria-labelledby="deleteModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">Eliminar proyecto</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <p>¿Está seguro que desea eliminar este proyecto?</p>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Cerrar
+          </button>
+          <form method="post" id="deleteProjectForm" class="d-inline">
+            <button type="submit" class="btn btn-danger">Eliminar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {# Modal modificar proyecto #}
+  <div
+    class="modal fade"
+    id="modifyModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="ModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="ModalLabel">Modificar un proyecto</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <form id="modifyProjectForm" method="post">
+            <div class="mb-3">
+              <label class="form-label" for="description"
+                >Descripcion del Proyecto</label
+              >
+              <input
+                type="text"
+                id="descriptionM"
+                class="form-control"
+                name="description"
+                required
+                autofocus
+              />
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="start_date">Inicio</label>
+              <input
+                id="start_dateM"
+                name="start_date"
+                type="date"
+                class="form-control"
+                style="background-color:transparent;border-radius: 5px;display: inline-block;"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="deadline">Cierre</label>
+              <input
+                id="deadlineM"
+                name="deadline"
+                type="date"
+                class="form-control"
+                style="background-color:transparent;border-radius: 5px;display: inline-block;"
+                required
+              />
+            </div>
+
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Cerrar
+              </button>
+              <button type="submmit" class="btn btn-primary">Enviar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {# Modal agregar proyecto #}
+  <div
+    class="modal fade"
+    id="addModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="AddModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="AddModalLabel">Agregar un proyecto</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <form action="{{ url_for('create_project') }}" method="post">
+            <div class="mb-3">
+              <label class="form-label" for="description"
+                >Descripcion del Proyecto
+              </label>
+              <input
+                type="text"
+                id="description"
+                name="description"
+                class="form-control"
+                placeholder="Ingrese la descripcion del proyecto"
+                required
+                autofocus
+              />
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="start_date">Inicio</label>
+              <input
+                id="start_date"
+                type="date"
+                name="start_date"
+                class="form-control"
+                style="background-color:transparent;border-radius: 5px;display: inline-block;"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="deadline">Cierre</label>
+              <input
+                id="deadline"
+                name="deadline"
+                type="date"
+                class="form-control"
+                style="background-color:transparent;border-radius: 5px;display: inline-block;"
+                required
+              />
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-dismiss="modal"
+              >
+                Cerrar
+              </button>
+              <button type="submit" class="btn btn-primary">Agregar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {# Barra de filtro de proyectos #}
+  <div class="container">
+    <form
+      class="row search-filter"
+      action="{{ url_for('portfolio') }}"
+      method="post"
+    >
+      <div class="col-sm-12">
+        <div class="input-group">
+          <input
+            name="descrip-filter"
+            id="descrip-filter"
+            type="text"
+            class="form-control"
+            placeholder="Buscar proyecto"
+          />
+          {# <div class="input-group-btn" style="margin-left: 10px;display: flex;"> #}
+          <button
+            type="submit"
+            class="btn btn-primary"
+            style="border-radius: 5px;margin-left: 10px;"
+          >
+            <img
+              src="{{ url_for('static', filename='img/search.svg') }}"
+              width="40"
+              height="40"
+              fill="white"
+              class="table-button"
+              value="submit"
+              style="border-radius: 5px;"
+              title="Buscar proyecto"
+            />
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            style="border-radius: 5px;margin-left: 10px;"
+            data-bs-toggle="modal"
+            data-bs-target="#addModal"
+          >
+            <img
+              src="{{ url_for('static', filename='img/add.svg') }}"
+              width="40"
+              height="40"
+              fill="white"
+              class="table-button"
+              value="submit"
+              style="border-radius: 5px;"
+            />
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  {# Si no hay proyectos o no se encontraron en la busqueda #}
+  {% if projects|length == 0 %}
+    <div class="d-flex justify-content-center my-4">
+      <div class="alert alert-danger" role="alert">
+        No se encontraron proyectos
+      </div>
+    </div>
+  {% else %}
+    {# Tabla de proyectos #}
+    <div class="container">
+      <div class="container table-container">
+        <table class="table table-striped table-hover">
+          {# Header de la tabla #}
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Descripcion</th>
+              <th>Inicio</th>
+              <th>Cierre</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for project in projects %}
+              <tr>
+                <td>{{ project.id }}</td>
+                <td>{{ project.description }}</td>
+                <td>
+                  <input
+                    type="date"
+                    style="background-color:transparent;border-radius: 5px;"
+                    value="{{ project.start_date }}"
+                    disabled
+                  />
+                </td>
+                <td>
+                  <input
+                    type="date"
+                    style="background-color:transparent;border-radius: 5px;"
+                    value="{{ project.end_date }}"
+                    disabled
+                  />
+                </td>
+                <td>
+                  {# Generar #}
+                  <button
+                    type="button"
+                    class="my-2 btn {% if project.active %}
+                      btn-primary
+                    {% else %}
+                      btn-secondary
+                    {% endif %}"
+                    {% if not project.active %}disabled{% endif %}
+                  >
+                    <img
+                      src="{{ url_for('static', filename='img/generate.svg') }}"
+                      width="24"
+                      height="24"
+                      fill="white"
+                      class="table-button"
+                      value="submit"
+                      style="border-radius: 5px;"
+                      title="Generar proyecto"
+                    />
+                  </button>
+
+                  {# Modificar #}
+                  <button
+                    type="button"
+                    id="modify{{ project.id }}"
+                    class="my-2 btn {% if project.active %}
+                      btn-primary
+                    {% else %}
+                      btn-secondary
+                    {% endif %} modify-project"
+                    data-toggle="modal"
+                    {% if not project.active %}disabled{% endif %}
+                  >
+                    <img
+                      src="{{ url_for('static', filename='img/edit.svg') }}"
+                      width="24"
+                      height="24"
+                      fill="white"
+                      class="table-button"
+                      value="submit"
+                      style="border-radius: 5px;"
+                      title="Modificar proyecto"
+                    />
+                  </button>
+
+                  {# Eliminar #}
+                  <button
+                    type="button"
+                    id="delete{{ project.id }}"
+                    class="my-2 btn {% if project.active %}
+                      btn-primary
+                    {% else %}
+                      btn-secondary
+                    {% endif %} delete-project"
+                    data-toggle="modal"
+                    {% if not project.active %}disabled{% endif %}
+                  >
+                    <img
+                      src="{{ url_for('static', filename='img/delete.svg') }}"
+                      width="24"
+                      height="24"
+                      fill="white"
+                      class="table-button"
+                      value="submit"
+                      style="border-radius: 5px;"
+                      title="Eliminar proyecto"
+                    />
+                  </button>
+
+                  {# Habilitar/Cerrar #}
+                  {% if project.active %}
+                    <button
+                      type="button"
+                      id="disable{{ project.id }}"
+                      class="my-2 btn btn-primary change-status-project"
+                      name="disable_project"
+                    >
+                      <img
+                        src="{{ url_for('static', filename='img/stop.svg') }}"
+                        width="24"
+                        height="24"
+                        fill="white"
+                        class="table-button"
+                        value="submit"
+                        style="border-radius: 5px;"
+                        title="Cerrar proyecto"
+                      />
+                    </button>
+                  {% else %}
+                    <button
+                      type="submit"
+                      id="enable{{ project.id }}"
+                      name="enable_project"
+                      class="btn btn-primary change-status-project"
+                    >
+                      <img
+                        src="{{ url_for('static', filename='img/play.svg') }}"
+                        width="24"
+                        height="24"
+                        fill="white"
+                        class="table-button"
+                        value="submit"
+                        style="border-radius: 5px;"
+                        title="Habilitar proyecto"
+                      />
+                    </button>
+                  {% endif %}
+                  {# Imprimir #}
+                  <button
+                    type="button"
+                    id="print{{ project.id }}"
+                    class="my-2 btn btn-primary"
+                    data-toggle="modal"
+                    data-target="#modifyModal"
+                  >
+                    <img
+                      src="{{ url_for('static', filename='img/print.svg') }}"
+                      width="24"
+                      height="24"
+                      fill="white"
+                      class="table-button"
+                      value="submit"
+                      style="border-radius: 5px;"
+                      title="Imprimir proyecto"
+                    />
+                  </button>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  {% endif %}
+
+  <script src="{{ url_for('static', filename='js/project.js') }}"></script>
+{% endblock %}
