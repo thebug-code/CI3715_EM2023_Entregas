@@ -6,7 +6,6 @@ from SAGTMA.utils import events
 from SAGTMA.utils.profiles import validate_names
 
 
-# ========== Excepciones ==========
 class ClientError(ValueError):
     pass
 
@@ -159,7 +158,10 @@ def register_client(
     db.session.add(new_client)
 
     # Registra el evento en la base de datos
-    events.add_event("Detalles de los Clientes", f"Agregar cliente '{new_client.id_number}'")
+    events.add_event(
+        "Detalles de los Clientes", f"Agregar cliente '{new_client.id_number}'"
+    )
+
 
 # ========== Edicion de datos ==========
 def modify_client(
@@ -252,4 +254,6 @@ def delete_client(client_id: int):
     db.session.delete(result[0])
 
     # Registra el evento en la base de datos
-    events.add_event("Detalles de los Clientes", f"Eliminar cliente '{result[0].id_number}'")
+    events.add_event(
+        "Detalles de los Clientes", f"Eliminar cliente '{result[0].id_number}'"
+    )

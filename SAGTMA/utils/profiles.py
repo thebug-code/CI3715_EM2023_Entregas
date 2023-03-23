@@ -264,4 +264,6 @@ def delete_user(user_id: int):
     db.session.commit()
 
     # Añade el evento de eliminación
-    events.add_event("Perfiles de Usuarios", f"Eliminar usuario '{deleted_user.username}'")
+    events.add_event(
+        "Perfiles de Usuarios", f"Eliminar usuario '{deleted_user.username}'"
+    )

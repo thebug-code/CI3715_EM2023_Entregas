@@ -162,6 +162,7 @@ def register_client_vehicle(
         f"Anadir '{new_vehicle.brand}' al cliente '{new_vehicle.owner.id_numberr}'",
     )
 
+
 # ========== Modicar datos de Vehiculos ==========
 def modify_vehicle(
     vehicle_id: int,

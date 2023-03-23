@@ -5,7 +5,6 @@ from SAGTMA.utils import events
 from datetime import date
 
 
-# ========== Excepciones ==========
 class ProjectError(ValueError):
     pass
 
@@ -71,7 +70,9 @@ def create_project(description: str, start_date: str, deadline: str):
     db.session.add(new_project)
 
     # Registra el evento en la base de datos
-    events.add_event("Portafolio de Proyectos", f"Agregar proyecto '{new_project.description}'")
+    events.add_event(
+        "Portafolio de Proyectos", f"Agregar proyecto '{new_project.description}'"
+    )
 
 
 # ========== Modificar ==========
