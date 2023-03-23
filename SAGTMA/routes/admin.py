@@ -179,7 +179,7 @@ def ws_depts() -> Response:
             stmt = stmt.where(Department.description.like(f"%{dept}%"))
 
         # Añade el evento de búsqueda
-        # events.add_search_dept(dept)
+        events.add_search_dept(dept)
 
     result = db.session.execute(stmt).fetchall()
     _depts = [r for r, in result]
