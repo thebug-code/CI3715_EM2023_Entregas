@@ -4,24 +4,7 @@ from SAGTMA.models import Department, db
 from SAGTMA.utils import events
 
 
-# ========== Excepciones ==========
 class DepartmentError(ValueError):
-    pass
-
-
-class AlreadyExistingDepartmentError(DepartmentError):
-    pass
-
-
-class MissingFieldError(DepartmentError):
-    pass
-
-
-class DepartmentNotFoundError(DepartmentError):
-    pass
-
-
-class InvalidDescriptionError(DepartmentError):
     pass
 
 
@@ -35,13 +18,13 @@ def validate_descrip_dept(description: str) -> bool:
       -No tiene caracteres especiales distintos de ' -_?¿¡!:'
     """
     if len(description) < 6 or len(description) > 100:
-        raise InvalidDescripProjectError(
+        raise DepartmentError(
             "La descripción del departamento debe tener entre 6 y 100 caracteres."
         )
 
-    regex = r'^[\w\s\-?¿¡!:.]*$'
+    regex = r"^[\w\s\-?¿¡!:.]*$"
     if not re.search(regex, description):
-        raise InvalidDescripProjectError(
+        raise DepartmentError(
             "La descripción del departamento no puede contener caracteres especiales."
         )
 
@@ -57,7 +40,7 @@ def register_dept(description: str):
     description = description.strip()
 
     if not all([description]):
-        raise MissingFieldError("Todos los campos son obligatorios")
+        raise DepartmentError("Todos los campos son obligatorios")
 
     # Chequea si la descripción es válida
     validate_descrip_dept(description)
@@ -65,13 +48,11 @@ def register_dept(description: str):
     # Verifica si ya existe un departamento con la misma descripción
     smt = db.select(Department).where(Department.description == description)
     if db.session.execute(smt).first():
-        raise AlreadyExistingDepartmentError(
-            "Ya existe un departamento con la misma descripción"
-        )
+        raise DepartmentError("Ya existe un departamento con la misma descripción")
 
     # Crea el departamento en la base de datos
     new_dept = Department(description)
-    
+
     db.session.add(new_dept)
 
     # Registra el evento en la base de datos
@@ -89,7 +70,7 @@ def delete_dept(dept_id: int):
     stmt = db.select(Department).where(Department.id == dept_id)
     result = db.session.execute(stmt).first()
     if not result:
-        raise DepartmentNotFoundError("El departamento indicado no existe")
+        raise DepartmentError("El departamento indicado no existe")
 
     # Elimina el departamento de la base de datos
     db.session.delete(result[0])
@@ -109,24 +90,22 @@ def modify_dept(dept_id: int, description: str):
     description = description.strip()
 
     if not all([description]):
-        raise MissingFieldError("Todos los campos son obligatorios")
+        raise DepartmentError("Todos los campos son obligatorios")
 
     # Verifica si ya existe un departamento con la misma descripción
-    smt = ( 
+    smt = (
         db.select(Department)
         .where(Department.description == description)
         .where(Department.id != dept_id)
     )
     if db.session.execute(smt).first():
-        raise AlreadyExistingDepartmentError(
-            "Ya existe un departamento con la misma descripción"
-        )
+        raise DepartmentError("Ya existe un departamento con la misma descripción")
 
     # Busca el departamento con el id indicado y verifica si existe
     stmt = db.select(Department).where(Department.id == dept_id)
     result = db.session.execute(stmt).first()
     if not result:
-        raise DepartmentNotFoundError("El departamento indicado no existe")
+        raise DepartmentError("El departamento indicado no existe")
 
     # Chequea si la descripción es válida
     validate_descrip_dept(description)

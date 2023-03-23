@@ -11,34 +11,6 @@ class ClientError(ValueError):
     pass
 
 
-class AlreadyExistingClientError(ClientError):
-    pass
-
-
-class MissingFieldError(ClientError):
-    pass
-
-
-class ClientNotFoundError(ClientError):
-    pass
-
-
-class InvalidEmailError(ClientError):
-    pass
-
-
-class InvalidPhoneError(ClientError):
-    pass
-
-
-class InvalidIdNumberError(ClientError):
-    pass
-
-
-class InvalidAddressError(ClientError):
-    pass
-
-
 # ========== Validaciones ==========
 def validate_id(id_number: str) -> str:
     """Lanza una excepción si una cédula no es válida.
@@ -62,7 +34,7 @@ def validate_id(id_number: str) -> str:
     # Expresión regular para validar cédulas de identidad
     regex = r"[V|E|J|G|C]-\d{7,8}"
     if not re.fullmatch(regex, id_number):
-        raise InvalidIdNumberError(
+        raise ClientError(
             "La cédula ingresada es inválida, debe tener el formato V-12345678"
         )
 
@@ -89,9 +61,7 @@ def validate_phone_number(phone_number: str) -> str:
     # Expresión regular para validar número telefónicos
     regex = r"((\+|00)?58|0)?\d{10}"
     if not re.fullmatch(regex, phone_number):
-        raise InvalidPhoneError(
-            "El número de teléfono ingresado no tiene un formato válido"
-        )
+        raise ClientError("El número de teléfono ingresado no tiene un formato válido")
 
     # Regulariza el número para guardarlo en la base de datos
     if phone_number.startswith("00"):
@@ -109,7 +79,7 @@ def validate_email(email: str):
     # Expresión regular para validar correos electrónicos
     regex = r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b"
     if not re.fullmatch(regex, email):
-        raise InvalidEmailError("El correo electrónico ingresado es inválido")
+        raise ClientError("El correo electrónico ingresado es inválido")
 
 
 def validate_birthdate(birthdate: datetime.date):
@@ -154,7 +124,7 @@ def register_client(
     address = address.strip()
 
     if not all([id_number, names, surnames, birthdate, phone_number, email, address]):
-        raise MissingFieldError("Todos los campos son obligatorios")
+        raise ClientError("Todos los campos son obligatorios")
 
     # Chequea si los campos son válidos
     id_number = validate_id(id_number)
@@ -171,7 +141,7 @@ def register_client(
     # Verifica si ya existe un cliente con el mismo id_number
     stmt = db.select(Client).where(Client.id_number == id_number)
     if db.session.execute(stmt).first():
-        raise AlreadyExistingClientError("Ya existe un cliente con la misma cédula")
+        raise ClientError("Ya existe un cliente con la misma cédula")
 
     # Convert birthdate a tipo Date usando la libreria datetime
     y, m, d = birthdate.split("-")
@@ -217,7 +187,7 @@ def modify_client(
 
     # Verifica si todos los campos fueron ingresados
     if not all([id_number, names, surnames, birthdate, phone_number, email, address]):
-        raise MissingFieldError("Todos los campos son obligatorios")
+        raise ClientError("Todos los campos son obligatorios")
 
     # Chequea si los campos son válidos
     id_number = validate_id(id_number)
@@ -238,15 +208,13 @@ def modify_client(
         .where(Client.id != client_id)
     )
     if db.session.execute(stmt).first():
-        raise AlreadyExistingClientError(
-            "Ya existe un cliente con la misma cédula"
-        )
+        raise ClientError("Ya existe un cliente con la misma cédula")
 
     # Busca el cliente con el id indicado y verifica si existe
     stmt = db.select(Client).where(Client.id == client_id)
     client_query = db.session.execute(stmt).first()
     if not client_query:
-        raise ClientNotFoundError("El cliente indicado no existe")
+        raise ClientError("El cliente indicado no existe")
 
     # Convert birthdate a tipo Date usando la libreria datetime
     y, m, d = birthdate.split("-")
@@ -279,7 +247,7 @@ def delete_client(client_id: int):
     stmt = db.select(Client).where(Client.id == client_id)
     result = db.session.execute(stmt).first()
     if not result:
-        raise ClientNotFoundError("El cliente indicado no existe")
+        raise ClientError("El cliente indicado no existe")
 
     # Elimina el cliente de la base de datos
     db.session.delete(result[0])

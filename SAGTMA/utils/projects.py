@@ -6,27 +6,7 @@ from datetime import date
 
 
 # ========== Excepciones ==========
-class CreateProjectError(ValueError):
-    pass
-
-
-class AlreadyExistingProjectError(CreateProjectError):
-    pass
-
-
-class InvalidDescripProjectError(CreateProjectError):
-    pass
-
-
-class InvalidProjectDate(CreateProjectError):
-    pass
-
-
-class MissingFieldError(CreateProjectError):
-    pass
-
-
-class ProjectNotFoundError(CreateProjectError):
+class ProjectError(ValueError):
     pass
 
 
@@ -39,13 +19,13 @@ def validate_descrip_project(description: str) -> bool:
       -No tiene caracteres especiales distintos de ' -_?¿¡!:'
     """
     if len(description) < 6 or len(description) > 100:
-        raise InvalidDescripProjectError(
+        raise ProjectError(
             "La descripción del proyecto debe tener entre 6 y 100 caracteres."
         )
 
     for char in description:
         if not char.isalnum() and char not in " -_?¿¡!:.,":
-            raise InvalidDescripProjectError(
+            raise ProjectError(
                 "La descripción de un proyecto no puede contener caracteres especiales."
             )
 
@@ -54,7 +34,7 @@ def validate_date(start_date: date, deadline: date) -> bool:
     """Lanza una excepción si la fecha de inicio de un proyecto es despues que su fecha de cierre"""
 
     if start_date > deadline:
-        raise InvalidProjectDate(
+        raise ProjectError(
             "La fecha de inicio no puede ser mayor que la fecha de cierre."
         )
 
@@ -68,12 +48,12 @@ def create_project(description: str, start_date: str, deadline: str):
     # Eliminar espacios al comienzo y final de la descripción
     description = description.strip()
     if not all([description, start_date, deadline]):
-        raise MissingFieldError("Todos los campos son obligatorios")
+        raise ProjectError("Todos los campos son obligatorios")
 
     # Verifica si ya existe un proyecto con la misma descripción
     stmt = db.select(Project).where(Project.description == description)
     if db.session.execute(stmt).first():
-        raise AlreadyExistingProjectError("El proyecto ya existe")
+        raise ProjectError("El proyecto ya existe")
 
     # Convert fechas a tipo Date usando la libreria datetime
     y, m, d = start_date.split("-")
@@ -101,7 +81,7 @@ def modify_project(project_id: int, description: str, start_date: str, deadline:
     Lanza una excepción CreateProyectError si hubo algún error.
     """
     if not all([description, start_date, deadline]):
-        raise MissingFieldError("Todos los campos son obligatorios")
+        raise ProjectError("Todos los campos son obligatorios")
 
     # Verifica si ya existe un proyecto con la mima descripción
     stmt = (
@@ -110,13 +90,13 @@ def modify_project(project_id: int, description: str, start_date: str, deadline:
         .where(Project.id != project_id)
     )
     if db.session.execute(stmt).first():
-        raise AlreadyExistingProjectError("El proyecto ya existe")
+        raise ProjectError("El proyecto ya existe")
 
     # Busca el proyecto con el id indicado
     stmt = db.select(Project).where(Project.id == project_id)
     project_query = db.session.execute(stmt).first()
     if not project_query:
-        raise ProjectNotFoundError("El proyecto indicado no existe")
+        raise ProjectError("El proyecto indicado no existe")
 
     # Convert fechas a tipo Date
     y, m, d = start_date.split("-")

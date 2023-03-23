@@ -14,6 +14,7 @@ from SAGTMA.utils.decorators import login_required, requires_roles
 from SAGTMA.models import Project, db
 
 
+# ========== Gerente de Operaciones ==========
 @current_app.route("/project-portfolio/", methods=["GET", "POST"])
 @requires_roles("Gerente de Operaciones")
 def portfolio() -> Response:
@@ -47,7 +48,7 @@ def create_project() -> Response:
 
     try:
         projects.create_project(description, start_date, deadline)
-    except projects.CreateProjectError as e:
+    except projects.ProjectError as e:
         flash(f"{e}")
         return redirect(url_for("portfolio"))
 
@@ -67,7 +68,7 @@ def modify_project(project_id):
 
     try:
         projects.modify_project(project_id, description, start_date, deadline)
-    except projects.CreateProjectError as e:
+    except projects.ProjectError as e:
         flash(f"{e}")
 
     # Se permanece en la pagina
@@ -124,3 +125,26 @@ def change_project_status(project_id):
 
     # Se permanece en la pagina
     return redirect(url_for("portfolio"))
+
+
+# ========== Gerente de Proyectos ==========
+@current_app.route("/project-portfolio/<int:project_id>", methods=["GET", "POST"])
+@requires_roles("Gerente de Proyectos")
+def portfolio() -> Response:
+    """Muestra la lista de proyectos anadidos en el sistema"""
+    if request.method == "POST":
+        # Obtiene los datos del formulario
+        descrip = request.form.get("descrip-filter")
+
+        stmt = db.select(Project).where(Project.description.like(f"%{descrip}%"))
+
+        # Añade el evento de búsqueda
+        events.add_search_project(descrip)
+    else:
+        # Selecciona los proyectos de la base de datos
+        stmt = db.select(Project)
+
+    result = db.session.execute(stmt).fetchall()
+    _projects = [r for r, in result]
+
+    return render_template("manager/portfolio.html", projects=_projects)

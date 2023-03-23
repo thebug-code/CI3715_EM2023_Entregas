@@ -39,17 +39,25 @@ def logout_required(f):
 def requires_roles(*roles):
     """Decorador de roles requeridos para rutas protegidas.
 
-    Verifica primero si el usuario ha iniciado sesión, y luego si tiene alguno
-    de los roles requeridos, si no, lanza un error 403 de acceso denegado
+    Verifica primero si el usuario ha iniciado sesión, y luego si su rol comienza
+    con alguna de las palabra de *roles, si no, lanza un error 403 de acceso denegado
     """
 
     def wrapper(f):
         @login_required
         @wraps(f)
         def wrapped(*args, **kwargs):
-            if session.get("role") not in roles:
+            user_role = session.get("role")
+
+            if user_role is None:
                 abort(403)
-            return f(*args, **kwargs)
+
+            # Verifica si el rol comienza con algunan de las palabras de *roles
+            for role in roles:
+                if user_role.startswith(role):
+                    return f(*args, **kwargs)
+
+            abort(403)
 
         return wrapped
 

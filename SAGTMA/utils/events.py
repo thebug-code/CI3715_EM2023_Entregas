@@ -8,10 +8,6 @@ class EventError(ValueError):
     pass
 
 
-class InvalidEventError(EventError):
-    pass
-
-
 # ========== Perfiles de Usuarios ==========
 def add_register(username: str):
     _add_event("Perfiles de Usuarios", f"Agregar usuario '{username}'")
@@ -58,13 +54,13 @@ def add_search_log(search: str):
 def delete_event(event_id: int):
     """Elimina un usuario de la base de datos y"""
     if not event_id:
-        raise InvalidEventError("El evento indicado no existe")
+        raise EventError("El evento indicado no existe")
 
     # Busca el evento en la base de datos
     stmt = db.select(Event).where(Event.id == event_id)
     result = db.session.execute(stmt).fetchone()
     if not result:
-        raise InvalidEventError("El evento indicado no existe")
+        raise EventError("El evento indicado no existe")
     (deleted_event,) = result
 
     # Elimina el evento de la base de datos
@@ -139,8 +135,6 @@ def add_search_dept(search: str):
 
 
 # =========== Funciones Auxiliares ==========
-
-
 def _add_event(module: str, description: str):
     """Crea y anade un nuevo a la base de datos"""
     current_user = profiles.get_current_user(session["id"])

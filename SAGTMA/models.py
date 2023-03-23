@@ -168,6 +168,7 @@ class Vehicle(db.Model):
     def __repr__(self) -> str:
         return f"Vehicle<{self.license_plate}: {self.brand} {self.model}>"
 
+
 class Department(db.Model):
     """Modelo de Departamento."""
 
@@ -178,5 +179,4 @@ class Department(db.Model):
         self.description = description
 
     def __repr__(self) -> str:
-        return f'Department<{self.description}>'
-
+        return f"Department<{self.description}>"

@@ -204,9 +204,7 @@ def register_dept() -> Response:
     return redirect(url_for("ws_depts"))
 
 
-@current_app.route(
-    "/workshop-departments/delete/<int:dept_id>/", methods=["POST"]
-)
+@current_app.route("/workshop-departments/delete/<int:dept_id>/", methods=["POST"])
 @requires_roles("Administrador")
 def delete_dept(dept_id: int) -> Response:
     """Elimina un departamento de la base de datos."""
@@ -221,9 +219,7 @@ def delete_dept(dept_id: int) -> Response:
     return redirect(url_for("ws_depts"))
 
 
-@current_app.route(
-    "/workshop-departments/modify/<int:dept_id>/", methods=["POST"]
-)
+@current_app.route("/workshop-departments/modify/<int:dept_id>/", methods=["POST"])
 @requires_roles("Administrador")
 def modify_dept(dept_id: int) -> Response:
     """

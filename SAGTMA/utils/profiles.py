@@ -6,44 +6,7 @@ from SAGTMA.models import Role, User, db
 from SAGTMA.utils import events
 
 
-# ========== Excepciones ==========
 class AuthenticationError(ValueError):
-    pass
-
-
-class AlreadyExistingUserError(AuthenticationError):
-    pass
-
-
-class InvalidNameError(AuthenticationError):
-    pass
-
-
-class InvalidUsernameError(AuthenticationError):
-    pass
-
-
-class InvalidPasswordError(AuthenticationError):
-    pass
-
-
-class PasswordMismatchError(AuthenticationError):
-    pass
-
-
-class MissingFieldError(AuthenticationError):
-    pass
-
-
-class UserNotFoundError(AuthenticationError):
-    pass
-
-
-class IncorrectPasswordError(AuthenticationError):
-    pass
-
-
-class InvalidRoleError(AuthenticationError):
     pass
 
 
@@ -57,18 +20,18 @@ def validate_username(username: str) -> bool:
       -No comienza con un caracter numérico
     """
     if len(username) < 3 or len(username) > 20:
-        raise InvalidUsernameError(
+        raise AuthenticationError(
             "El nombre de usuario debe tener entre 3 y 20 caracteres."
         )
 
     if username[0].isdigit():
-        raise InvalidUsernameError(
+        raise AuthenticationError(
             "El nombre de usuario no puede comenzar con un número."
         )
 
     for char in username:
         if not char.isalnum() and char != "_":
-            raise InvalidUsernameError(
+            raise AuthenticationError(
                 "El nombre de usuario no puede contener caracteres especiales."
             )
 
@@ -81,11 +44,13 @@ def validate_names(names: str) -> bool:
       -No tiene caracteres especiales distintos de ' ' (espacio)
     """
     if len(names) < 2 or len(names) > 50:
-        raise InvalidNameError("El nombre debe tener entre 2 y 50 caracteres.")
+        raise AuthenticationError("El nombre debe tener entre 2 y 50 caracteres.")
 
     for char in names:
         if not char.isalnum() and char != " ":
-            raise InvalidNameError("El nombre no puede contener caracteres especiales.")
+            raise AuthenticationError(
+                "El nombre no puede contener caracteres especiales."
+            )
 
 
 def validate_password(password: str) -> bool:
@@ -98,7 +63,7 @@ def validate_password(password: str) -> bool:
       -Tiene al menos un caracter especial
     """
     if len(password) < 6 or len(password) > 20:
-        raise InvalidPasswordError("La contraseña debe tener entre 6 y 20 caracteres.")
+        raise AuthenticationError("La contraseña debe tener entre 6 y 20 caracteres.")
 
     no_number = True
     no_upper = True
@@ -115,13 +80,13 @@ def validate_password(password: str) -> bool:
             no_special = False
 
     if no_number:
-        raise InvalidPasswordError("La contraseña debe contener al menos un número.")
+        raise AuthenticationError("La contraseña debe contener al menos un número.")
     elif no_upper or no_lower:
-        raise InvalidPasswordError(
+        raise AuthenticationError(
             "La contraseña debe contener al menos una mayúscula y una minúscula"
         )
     elif no_special:
-        raise InvalidPasswordError(
+        raise AuthenticationError(
             "La contraseña debe contener al menos un caracter especial."
         )
 
@@ -143,12 +108,12 @@ def register_user(
     names = names.strip()
     surnames = surnames.strip()
     if not all([username, names, surnames, password, confirm_password, role_id]):
-        raise MissingFieldError("Todos los campos son obligatorios")
+        raise AuthenticationError("Todos los campos son obligatorios")
 
     # Verifica si ya existe un usuario con el mismo nombre de usuario
     stmt = db.select(User).where(User.username == username)
     if db.session.execute(stmt).first():
-        raise AlreadyExistingUserError("El nombre de usuario ya existe")
+        raise AuthenticationError("El nombre de usuario ya existe")
 
     # Chequea si los campos ingresados son válidos
     validate_username(username)
@@ -157,13 +122,13 @@ def register_user(
     validate_password(password)
 
     if password != confirm_password:
-        raise PasswordMismatchError("Las contraseñas ingresadas no coinciden")
+        raise AuthenticationError("Las contraseñas ingresadas no coinciden")
 
     # Busca el rol con el nombre ingresado
     stmt = db.select(Role).where(Role.id == role_id)
     query_role = db.session.execute(stmt).first()
     if not query_role:
-        raise InvalidRoleError("El rol ingresado no existe")
+        raise AuthenticationError("El rol ingresado no existe")
 
     # Crea el usuario en la base de datos
     new_user = User(username, names, surnames, hash_password(password), query_role[0])
@@ -187,15 +152,15 @@ def log_user(username: str, password: str) -> Tuple[int, str]:
     Retorna una tupla con el id del usuario y el nombre de su rol
     """
     if not username or not password:
-        raise MissingFieldError("Todos los campos son obligatorios")
+        raise AuthenticationError("Todos los campos son obligatorios")
 
     stmt = db.select(User).where(User.username == username)
     query_user = db.session.execute(stmt).first()
 
     if not query_user:
-        raise UserNotFoundError("El usuario ingresado no existe")
+        raise AuthenticationError("El usuario ingresado no existe")
     elif not check_password(password, query_user[0].password):
-        raise IncorrectPasswordError("Las credenciales ingresadas son incorrectas")
+        raise AuthenticationError("Las credenciales ingresadas son incorrectas")
 
     return (query_user[0].id, query_user[0].role.name)
 
@@ -222,13 +187,13 @@ def edit_user(user_id: int, username: str, names: str, surnames: str, role_id: s
     names = names.strip()
     surnames = surnames.strip()
     if not all([user_id, username, names, surnames, role_id]):
-        raise MissingFieldError("Todos los campos son obligatorios")
+        raise AuthenticationError("Todos los campos son obligatorios")
 
     # Busca el usuario en la base de datos
     stmt = db.select(User).where(User.id == user_id)
     result = db.session.execute(stmt).fetchone()
     if not result:
-        raise UserNotFoundError("El usuario indicado no existe")
+        raise AuthenticationError("El usuario indicado no existe")
     (edited_user,) = result
 
     # Busca el rol en la base de datos
@@ -236,14 +201,14 @@ def edit_user(user_id: int, username: str, names: str, surnames: str, role_id: s
     result = db.session.execute(stmt).fetchone()
     if not result:
         # Si no existe, se permanece en la página
-        raise InvalidRoleError("El rol indicado no existe")
+        raise AuthenticationError("El rol indicado no existe")
     (new_role,) = result
 
     # Verifica si ya existe un usuario distinto con el mismo nombre de usuario
     stmt = db.select(User).where(User.username == username).where(User.id != user_id)
     result = db.session.execute(stmt).first()
     if result:
-        raise AlreadyExistingUserError("El nombre de usuario ya existe")
+        raise AuthenticationError("El nombre de usuario ya existe")
 
     # Chequea si los campos ingresados son válidos
     validate_username(username)
@@ -253,13 +218,13 @@ def edit_user(user_id: int, username: str, names: str, surnames: str, role_id: s
     if new_role.name == "Administrador":
         # No se puede editar el rol de un usuario a administrador
         if edited_user.role.name != "Administrador":
-            raise InvalidRoleError(
+            raise AuthenticationError(
                 "No se puede editar el rol de un usuario a administrador"
             )
     else:
         # No se puede editar el rol de un administrador
         if edited_user.role.name == "Administrador":
-            raise InvalidRoleError("No se puede editar el rol de un administrador")
+            raise AuthenticationError("No se puede editar el rol de un administrador")
 
     # Edita el usuario en la base de datos
     edited_user.username = username
@@ -280,18 +245,18 @@ def delete_user(user_id: int):
     Lanza una excepción AuthenticationError si hubo algún error.
     """
     if not user_id:
-        raise MissingFieldError("Todos los campos son obligatorios")
+        raise AuthenticationError("Todos los campos son obligatorios")
 
     # Busca el usuario en la base de datos
     stmt = db.select(User).where(User.id == user_id)
     result = db.session.execute(stmt).fetchone()
     if not result:
-        raise UserNotFoundError("El usuario indicado no existe")
+        raise AuthenticationError("El usuario indicado no existe")
     (deleted_user,) = result
 
     # No se puede eliminar un administrador
     if deleted_user.role.name == "Administrador":
-        raise InvalidRoleError("No se puede eliminar un administrador")
+        raise AuthenticationError("No se puede eliminar un administrador")
 
     # Elimina el usuario de la base de datos
     db.session.delete(deleted_user)

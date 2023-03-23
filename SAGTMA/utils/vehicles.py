@@ -6,36 +6,7 @@ from datetime import date
 from SAGTMA.utils.profiles import validate_names
 
 
-# ========== Excepciones ==========
 class VehicleError(ValueError):
-    pass
-
-
-class AlreadyExistingVehicleError(VehicleError):
-    pass
-
-
-class MissingFieldError(VehicleError):
-    pass
-
-
-class VehicleNotFoundError(VehicleError):
-    pass
-
-
-class InvalidLicensePlateError(VehicleError):
-    pass
-
-
-class InvalidSerialNumberError(VehicleError):
-    pass
-
-
-class InvalidColorError(VehicleError):
-    pass
-
-
-class InvalidYearError(VehicleError):
     pass
 
 
@@ -49,21 +20,19 @@ def validate_license_plate(license_plate: str) -> bool:
       -No tiene espacios/guiones consecutivos
     """
     if len(license_plate) < 5 or len(license_plate) > 10:
-        raise InvalidLicensePlateError("La placa debe tener entre 5 y 10 caracteres")
+        raise VehicleError("La placa debe tener entre 5 y 10 caracteres")
 
     if not license_plate[0].isalpha():
-        raise InvalidLicensePlateError(
-            "La placa debe comenzar con un caracter alfanumérico"
-        )
+        raise VehicleError("La placa debe comenzar con un caracter alfanumérico")
 
     # Chequea que no haya caracteres especiales más que guiones o espacios, y que no haya espacios consecutivos
     for i, char in enumerate(license_plate):
         if not char.isalnum() and char not in "- ":
-            raise InvalidLicensePlateError(
+            raise VehicleError(
                 "La placa solo puede contener caracteres alfanuméricos, guiones y espacios"
             )
         if char in "- " and license_plate[i - 1] in "- ":
-            raise InvalidLicensePlateError(
+            raise VehicleError(
                 "La placa no puede contener espacios/guiones consecutivos"
             )
 
@@ -78,23 +47,21 @@ def validate_serial_number(serial_number: str):
       -No comienza ni termina con un guión
     """
     if len(serial_number) < 5 or len(serial_number) > 20:
-        raise InvalidSerialNumberError(
-            "El número de serie debe tener entre 5 y 20 caracteres"
-        )
+        raise VehicleError("El número de serie debe tener entre 5 y 20 caracteres")
 
     if serial_number[0] == "-" or serial_number[-1] == "-":
-        raise InvalidSerialNumberError(
+        raise VehicleError(
             "El número de serie no puede comenzar ni terminar con un guión"
         )
 
     for i, char in enumerate(serial_number):
         if not char.isalnum() and char != "-":
-            raise InvalidSerialNumberError(
+            raise VehicleError(
                 "El número de serie solo puede contener caracteres alfanuméricos y guiones"
             )
 
         if char in "- " and serial_number[i - 1] in "- ":
-            raise InvalidSerialNumberError(
+            raise VehicleError(
                 "El número de serie no puede contener guiones consecutivos"
             )
 
@@ -107,11 +74,11 @@ def validate_color(color: str):
       -Solo tiene caracteres alfanuméricos o espacios
     """
     if len(color) < 2 or len(color) > 20:
-        raise InvalidColorError("El color debe tener entre 2 y 20 caracteres")
+        raise VehicleError("El color debe tener entre 2 y 20 caracteres")
 
     for char in color:
         if not char.isalnum() and char != " ":
-            raise InvalidColorError(
+            raise VehicleError(
                 "El color solo puede contener caracteres alfanuméricos y espacios"
             )
 
@@ -124,7 +91,7 @@ def validate_year(year: int):
       -Es menor o igual al año actual
     """
     if year < 1900 or year > date.today().year + 1:
-        raise InvalidYearError(
+        raise VehicleError(
             "El año debe ser un número entero entre 1900 y el año posterior al actual"
         )
 
@@ -158,7 +125,7 @@ def register_client_vehicle(
     if not all(
         [license_plate, brand, model, year, body_number, engine_number, color, problem]
     ):
-        raise MissingFieldError("Todos los campos son obligatorios")
+        raise VehicleError("Todos los campos son obligatorios")
 
     # Chequea si los campos son válidos
     validate_license_plate(license_plate)
@@ -177,7 +144,7 @@ def register_client_vehicle(
     # Verifica si ya existe un vehiculo con la misma placa
     stmt = db.select(Vehicle).where(Vehicle.license_plate == license_plate)
     if db.session.execute(stmt).first():
-        raise AlreadyExistingVehicleError("El vehículo indicado ya existe")
+        raise VehicleError("El vehículo indicado ya existe")
 
     # Crea el Vehiculo en la base de datos
     new_vehicle = Vehicle(
@@ -222,7 +189,7 @@ def modify_vehicle(
     if not all(
         [license_plate, brand, model, year, body_number, engine_number, color, problem]
     ):
-        raise MissingFieldError("Todos los campos son obligatorios")
+        raise VehicleError("Todos los campos son obligatorios")
 
     # Chequea si los campos son válidos
     validate_license_plate(license_plate)
@@ -245,13 +212,13 @@ def modify_vehicle(
         .where(Vehicle.id != vehicle_id)
     )
     if db.session.execute(stmt).first():
-        raise AlreadyExistingVehicleError("El vehículo ya existe")
+        raise VehicleError("El vehículo ya existe")
 
     # Busca el vehiculo con el id indicado y verifica si existe
     stmt = db.select(Vehicle).where(Vehicle.id == vehicle_id)
     vehicle_query = db.session.execute(stmt).first()
     if not vehicle_query:
-        raise VehicleNotFoundError("El vehículo indicado no existe")
+        raise VehicleError("El vehículo indicado no existe")
     (edited_vehicle,) = vehicle_query
 
     # Actualiza los datos del vehiculo
@@ -278,7 +245,7 @@ def delete_vehicle(vehicle_id: int) -> int:
     stmt = db.select(Vehicle).where(Vehicle.id == vehicle_id)
     result = db.session.execute(stmt).first()
     if not result:
-        raise VehicleNotFoundError("El vehículo indicado no existe")
+        raise VehicleError("El vehículo indicado no existe")
 
     # Elimina el vehiculo de la base de datos
     db.session.delete(result[0])
