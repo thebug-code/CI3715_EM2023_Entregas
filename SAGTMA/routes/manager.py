@@ -26,7 +26,7 @@ def portfolio() -> Response:
         stmt = db.select(Project).where(Project.description.like(f"%{descrip}%"))
 
         # Añade el evento de búsqueda
-        events.add_search_project(descrip)
+        events.add_event("Portafolio de Proyectos", f"Buscar '{descrip}'")
     else:
         # Selecciona los proyectos de la base de datos
         stmt = db.select(Project)
@@ -92,7 +92,7 @@ def delete_project(project_id) -> Response:
     db.session.commit()
 
     # Registra el evento en la base de datos
-    events.add_delete_project(result[0].description)
+    events.add_event("Portafolio de Proyectos", f"Eliminar '{result[0].description}'")
 
     flash("Proyecto eliminado exitosamente")
 
@@ -139,7 +139,7 @@ def portfolio() -> Response:
         stmt = db.select(Project).where(Project.description.like(f"%{descrip}%"))
 
         # Añade el evento de búsqueda
-        events.add_search_project(descrip)
+        events.add_event("Portafolio de Proyectos", f"Buscar '{descrip}'")
     else:
         # Selecciona los proyectos de la base de datos
         stmt = db.select(Project)

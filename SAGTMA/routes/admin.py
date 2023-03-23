@@ -41,7 +41,11 @@ def users_profiles() -> Response:
             stmt = stmt.where(User.role_id == role)
 
         # Añade el evento de búsqueda
-        events.add_search_user(user, role)
+        events.add_event(
+            "Perfiles de Usuarios",
+            f"Buscar '{user}' en "
+            + ("todos los roles" if not role else f"el rol '{role}'"),
+        )
 
     result = db.session.execute(stmt).fetchall()
     users = [r for r, in result]
@@ -138,7 +142,7 @@ def logger() -> Response:
             )
 
             # Añade el evento de búsqueda
-            events.add_search_log(event)
+            events.add_event("Logger de Eventos", f"Buscar '{event}'")
     else:
         # Selecciona los eventos de la base de datos
         stmt = db.select(Event)
@@ -179,7 +183,7 @@ def ws_depts() -> Response:
             stmt = stmt.where(Department.description.like(f"%{dept}%"))
 
         # Añade el evento de búsqueda
-        events.add_search_dept(dept)
+        events.add_event("Departamentos del Taller", f"Buscar '{dept}'")
 
     result = db.session.execute(stmt).fetchall()
     _depts = [r for r, in result]

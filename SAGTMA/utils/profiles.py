@@ -135,7 +135,7 @@ def register_user(
     db.session.add(new_user)
 
     # Registra el evento en la base de datos
-    events.add_register(new_user.username)
+    events.add_event("Perfiles de Usuarios", f"Agregar usuario '{new_user.username}'")
 
 
 def hash_password(password: str):
@@ -235,7 +235,7 @@ def edit_user(user_id: int, username: str, names: str, surnames: str, role_id: s
     db.session.commit()
 
     # Añade el evento de edición
-    events.add_edit_user(username)
+    events.add_event("Perfiles de Usuarios", f"Editar usuario '{username}'")
 
 
 # ========== Eliminación de usuarios ==========
@@ -264,4 +264,4 @@ def delete_user(user_id: int):
     db.session.commit()
 
     # Añade el evento de eliminación
-    events.add_delete_user(deleted_user.username)
+    events.add_event("Perfiles de Usuarios", f"Eliminar usuario '{deleted_user.username}'")

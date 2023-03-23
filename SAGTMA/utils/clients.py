@@ -159,8 +159,7 @@ def register_client(
     db.session.add(new_client)
 
     # Registra el evento en la base de datos
-    events.add_client(new_client.id_number)
-
+    events.add_event("Detalles de los Clientes", f"Agregar cliente '{new_client.id_number}'")
 
 # ========== Edicion de datos ==========
 def modify_client(
@@ -233,7 +232,7 @@ def modify_client(
     client_query[0].address = address.strip()
 
     # Registra el evento en la base de datos
-    events.add_modify_client(id_number)
+    events.add_event("Detalles de los Clientes", f"Modificar cliente '{id_number}'")
 
 
 # ========== Eliminacion de clientes ==========
@@ -253,4 +252,4 @@ def delete_client(client_id: int):
     db.session.delete(result[0])
 
     # Registra el evento en la base de datos
-    events.add_delete_client(result[0].id_number)
+    events.add_event("Detalles de los Clientes", f"Eliminar cliente '{result[0].id_number}'")

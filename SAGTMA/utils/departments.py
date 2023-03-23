@@ -56,7 +56,7 @@ def register_dept(description: str):
     db.session.add(new_dept)
 
     # Registra el evento en la base de datos
-    events.add_dept(new_dept.description)
+    events.add_event("Departamentos del Taller", f"Agregar departamento '{new_dept.description}'")
 
 
 # ========== Eliminacion de un departamento ==========
@@ -76,7 +76,7 @@ def delete_dept(dept_id: int):
     db.session.delete(result[0])
 
     # Registra el evento en la base de datos
-    events.add_delete_dept(result[0].description)
+    events.add_event("Departamentos del Taller", f"Eliminar departamento '{result[0].description}'")
 
 
 # ========== Modificacion de un departamento ==========
@@ -114,4 +114,4 @@ def modify_dept(dept_id: int, description: str):
     result[0].description = description
 
     # Registra el evento en la base de datos
-    events.add_modify_dept(result[0].description)
+    events.add_event("Departamentos del Taller", f"Modificar departamento '{result[0].description}'")

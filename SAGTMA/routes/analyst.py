@@ -47,7 +47,7 @@ def client_details() -> Response:
             )
 
         # Añade el evento de búsqueda
-        events.add_search_client(client)
+        events.add_event("Detalles de los Clientes", f"Buscar '{client}'")
 
     result = db.session.execute(stmt).fetchall()
     _clients = [r for r, in result]
@@ -182,7 +182,10 @@ def client_vehicles(client_id: int) -> Response:
             )
 
         # Añade el evento de búsqueda
-        events.add_search_vehicle(vehicle, client.id_number)
+        events.add_event(
+     "Vehículos de los Clientes",
+        f"Buscar '{vehicle}' del cliente '{client.id_number}'",
+    )
 
     result = db.session.execute(stmt).fetchall()
     _vehicles = [r for r, in result]
