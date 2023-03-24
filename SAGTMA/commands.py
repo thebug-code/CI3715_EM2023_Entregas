@@ -9,7 +9,8 @@ from SAGTMA.utils import profiles
 
 @current_app.cli.command("init-db")
 def init_db_command():
-    """Inicializa la base de datos y prepuebla la misma. Antes de poblarla
+    """
+    Inicializa la base de datos y prepuebla la misma. Antes de poblarla
     borra los datos que tenía previamente.
     """
     db.drop_all()
@@ -25,6 +26,7 @@ def populate_db():
         "Usuario (Dummy)",
         "Administrador",
         "Gerente de Operaciones",
+        "Analista de Operaciones",
         "Gerente de Mecánica General",
         "Especialista en Mecánica",
         "Gerente de Estructura",

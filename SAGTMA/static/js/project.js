@@ -1,6 +1,6 @@
 $(document).ready(function () {
   // Modificar proyecto
-  $(document).on("click", ".modify-project", function () {
+  $(document).on("click", ".edit-project", function () {
     var form = $(this);
     id = form.attr("id").match(/\d+/)[0];
 
@@ -8,15 +8,15 @@ $(document).ready(function () {
       url: "/api/v1/projects",
       data: { id },
       success: function (data) {
-        $("#modifyModal").modal("show");
+        $("#edit-project-modal").modal("show");
         var project = data[0];
 
-        $("#descriptionM").val(project.description);
-        $("#start_dateM").val(project.start_date);
-        $("#deadlineM").val(project.deadline);
-        $("#modifyProjectForm").attr(
+        $("#edit-description").val(project.description);
+        $("#edit-start-date").val(project.start_date);
+        $("#edit-deadline").val(project.deadline);
+        $("#edit-project-form").attr(
           "action",
-          "/project-portfolio/modify/" + id + "/"
+          "/project-portfolio/edit/" + id + "/"
         );
       },
     });
@@ -27,40 +27,40 @@ $(document).ready(function () {
     var form = $(this);
     id = form.attr("id").match(/\d+/)[0];
 
-    $("#deleteModal").modal("show");
-    $("#deleteProjectForm").attr(
+    $("#delete-project-modal").modal("show");
+    $("#delete-project-form").attr(
       "action",
       "/project-portfolio/delete/" + id + "/"
     );
   });
 
   // Cambiar status de proyecto
-  $(document).on("click", ".change-status-project", function () {
+  $(document).on("click", ".change-project-status", function () {
     var form = $(this);
     id = form.attr("id").match(/\d+/)[0];
-    $("#changeStatusModal").modal("show");
-    $("#modalBodyCS").empty();
+    $("#change-project-status-modal").modal("show");
+    $("#modal-body-cs").empty();
 
     // Verifica si se activa o desactiva proyecto
-    if (form.attr("name") == "enable_project") {
-      $("#modalBodyCS").append(
+    if (form.attr("name") == "enable-project") {
+      $("#modal-body-cs").append(
         "<p>¿Está seguro que desea activar este proyecto?</p>"
       );
-      $("#submitButtonCS").attr("name", "enable_project");
-      $("#submitButtonCS").addClass("btn-primary");
-      $("#submitButtonCS").text("Activar");
+      $("#submit-button-cs").attr("name", "enable-project");
+      $("#submit-button-cs").addClass("btn-primary");
+      $("#submit-button-cs").text("Activar");
     } else {
-      $("#modalBodyCS").append(
+      $("#modal-body-cs").append(
         "<p>¿Está seguro que desea cerrar este proyecto?</p>"
       );
-      $("#submitButtonCS").attr("name", "disable_project");
-      $("#submitButtonCS").addClass("btn-danger");
-      $("#submitButtonCS").text("Cerrar");
+      $("#submit-button-cs").attr("name", "disable-project");
+      $("#submit-button-cs").addClass("btn-danger");
+      $("#submit-button-cs").text("Cerrar");
     }
 
-    $("#changeStatusProjectForm").attr(
+    $("#change-project-status-form").attr(
       "action",
-      "/project-portfolio/modify/" + id + "/status/"
+      "/project-portfolio/edit/" + id + "/status/"
     );
   });
 });

@@ -10,7 +10,7 @@
   {# Modal de registrar departamento #}
   <div
     class="modal fade"
-    id="addModal"
+    id="add-dept-modal"
     tabindex="-1"
     aria-labelledby="addModalLabel"
     aria-hidden="true"
@@ -59,7 +59,7 @@
   {# Modal confirmar eliminar departamento #}
   <div
     class="modal fade"
-    id="deleteModal"
+    id="delete-dept-modal"
     tabindex="-1"
     aria-labelledby="deleteModalLabel"
     aria-hidden="true"
@@ -102,7 +102,7 @@
   {# Modal de modificar Departamento #}
   <div
     class="modal fade"
-    id="modifyModal"
+    id="edit-dept-modal"
     tabindex="-1"
     aria-labelledby="editModalLabel"
     aria-hidden="true"
@@ -121,17 +121,17 @@
           ></button>
         </div>
         <div class="modal-body">
-          <form method="post" id="modify-dept-form">
+          <form method="post" id="edit-dept-form">
             <div class="mb-3">
               <label
-                for="modify-description"
+                for="description"
                 class="form-label"
                 >Descripción</label
               >
               <input
                 type="text"
                 class="form-control"
-                id="modify-description"
+                id="description"
                 name="description"
                 placeholder="Ingrese la descripción del departamento"
                 required
@@ -181,7 +181,7 @@
             type="button"
             class="btn btn-primary"
             data-bs-toggle="modal"
-            data-bs-target="#addModal"
+            data-bs-target="#add-dept-modal"
           >
             <img
               src="{{ url_for('static', filename='img/add.svg') }}"
@@ -225,8 +225,8 @@
                   {# Botón de modificar #}
                   <button
                     type="button"
-                    id="modify{{ dept.id }}"
-                    class="btn btn-primary my-2 modify-dept"
+                    id="edit{{ dept.id }}"
+                    class="btn btn-primary my-2 edit-dept"
                     data-bs-toggle="modal"
                   >
                     <img

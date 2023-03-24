@@ -12,7 +12,8 @@ class AuthenticationError(ValueError):
 
 # ========== Validaciones ==========
 def validate_username(username: str) -> bool:
-    """Lanza una excepción si el nombre de usuario no es válido.
+    """
+    Lanza una excepción si el nombre de usuario no es válido.
 
     Un nombre de usuario es válido si:
       -Tiene al menos 3 caracteres y a lo sumo 20 caracteres
@@ -37,7 +38,8 @@ def validate_username(username: str) -> bool:
 
 
 def validate_names(names: str) -> bool:
-    """Lanza una excepción si el nombre no es válido.
+    """
+    Lanza una excepción si el nombre no es válido.
 
     Un nombre es válido si:
       -Tiene al menos 2 caracteres y a lo sumo 50 caracteres
@@ -54,7 +56,8 @@ def validate_names(names: str) -> bool:
 
 
 def validate_password(password: str) -> bool:
-    """Lanza una excepción si la contraseña no es válida.
+    """
+    Lanza una excepción si la contraseña no es válida.
 
     La contraseña es válida si:
       -Tiene al menos 6 caracteres y a lo sumo 20 caracteres
@@ -100,7 +103,8 @@ def register_user(
     confirm_password: str,
     role_id: str,
 ):
-    """Registra un usuario en la base de datos.
+    """
+    Registra un usuario en la base de datos.
 
     Lanza una excepción AuthenticationError si hubo algún error.
     """
@@ -145,7 +149,8 @@ def hash_password(password: str):
 
 # ========== Inicio de sesión ==========
 def log_user(username: str, password: str) -> Tuple[int, str]:
-    """Inicia la sesión de un usuario retorna su id.
+    """
+    Inicia la sesión de un usuario retorna su id.
 
     Lanza una excepción AuthenticationError si hubo algún error.
 
@@ -179,7 +184,8 @@ def get_current_user(user_id: int) -> User:
 
 # ========== Edición de datos ==========
 def edit_user(user_id: int, username: str, names: str, surnames: str, role_id: str):
-    """Edita los datos de un usuario en la base de datos.
+    """
+    Edita los datos de un usuario en la base de datos.
 
     Lanza una excepción AuthenticationError si hubo algún error.
     """
@@ -240,7 +246,8 @@ def edit_user(user_id: int, username: str, names: str, surnames: str, role_id: s
 
 # ========== Eliminación de usuarios ==========
 def delete_user(user_id: int):
-    """Elimina un usuario de la base de datos.
+    """
+    Elimina un usuario de la base de datos.
 
     Lanza una excepción AuthenticationError si hubo algún error.
     """

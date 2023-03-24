@@ -1,6 +1,6 @@
 $(document).ready(function () {
   // Modificar vehiculo de cliente
-  $(document).on("click", ".modify-client-vehicle", function () {
+  $(document).on("click", ".edit-vehicle", function () {
     var form = $(this);
     id = form.attr("id").match(/\d+/)[0];
 
@@ -8,20 +8,20 @@ $(document).ready(function () {
       url: "/api/v1/vehicles",
       data: { id },
       success: function (data) {
-        $("#modifyModal").modal("show");
+        $("#edit-vehicle-modal").modal("show");
         var client = data[0];
 
-        $("#modify-license-plate ").val(client.license_plate);
-        $("#modify-brand").val(client.brand);
-        $("#modify-model").val(client.model);
-        $("#modify-year").val(client.year);
-        $("#modify-body-number").val(client.body_number);
-        $("#modify-engine-number").val(client.engine_number);
-        $("#modify-color").val(client.color);
-        $("#modify-problem").val(client.problem);
-        $("#modify-client-vehicle-form").attr(
+        $("#edit-license-plate ").val(client.license_plate);
+        $("#edit-brand").val(client.brand);
+        $("#edit-model").val(client.model);
+        $("#edit-year").val(client.year);
+        $("#edit-body-number").val(client.body_number);
+        $("#edit-engine-number").val(client.engine_number);
+        $("#edit-color").val(client.color);
+        $("#edit-problem").val(client.problem);
+        $("#edit-vehicle-form").attr(
           "action",
-          "/client-details/" + id + "/modify"
+          "/client-details/" + id + "/edit"
         );
       },
     });
@@ -32,7 +32,9 @@ $(document).ready(function () {
     var form = $(this);
     id = form.attr("id").match(/\d+/)[0];
 
-    $("#deleteModal").modal("show");
-    $("#deleteVehicleForm").attr("action", "/client-details/" + id + "/delete");
+    $("#delete-vehicle-modal").modal("show");
+    $("#delete-vehicle-form").attr(
+      "action",
+      "/client-details/" + id + "/delete");
   });
 });

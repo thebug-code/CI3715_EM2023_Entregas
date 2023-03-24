@@ -12,7 +12,8 @@ class ClientError(ValueError):
 
 # ========== Validaciones ==========
 def validate_id(id_number: str) -> str:
-    """Lanza una excepción si una cédula no es válida.
+    """
+    Lanza una excepción si una cédula no es válida.
 
     El formato del una cédula válida es:
      - Comienza con V, E, J, G, C, mayúscula o minúscula.
@@ -41,7 +42,8 @@ def validate_id(id_number: str) -> str:
 
 
 def validate_phone_number(phone_number: str) -> str:
-    """Lanza una excepción si el número telefónico no es válido.
+    """
+    Lanza una excepción si el número telefónico no es válido.
 
     El formato del un número de teléfono válido es cualquiera de los siguientes:
      - Comienza con 58, +58, 0058, 0 no tener comienzo.
@@ -82,7 +84,8 @@ def validate_email(email: str):
 
 
 def validate_birthdate(birthdate: datetime.date):
-    """Lanza una excepción si la fecha de nacimiento no es válida
+    """
+    Lanza una excepción si la fecha de nacimiento no es válida
 
     La edad mínima es 18 años.
     La edad máxima es 100 años.
@@ -164,7 +167,7 @@ def register_client(
 
 
 # ========== Edicion de datos ==========
-def modify_client(
+def edit_client(
     client_id: int,
     id_number: str,
     names: str,

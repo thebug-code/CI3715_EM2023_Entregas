@@ -10,7 +10,7 @@
   {# Modal de agregar cliente #}
   <div
     class="modal fade"
-    id="addModal"
+    id="add-client-modal"
     tabindex="-1"
     aria-labelledby="addModalLabel"
     aria-hidden="true"
@@ -131,7 +131,7 @@
   {# Modal de modificar cliente #}
   <div
     class="modal fade"
-    id="modifyModal"
+    id="edit-client-modal"
     tabindex="-1"
     aria-labelledby="editModalLabel"
     aria-hidden="true"
@@ -148,15 +148,15 @@
           ></button>
         </div>
         <div class="modal-body">
-          <form id="modifyClientForm" method="post">
+          <form id="edit-client-form" method="post">
             <div class="mb-3">
-              <label for="modifyIdNumber" class="form-label"
+              <label for="edit-id-number" class="form-label"
                 >cédula de identidad</label
               >
               <input
                 type="text"
                 class="form-control"
-                id="modifyIdNumber"
+                id="edit-id-number"
                 name="id-number"
                 placeholder="ingrese la cédula del cliente (x-xxxxxxxx)"
                 required
@@ -164,72 +164,72 @@
               />
             </div>
             <div class="mb-3">
-              <label for="modifyNames" class="form-label">Nombres</label>
+              <label for="edit-names" class="form-label">Nombres</label>
               <input
                 type="text"
                 class="form-control"
-                id="modifyNames"
+                id="edit-names"
                 name="names"
                 placeholder="Ingrese los nombres del cliente"
                 required
               />
             </div>
             <div class="mb-3">
-              <label for="modifySurnames" class="form-label">Apellidos</label>
+              <label for="edit-surnames" class="form-label">Apellidos</label>
               <input
                 type="text"
                 class="form-control"
-                id="modifySurnames"
+                id="edit-surnames"
                 name="surnames"
                 placeholder="Ingrese los apellidos del cliente"
                 required
               />
             </div>
             <div class="mb-3">
-              <label for="modifyBirthdate" class="form-label"
+              <label for="edit-birthdate" class="form-label"
                 >Fecha de Nacimiento</label
               >
               <input
                 type="date"
                 class="form-control"
-                id="modifyBirthdate"
+                id="edit-birthdate"
                 name="birthdate"
                 placeholder="Ingrese la fecha de nacimiento del cliente"
                 required
               />
             </div>
             <div class="mb-3">
-              <label for="modifyPhoneNumber" class="form-label"
+              <label for="edit-phone-number" class="form-label"
                 >Número de teléfono</label
               >
               <input
                 type="text"
                 class="form-control"
-                id="modifyPhoneNumber"
+                id="edit-phone-number"
                 name="phone-number"
                 placeholder="Ingrese el contacto del cliente (+58XXXXXXXXXXX)"
                 required
               />
             </div>
             <div class="mb-3">
-              <label for="modifyEmail" class="form-label"
+              <label for="editEmail" class="form-label"
                 >Correo electrónico</label
               >
               <input
                 type="email"
                 class="form-control"
-                id="modifyEmail"
+                id="edit-email"
                 name="email"
                 placeholder="Ingrese el correo electrónico del cliente"
                 required
               />
             </div>
             <div class="mb-3">
-              <label for="modifyAddress" class="form-label">Dirección</label>
+              <label for="editAddress" class="form-label">Dirección</label>
               <input
                 type="text"
                 class="form-control"
-                id="modifyAddress"
+                id="edit-address"
                 name="address"
                 placeholder="Ingrese la dirección del cliente"
                 required
@@ -254,7 +254,7 @@
   {# Modal confirmar eliminar cliente #}
   <div
     class="modal fade"
-    id="deleteModal"
+    id="delete-client-modal"
     tabindex="-1"
     aria-labelledby="deleteModalLabel"
     aria-hidden="true"
@@ -281,7 +281,7 @@
           >
             Cerrar
           </button>
-          <form method="post" class="d-inline" id="deleteClientForm">
+          <form method="post" class="d-inline" id="delete-client-form">
             <button type="submit" class="btn btn-danger">Eliminar</button>
           </form>
         </div>
@@ -317,7 +317,7 @@
             type="button"
             class="btn btn-primary"
             data-bs-toggle="modal"
-            data-bs-target="#addModal"
+            data-bs-target="#add-client-modal"
           >
             <img
               src="{{ url_for('static', filename='img/add.svg') }}"
@@ -389,8 +389,8 @@
                   {# Botón de modificar #}
                   <button
                     type="button"
-                    id="modify{{ client.id }}"
-                    class="btn btn-primary my-2 modify-client"
+                    id="edit{{ client.id }}"
+                    class="btn btn-primary my-2 edit-client"
                     data-toggle="modal"
                   >
                     <img

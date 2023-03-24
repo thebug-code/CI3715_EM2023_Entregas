@@ -2,7 +2,7 @@
 {% set active_page = "clients" %}
 {% block title %}Vehículos del Cliente{% endblock %}
 {% block content %}
-  <!-- Título de la página centrado en una barra -->
+  {# Título de la página centrado en una barra #}
   <div class="d-flex justify-content-center my-4">
     <h1 class="title-container">Vehículos del Cliente</h1>
   </div>
@@ -10,7 +10,7 @@
   {# Modal de agregar vehículo #}
   <div
     class="modal fade"
-    id="addModal"
+    id="add-vehicle-modal"
     tabindex="-1"
     aria-labelledby="addModalLabel"
     aria-hidden="true"
@@ -127,7 +127,7 @@
               />
             </div>
 
-            <!-- Id del cliente -->
+            {# Id del cliente #}
             <input type="hidden" name="client-id" value="{{ client.id }}" />
 
             <div class="modal-footer">
@@ -149,7 +149,7 @@
   {# Modal de modificar vehículo #}
   <div
     class="modal fade"
-    id="modifyModal"
+    id="edit-vehicle-modal"
     tabindex="-1"
     aria-labelledby="editModalLabel"
     aria-hidden="true"
@@ -157,7 +157,7 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="editModalLabel">Modificar vehículo</h5>
+          <h5 class="modal-title" id="editModalLRbel">Modificar vehículo</h5>
           <button
             type="button"
             class="btn-close"
@@ -166,13 +166,13 @@
           ></button>
         </div>
         <div class="modal-body">
-          <form id="modify-client-vehicle-form" method="post">
+          <form id="edit-vehicle-form" method="post">
             <div class="mb-3">
-              <label for="modify-license-plate" class="form-label">Placa</label>
+              <label for="edit-license-plate" class="form-label">Placa</label>
               <input
                 type="text"
                 class="form-control"
-                id="modify-license-plate"
+                id="edit-license-plate"
                 name="license-plate"
                 placeholder="Ingrese la placa del vehículo"
                 required
@@ -180,70 +180,70 @@
               />
             </div>
             <div class="mb-3">
-              <label for="modify-brand" class="form-label">Marca</label>
+              <label for="edit-brand" class="form-label">Marca</label>
               <input
                 type="text"
                 class="form-control"
-                id="modify-brand"
+                id="edit-brand"
                 name="brand"
                 placeholder="Ingrese la marca del vehículo"
                 required
               />
             </div>
             <div class="mb-3">
-              <label for="modify-model" class="form-label">Modelo</label>
+              <label for="edit-model" class="form-label">Modelo</label>
               <input
                 type="text"
                 class="form-control"
-                id="modify-model"
+                id="edit-model"
                 name="model"
                 placeholder="Ingrese el modelo del vehículo"
                 required
               />
             </div>
             <div class="mb-3">
-              <label for="modify-year" class="form-label">Año</label>
+              <label for="edit-year" class="form-label">Año</label>
               <input
                 type="number"
                 class="form-control"
-                id="modify-year"
+                id="edit-year"
                 name="year"
                 placeholder="Ingrese el año del vehículo"
                 required
               />
             </div>
             <div class="mb-3">
-              <label for="modify-body-number" class="form-label"
+              <label for="edit-body-number" class="form-label"
                 >Serial de carrocería</label
               >
               <input
                 type="text"
                 class="form-control"
-                id="modify-body-number"
+                id="edit-body-number"
                 name="body-number"
                 placeholder="Ingrese el serial de carrocería del vehículo"
                 required
               />
             </div>
             <div class="mb-3">
-              <label for="modify-engine-number" class="form-label"
+              <label for="edit-engine-number" class="form-label"
                 >Serial de motor</label
               >
               <input
                 class="form-control"
-                id="modify-engine-number"
+                id="edit-engine-number"
                 name="engine-number"
                 placeholder="Ingrese el serial de motor del vehículo"
                 required
               />
             </div>
             <div class="mb-3">
-              <label for="modify-color" class="form-label">Color</label>
+              <label for="edit-color" class="form-label">Color</label>
               <select
                 class="form-select"
                 aria-label="Default select example"
                 name="color"
-                id="modify-color"
+                id="edit-color"
               >
                 {% for color in colors %}
                   <option value="{{ color }}">
@@ -253,20 +253,20 @@
               </select>
             </div>
             <div class="mb-3">
-              <label for="modify-problem" class="form-label">Problema</label>
+              <label for="edit-problem" class="form-label">Problema</label>
               <input
                 class="form-control"
-                id="modify-problem"
+                id="edit-problem"
                 name="problem"
                 placeholder="Ingrese el problema del vehículo"
                 required
               />
             </div>
 
-            <!-- Id del cliente invisible -->
+            {# Id del cliente invisible #}
             <input
               type="hidden"
-              id="modify-client-id"
+              id="edit-client-id"
               name="client-id"
               value="{{ client.id }}"
             />
@@ -290,7 +290,7 @@
   {# Modal confirmar eliminar vehículo #}
   <div
     class="modal fade"
-    id="deleteModal"
+    id="delete-vehicle-modal"
     tabindex="-1"
     aria-labelledby="deleteModalLabel"
     aria-hidden="true"
@@ -317,8 +317,8 @@
           >
             Cerrar
           </button>
-          <form method="post" id="deleteVehicleForm" class="d-inline">
-            <!-- Id de cliente invisible -->
+          <form method="post" id="delete-vehicle-form" class="d-inline">
+            {# Id de cliente invisible #}
             <input
               type="hidden"
               name="client-id"
@@ -360,7 +360,7 @@
             type="button"
             class="btn btn-primary"
             data-bs-toggle="modal"
-            data-bs-target="#addModal"
+            data-bs-target="#add-vehicle-modal"
           >
             <img
               src="{{ url_for('static', filename='img/add.svg') }}"
@@ -416,9 +416,9 @@
                 <td>
                   {# Botón de modificar #}
                   <button
-                    id="modify{{ vehicle.id }}"
+                    id="edit{{ vehicle.id }}"
                     type="button"
-                    class="btn btn-primary my-2 modify-client-vehicle"
+                    class="btn btn-primary my-2 edit-vehicle"
                     data-bs-toggle="modal"
                   >
                     <img

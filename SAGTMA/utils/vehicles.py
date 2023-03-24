@@ -12,7 +12,8 @@ class VehicleError(ValueError):
 
 # ========== Validaciones ==========
 def validate_license_plate(license_plate: str) -> bool:
-    """Lanza una excepción si la placa de un vehiculo no es válida.
+    """
+    Lanza una excepción si la placa de un vehiculo no es válida.
 
     Una placa es válida si:
       -Tiene al menos 5 caracteres y a lo sumo 10 caracteres
@@ -25,7 +26,8 @@ def validate_license_plate(license_plate: str) -> bool:
     if not license_plate[0].isalpha():
         raise VehicleError("La placa debe comenzar con un caracter alfanumérico")
 
-    # Chequea que no haya caracteres especiales más que guiones o espacios, y que no haya espacios consecutivos
+    # Chequea que no haya caracteres especiales más que guiones o espacios
+    # y que no haya espacios consecutivos
     for i, char in enumerate(license_plate):
         if not char.isalnum() and char not in "- ":
             raise VehicleError(
@@ -38,7 +40,8 @@ def validate_license_plate(license_plate: str) -> bool:
 
 
 def validate_serial_number(serial_number: str):
-    """Lanza una excepción si el número de serie no es válido.
+    """
+    Lanza una excepción si el número de serie no es válido.
 
     Un número de serie es válido si:
       -Tiene al menos 5 caracteres y a lo sumo 20 caracteres
@@ -67,7 +70,8 @@ def validate_serial_number(serial_number: str):
 
 
 def validate_color(color: str):
-    """Lanza una excepción si el color no es válido.
+    """
+    Lanza una excepción si el color no es válido.
 
     Un color es válido si:
       -Tiene al menos 2 caracteres y a lo sumo 20 caracteres
@@ -84,7 +88,8 @@ def validate_color(color: str):
 
 
 def validate_year(year: int):
-    """Lanza una excepción si el año no es válido.
+    """
+    Lanza una excepción si el año no es válido.
 
     Un año es válido si:
       -Es un número entero
@@ -159,12 +164,12 @@ def register_client_vehicle(
     # Registra el evento en la base de datos
     events.add_event(
         "Vehículos de los Clientes",
-        f"Anadir '{new_vehicle.brand}' al cliente '{new_vehicle.owner.id_numberr}'",
+        f"Anadir '{new_vehicle.brand}' al cliente '{new_vehicle.owner.id_number}'",
     )
 
 
 # ========== Modicar datos de Vehiculos ==========
-def modify_vehicle(
+def edit_vehicle(
     vehicle_id: int,
     license_plate: str,
     brand: str,

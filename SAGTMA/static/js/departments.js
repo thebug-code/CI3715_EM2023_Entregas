@@ -4,7 +4,7 @@ $(document).ready(function() {
     var form = $(this);
     id = form.attr("id").match(/\d+/)[0];
 
-    $("#deleteModal").modal('show');
+    $("#delete-dept-modal").modal('show');
     $("#delete-dept-form").attr(
       "action",
       "/workshop-departments/delete/" + id + "/"
@@ -12,7 +12,7 @@ $(document).ready(function() {
   });
 
   // Editar departamento
-  $(document).on("click", ".modify-dept", function () {
+  $(document).on("click", ".edit-dept", function () {
     var form = $(this);
     id = form.attr("id").match(/\d+/)[0];
 
@@ -20,13 +20,13 @@ $(document).ready(function() {
       url: "/api/v1/departments",
       data: { id },
       success: function (data) {
-        $("#modifyModal").modal("show");
+        $("#edit-dept-modal").modal("show");
         var dept = data[0];
 
-        $("#modify-description").val(dept.description);
-        $("#modify-dept-form").attr(
+        $("#edit-description").val(dept.description);
+        $("#edit-dept-form").attr(
           "action",
-          "/workshop-departments/modify/" + id + "/"
+          "/workshop-departments/edit/" + id + "/"
         );
       },
     });

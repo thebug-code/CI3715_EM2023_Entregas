@@ -57,17 +57,17 @@ def create_project() -> Response:
     return redirect(url_for("portfolio"))
 
 
-@current_app.route("/project-portfolio/modify/<int:project_id>/", methods=["POST"])
+@current_app.route("/project-portfolio/edit/<int:project_id>/", methods=["POST"])
 @login_required
 @requires_roles("Gerente de Operaciones")
-def modify_project(project_id):
+def edit_project(project_id):
     """Modifica los datos de un proyecto en la base de datos"""
     description = request.form["description"]
-    start_date = request.form["start_date"]
+    start_date = request.form["start-date"]
     deadline = request.form["deadline"]
 
     try:
-        projects.modify_project(project_id, description, start_date, deadline)
+        projects.edit_project(project_id, description, start_date, deadline)
     except projects.ProjectError as e:
         flash(f"{e}")
 
@@ -101,7 +101,7 @@ def delete_project(project_id) -> Response:
 
 
 @current_app.route(
-    "/project-portfolio/modify/<int:project_id>/status/", methods=["POST"]
+    "/project-portfolio/edit/<int:project_id>/status/", methods=["POST"]
 )
 @login_required
 @requires_roles("Gerente de Operaciones")
@@ -115,7 +115,7 @@ def change_project_status(project_id):
         return redirect(url_for("portfolio"))
 
     # Verifica si hay que habilitar o desactivar proyecto
-    if "enable_project" in request.form:
+    if "enable-project" in request.form:
         result[0].active = True
     else:
         result[0].active = False
@@ -128,23 +128,23 @@ def change_project_status(project_id):
 
 
 # ========== Gerente de Proyectos ==========
-@current_app.route("/project-portfolio/<int:project_id>", methods=["GET", "POST"])
-@requires_roles("Gerente de Proyectos")
-def portfolio() -> Response:
-    """Muestra la lista de proyectos anadidos en el sistema"""
-    if request.method == "POST":
-        # Obtiene los datos del formulario
-        descrip = request.form.get("descrip-filter")
-
-        stmt = db.select(Project).where(Project.description.like(f"%{descrip}%"))
-
-        # Añade el evento de búsqueda
-        events.add_event("Portafolio de Proyectos", f"Buscar '{descrip}'")
-    else:
-        # Selecciona los proyectos de la base de datos
-        stmt = db.select(Project)
-
-    result = db.session.execute(stmt).fetchall()
-    _projects = [r for r, in result]
-
-    return render_template("manager/portfolio.html", projects=_projects)
+#@current_app.route("/project-portfolio/<int:project_id>", methods=["GET", "POST"])
+#@requires_roles("Gerente de Proyectos")
+#def portfolio() -> Response:
+#    """Muestra la lista de proyectos anadidos en el sistema"""
+#    if request.method == "POST":
+#        # Obtiene los datos del formulario
+#        descrip = request.form.get("descrip-filter")
+#
+#        stmt = db.select(Project).where(Project.description.like(f"%{descrip}%"))
+#
+#        # Añade el evento de búsqueda
+#        events.add_event("Portafolio de Proyectos", f"Buscar '{descrip}'")
+#    else:
+#        # Selecciona los proyectos de la base de datos
+#        stmt = db.select(Project)
+#
+#    result = db.session.execute(stmt).fetchall()
+#    _projects = [r for r, in result]
+#
+#    return render_template("manager/portfolio.html", projects=_projects)

@@ -9,7 +9,7 @@ class EventError(ValueError):
 
 
 def add_event(module: str, description: str):
-    """Crea y anade un nuevo a la base de datos"""
+    """Crea y anade un nuevo evento en la base de datos"""
     current_user = profiles.get_current_user(session["id"])
     new_event = Event(current_user, module, description)
     db.session.add(new_event)
@@ -17,7 +17,11 @@ def add_event(module: str, description: str):
 
 
 def delete_event(event_id: int):
-    """Elimina un usuario de la base de datos y"""
+    """
+    Elimina un evento de la base de datos.
+
+    Lanza una excepción EventError si hubo algún error.
+    """
     if not event_id:
         raise EventError("El evento indicado no existe")
 

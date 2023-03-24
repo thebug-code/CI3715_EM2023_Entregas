@@ -111,7 +111,7 @@
   </div>
 
   <div class="container">
-    <!-- Barra de filtro de usuarios -->
+    {# Barra de filtro de usuarios #}
     <form
       class="row search-filter"
       action="{{ url_for('users_profiles') }}"
@@ -156,10 +156,10 @@
           </button>
         </div>
       </div>
-      <!-- Botón de agregar -->
+      {# Botón de agregar #}
     </form>
 
-    <!-- Si no hay usuarios o no se encontraron en la busqueda -->
+    {# Si no hay usuarios o no se encontraron en la busqueda #}
     {% if users|length == 0 %}
       <div class="d-flex justify-content-center my-4">
         <div class="alert alert-danger" role="alert">
@@ -167,10 +167,10 @@
         </div>
       </div>
     {% else %}
-      <!-- Tabla de usuarios -->
+    {# Tabla de usuarios #}
       <div class="container table-container">
         <table class="table table-striped table-hover">
-          <!-- Header de la tabla -->
+          {# Header de la tabla #}
           <thead>
             <tr>
               <th>Id</th>
@@ -184,7 +184,7 @@
           </thead>
           <tbody>
             {% for user in users %}
-              <!-- Modal de modificar usuario -->
+            {# Modal de modificar usuario #}
               <div
                 class="modal fade"
                 id="modifyModal{{ user.id }}"
@@ -293,7 +293,7 @@
                 </div>
               </div>
 
-              <!-- Modal confirmar eliminar usuario -->
+              {# Modal confirmar eliminar usuario #}
               <div
                 class="modal fade"
                 id="deleteModal{{ user.id }}"
@@ -343,16 +343,16 @@
                 </div>
               </div>
 
-              <!-- Filas de la tabla -->
+              {# Filas de la tabla #}
               <tr>
                 <td>{{ user.id }}</td>
                 <td>{{ user.username }}</td>
                 <td>{{ user.names }}</td>
                 <td>{{ user.surnames }}</td>
                 <td>{{ user.role.name }}</td>
-                <!-- Dropdown itera y muestra los proyectos del usuario -->
+                {# Dropdown itera y muestra los proyectos del usuario #}
                 <td>
-                  <!-- Si el usuario no tiene proyectos -->
+                  {# Si el usuario no tiene proyectos #}
                   {% if user.projects|length == 0 %}
                     <select class="form-select">
                       <option selected>No tiene proyectos</option>
@@ -371,7 +371,7 @@
                   {% endif %}
                 </td>
                 <td>
-                  <!-- Botón de modificar -->
+                  {# Botón de modificar #}
                   <button
                     type="button"
                     class="btn btn-primary my-2"
@@ -391,7 +391,7 @@
                     />
                   </button>
 
-                  <!-- Botón de eliminar -->
+                    {# Botón de eliminar #}
                   <button
                     type="button"
                     class="btn btn-primary"

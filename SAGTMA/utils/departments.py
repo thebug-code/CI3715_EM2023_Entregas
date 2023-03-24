@@ -84,7 +84,7 @@ def delete_dept(dept_id: int):
 
 
 # ========== Modificacion de un departamento ==========
-def modify_dept(dept_id: int, description: str):
+def edit_dept(dept_id: int, description: str):
     """
     Modifica un departamento de la base de datos
 

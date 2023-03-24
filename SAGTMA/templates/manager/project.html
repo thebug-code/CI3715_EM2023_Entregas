@@ -9,7 +9,7 @@
   {# Modal confirmar status proyecto #}
   <div
     class="modal fade"
-    id="changeStatusModal"
+    id="change-project-status-modal"
     tabindex="-1"
     aria-labelledby="changeStatusModalModalLabel"
     aria-hidden="true"
@@ -27,7 +27,7 @@
             aria-label="Close"
           ></button>
         </div>
-        <div id="modalBodyCS" class="modal-body"></div>
+        <div id="modal-body-cs" class="modal-body"></div>
         <div class="modal-footer">
           <button
             type="button"
@@ -36,8 +36,12 @@
           >
             Cerrar
           </button>
-          <form method="post" id="changeStatusProjectForm" class="d-inline">
-            <button id="submitButtonCS" type="submit" class="btn"></button>
+          <form
+            method="post"
+            id="change-project-status-form"
+            class="d-inline"
+          >
+            <button id="submit-button-cs" type="submit" class="btn"></button>
           </form>
         </div>
       </div>
@@ -47,7 +51,7 @@
   {# Modal confirmar eliminar proyecto #}
   <div
     class="modal fade"
-    id="deleteModal"
+    id="delete-project-modal"
     tabindex="-1"
     aria-labelledby="deleteModalLabel"
     aria-hidden="true"
@@ -74,7 +78,7 @@
           >
             Cerrar
           </button>
-          <form method="post" id="deleteProjectForm" class="d-inline">
+          <form method="post" id="delete-project-form" class="d-inline">
             <button type="submit" class="btn btn-danger">Eliminar</button>
           </form>
         </div>
@@ -85,7 +89,7 @@
   {# Modal modificar proyecto #}
   <div
     class="modal fade"
-    id="modifyModal"
+    id="edit-project-modal"
     tabindex="-1"
     role="dialog"
     aria-labelledby="ModalLabel"
@@ -103,14 +107,14 @@
           ></button>
         </div>
         <div class="modal-body">
-          <form id="modifyProjectForm" method="post">
+          <form id="edit-project-form" method="post">
             <div class="mb-3">
               <label class="form-label" for="description"
                 >Descripcion del Proyecto</label
               >
               <input
                 type="text"
-                id="descriptionM"
+                id="edit-description"
                 class="form-control"
                 name="description"
                 required
@@ -118,10 +122,10 @@
               />
             </div>
             <div class="mb-3">
-              <label class="form-label" for="start_date">Inicio</label>
+              <label class="form-label" for="start-date">Inicio</label>
               <input
-                id="start_dateM"
-                name="start_date"
+                id="edit-start-date"
+                name="start-date"
                 type="date"
                 class="form-control"
                 style="background-color:transparent;border-radius: 5px;display: inline-block;"
@@ -131,7 +135,7 @@
             <div class="mb-3">
               <label class="form-label" for="deadline">Cierre</label>
               <input
-                id="deadlineM"
+                id="edit-deadline"
                 name="deadline"
                 type="date"
                 class="form-control"
@@ -159,7 +163,7 @@
   {# Modal agregar proyecto #}
   <div
     class="modal fade"
-    id="addModal"
+    id="add-project-modal"
     tabindex="-1"
     role="dialog"
     aria-labelledby="AddModalLabel"
@@ -193,11 +197,11 @@
               />
             </div>
             <div class="mb-3">
-              <label class="form-label" for="start_date">Inicio</label>
+              <label class="form-label" for="start-date">Inicio</label>
               <input
                 id="start_date"
                 type="date"
-                name="start_date"
+                name="start-date"
                 class="form-control"
                 style="background-color:transparent;border-radius: 5px;display: inline-block;"
                 required
@@ -268,7 +272,7 @@
             class="btn btn-primary"
             style="border-radius: 5px;margin-left: 10px;"
             data-bs-toggle="modal"
-            data-bs-target="#addModal"
+            data-bs-target="#add-project-modal"
           >
             <img
               src="{{ url_for('static', filename='img/add.svg') }}"
@@ -354,12 +358,12 @@
                   {# Modificar #}
                   <button
                     type="button"
-                    id="modify{{ project.id }}"
+                    id="edit{{ project.id }}"
                     class="my-2 btn {% if project.active %}
                       btn-primary
                     {% else %}
                       btn-secondary
-                    {% endif %} modify-project"
+                    {% endif %} edit-project"
                     data-toggle="modal"
                     {% if not project.active %}disabled{% endif %}
                   >
@@ -405,7 +409,7 @@
                       type="button"
                       id="disable{{ project.id }}"
                       class="my-2 btn btn-primary change-status-project"
-                      name="disable_project"
+                      name="disable-project"
                     >
                       <img
                         src="{{ url_for('static', filename='img/stop.svg') }}"
@@ -422,7 +426,7 @@
                     <button
                       type="submit"
                       id="enable{{ project.id }}"
-                      name="enable_project"
+                      name="enable-project"
                       class="btn btn-primary change-status-project"
                     >
                       <img
@@ -443,7 +447,7 @@
                     id="print{{ project.id }}"
                     class="my-2 btn btn-primary"
                     data-toggle="modal"
-                    data-target="#modifyModal"
+                    {# data-target="#edit-project-modal" #}
                   >
                     <img
                       src="{{ url_for('static', filename='img/print.svg') }}"

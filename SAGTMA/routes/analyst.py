@@ -80,10 +80,10 @@ def register_client() -> Response:
     return redirect(url_for("client_details"))
 
 
-@current_app.route("/client-details/modify/<int:client_id>/", methods=["POST"])
+@current_app.route("/client-details/edit/<int:client_id>/", methods=["POST"])
 @login_required
 @requires_roles("Analista de Operaciones")
-def modify_client(client_id):
+def edit_client(client_id):
     """Modifica los datos de un cliente en la base de datos"""
     id_number = request.form.get("id-number")
     names = request.form.get("names")
@@ -94,7 +94,7 @@ def modify_client(client_id):
     address = request.form.get("address")
 
     try:
-        clients.modify_client(
+        clients.edit_client(
             client_id,
             id_number,
             names,
@@ -229,10 +229,10 @@ def register_client_vehicle(client_id: int) -> Response:
     return redirect(url_for("client_vehicles", client_id=client_id))
 
 
-@current_app.route("/client-details/<int:vehicle_id>/modify/", methods=["POST"])
+@current_app.route("/client-details/<int:vehicle_id>/edit/", methods=["POST"])
 @login_required
 @requires_roles("Analista de Operaciones")
-def modify_client_vehicle(vehicle_id) -> Response:
+def edit_client_vehicle(vehicle_id) -> Response:
     """Modifica los datos de un vehiculo de un cliente de la base de datos"""
     license_plate = request.form.get("license-plate")
     brand = request.form.get("brand")
@@ -245,7 +245,7 @@ def modify_client_vehicle(vehicle_id) -> Response:
     client_id = int(request.form.get("client-id"))
 
     try:
-        vehicles.modify_vehicle(
+        vehicles.edit_vehicle(
             vehicle_id,
             license_plate,
             brand,

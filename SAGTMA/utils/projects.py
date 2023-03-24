@@ -11,7 +11,8 @@ class ProjectError(ValueError):
 
 # ========== Validaciones ==========
 def validate_descrip_project(description: str) -> bool:
-    """Lanza una excepción si la descripción de un proyecto no es valida.
+    """
+    Lanza una excepción si la descripción de un proyecto no es valida.
 
     Una descripción de un proyecto es válida si:
       -Tiene al menos 6 caracteres y a lo sumo 100 caracteres
@@ -30,7 +31,8 @@ def validate_descrip_project(description: str) -> bool:
 
 
 def validate_date(start_date: date, deadline: date) -> bool:
-    """Lanza una excepción si la fecha de inicio de un proyecto es despues que su fecha de cierre"""
+    """
+    Lanza una excepción si la fecha de inicio de un proyecto es despues que su fecha de cierre"""
 
     if start_date > deadline:
         raise ProjectError(
@@ -40,9 +42,10 @@ def validate_date(start_date: date, deadline: date) -> bool:
 
 # ========== Anadidura ==========
 def create_project(description: str, start_date: str, deadline: str):
-    """Crea y anade un usuario en la base de datos.
+    """
+    Crea y anade un usuario en la base de datos.
 
-    Lanza una excepción CreateProyectError si hubo algún error.
+    Lanza una excepción ProyectError si hubo algún error.
     """
     # Eliminar espacios al comienzo y final de la descripción
     description = description.strip()
@@ -76,10 +79,11 @@ def create_project(description: str, start_date: str, deadline: str):
 
 
 # ========== Modificar ==========
-def modify_project(project_id: int, description: str, start_date: str, deadline: str):
-    """Modifica los datos de un proyecto en la base de datos
+def edit_project(project_id: int, description: str, start_date: str, deadline: str):
+    """
+    Modifica los datos de un proyecto en la base de datos
 
-    Lanza una excepción CreateProyectError si hubo algún error.
+    Lanza una excepción ProyectError si hubo algún error.
     """
     if not all([description, start_date, deadline]):
         raise ProjectError("Todos los campos son obligatorios")

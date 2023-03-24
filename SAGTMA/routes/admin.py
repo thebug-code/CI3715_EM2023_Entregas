@@ -94,10 +94,10 @@ def delete_user(user_id: int) -> Response:
     return redirect(url_for("users_profiles"))
 
 
-@current_app.route("/user-profiles/modify/<int:user_id>/", methods=["POST"])
+@current_app.route("/user-profiles/edit/<int:user_id>/", methods=["POST"])
 @requires_roles("Administrador")
 def edit_user(user_id: int) -> Response:
-    """Edita un usuario en la base de datos."""
+    """Modifica los datos de un usuario en la base de datos."""
     # Obtiene los datos del formulario
     username = request.form.get("username")
     names = request.form.get("names")
@@ -223,16 +223,14 @@ def delete_dept(dept_id: int) -> Response:
     return redirect(url_for("ws_depts"))
 
 
-@current_app.route("/workshop-departments/modify/<int:dept_id>/", methods=["POST"])
+@current_app.route("/workshop-departments/edit/<int:dept_id>/", methods=["POST"])
 @requires_roles("Administrador")
-def modify_dept(dept_id: int) -> Response:
-    """
-    Modifica un departamento en la base de datos.
-    """
+def edit_dept(dept_id: int) -> Response:
+    """Modifica un departamento en la base de datos"""
     description = request.form.get("description")
 
     try:
-        departments.modify_dept(dept_id, description)
+        departments.edit_dept(dept_id, description)
     except departments.DepartmentError as e:
         flash(f"{e}")
         return redirect(url_for("ws_depts"))
