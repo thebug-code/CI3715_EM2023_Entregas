@@ -72,7 +72,7 @@ class TestClients(BaseTestClass):
         ).click()
         WebDriverWait(self.driver, 1).until(
             expected_conditions.visibility_of_element_located(
-                (By.CSS_SELECTOR, "#addModal .modal-header")
+                (By.CSS_SELECTOR, "#add-client-modal .modal-header")
             )
         )
 
@@ -91,14 +91,14 @@ class TestClients(BaseTestClass):
         self.driver.find_element(By.ID, "address").click()
         self.driver.find_element(By.ID, "address").send_keys(address)
 
-        self.driver.find_element(By.CSS_SELECTOR, "#addModal .btn-primary").click()
+        self.driver.find_element(By.CSS_SELECTOR, "#add-client-modal .btn-primary").click()
         WebDriverWait(self.driver, 1).until(
             expected_conditions.visibility_of_element_located(
                 (By.CSS_SELECTOR, ".toast-body")
             )
         )
 
-    def _modify_client(
+    def _edit_client(
         self,
         id_number: str,
         names: str,
@@ -108,36 +108,36 @@ class TestClients(BaseTestClass):
         email: str,
         address: str,
     ):
-        self.driver.find_element(By.CSS_SELECTOR, "#modify0 > .table-button").click()
+        self.driver.find_element(By.CSS_SELECTOR, "#edit0 > .table-button").click()
         WebDriverWait(self.driver, 1).until(
             expected_conditions.visibility_of_element_located(
-                (By.CSS_SELECTOR, "#modifyModal .modal-header")
+                (By.CSS_SELECTOR, "#edit-client-modal .modal-header")
             )
         )
 
-        self.driver.find_element(By.ID, "modifyIdNumber").click()
-        self.driver.find_element(By.ID, "modifyIdNumber").clear()
-        self.driver.find_element(By.ID, "modifyIdNumber").send_keys(id_number)
-        self.driver.find_element(By.ID, "modifyNames").click()
-        self.driver.find_element(By.ID, "modifyNames").clear()
-        self.driver.find_element(By.ID, "modifyNames").send_keys(names)
-        self.driver.find_element(By.ID, "modifySurnames").click()
-        self.driver.find_element(By.ID, "modifySurnames").clear()
-        self.driver.find_element(By.ID, "modifySurnames").send_keys(surnames)
-        self.driver.find_element(By.ID, "modifyBirthdate").click()
-        self.driver.find_element(By.ID, "modifyBirthdate").clear()
-        self.driver.find_element(By.ID, "modifyBirthdate").send_keys(birthdate)
-        self.driver.find_element(By.ID, "modifyPhoneNumber").click()
-        self.driver.find_element(By.ID, "modifyPhoneNumber").clear()
-        self.driver.find_element(By.ID, "modifyPhoneNumber").send_keys(phone)
-        self.driver.find_element(By.ID, "modifyEmail").click()
-        self.driver.find_element(By.ID, "modifyEmail").clear()
-        self.driver.find_element(By.ID, "modifyEmail").send_keys(email)
-        self.driver.find_element(By.ID, "modifyAddress").click()
-        self.driver.find_element(By.ID, "modifyAddress").clear()
-        self.driver.find_element(By.ID, "modifyAddress").send_keys(address)
+        self.driver.find_element(By.ID, "edit-id-number").click()
+        self.driver.find_element(By.ID, "edit-id-number").clear()
+        self.driver.find_element(By.ID, "edit-id-number").send_keys(id_number)
+        self.driver.find_element(By.ID, "edit-names").click()
+        self.driver.find_element(By.ID, "edit-names").clear()
+        self.driver.find_element(By.ID, "edit-names").send_keys(names)
+        self.driver.find_element(By.ID, "edit-surnames").click()
+        self.driver.find_element(By.ID, "edit-surnames").clear()
+        self.driver.find_element(By.ID, "edit-surnames").send_keys(surnames)
+        self.driver.find_element(By.ID, "edit-birthdate").click()
+        self.driver.find_element(By.ID, "edit-birthdate").clear()
+        self.driver.find_element(By.ID, "edit-birthdate").send_keys(birthdate)
+        self.driver.find_element(By.ID, "edit-phone-number").click()
+        self.driver.find_element(By.ID, "edit-phone-number").clear()
+        self.driver.find_element(By.ID, "edit-phone-number").send_keys(phone)
+        self.driver.find_element(By.ID, "edit-email").click()
+        self.driver.find_element(By.ID, "edit-email").clear()
+        self.driver.find_element(By.ID, "edit-email").send_keys(email)
+        self.driver.find_element(By.ID, "edit-address").click()
+        self.driver.find_element(By.ID, "edit-address").clear()
+        self.driver.find_element(By.ID, "edit-address").send_keys(address)
 
-        self.driver.find_element(By.CSS_SELECTOR, "#modifyModal .btn-primary").click()
+        self.driver.find_element(By.CSS_SELECTOR, "#edit-client-modal .btn-primary").click()
         WebDriverWait(self.driver, 1).until(
             expected_conditions.visibility_of_element_located(
                 (By.CSS_SELECTOR, ".toast-body")
@@ -412,7 +412,7 @@ class TestClients(BaseTestClass):
 
         WebDriverWait(self.driver, 1).until(
             expected_conditions.visibility_of_element_located(
-                (By.CSS_SELECTOR, "#deleteModal .modal-header")
+                (By.CSS_SELECTOR, "#delete-client-modal .modal-header")
             )
         )
 
@@ -430,7 +430,7 @@ class TestClients(BaseTestClass):
 
         WebDriverWait(self.driver, 1).until(
             expected_conditions.visibility_of_element_located(
-                (By.CSS_SELECTOR, "#deleteModal .modal-header")
+                (By.CSS_SELECTOR, "#delete-client-modal .modal-header")
             )
         )
 
@@ -454,10 +454,10 @@ class TestClients(BaseTestClass):
             self.driver.find_element(By.CSS_SELECTOR, ".alert").text,
         )
 
-    def test_modify_client_valid(self):
+    def test_edit_client_valid(self):
         """Testea la creación de clientes válidos."""
 
-        def _test_modify_client_valid(
+        def _test_edit_client_valid(
             id_number: str,
             names: str,
             surnames: str,
@@ -466,7 +466,7 @@ class TestClients(BaseTestClass):
             email: str,
             address: str,
         ):
-            self._modify_client(
+            self._edit_client(
                 id_number, names, surnames, birthdate, phone, email, address
             )
             self.assertEqual(
@@ -481,7 +481,7 @@ class TestClients(BaseTestClass):
         self._login_analyst()
 
         # Cliente válido condiciones normales
-        _test_modify_client_valid(
+        _test_edit_client_valid(
             "V-12345678",
             "Alan",
             "Turing",
@@ -492,7 +492,7 @@ class TestClients(BaseTestClass):
         )
 
         # Cédula distinta
-        _test_modify_client_valid(
+        _test_edit_client_valid(
             "j-1234567",
             "Alan",
             "Turing",
@@ -503,7 +503,7 @@ class TestClients(BaseTestClass):
         )
 
         # Nombres y apellidos corto/largo
-        _test_modify_client_valid(
+        _test_edit_client_valid(
             "V-92345678",
             "Ka",
             "Bolivar Palacios y Blanco de la Santisima Trinid",
@@ -518,7 +518,7 @@ class TestClients(BaseTestClass):
         one_hundred_years_ago = datetime.date.today() - datetime.timedelta(
             days=99 * 365
         )
-        _test_modify_client_valid(
+        _test_edit_client_valid(
             "V-1234678",
             "Chavez",
             "Maduro",
@@ -528,7 +528,7 @@ class TestClients(BaseTestClass):
             "San Antonio de los Altos",
         )
 
-        _test_modify_client_valid(
+        _test_edit_client_valid(
             "V-1234178",
             "Raul",
             "Siete",
@@ -539,7 +539,7 @@ class TestClients(BaseTestClass):
         )
 
         # Otros formatos de teléfono
-        _test_modify_client_valid(
+        _test_edit_client_valid(
             "V-2234678",
             "Nombre",
             "Generico",
@@ -549,7 +549,7 @@ class TestClients(BaseTestClass):
             "No Sé",
         )
 
-        _test_modify_client_valid(
+        _test_edit_client_valid(
             "V-3234678",
             "Jesus",
             "David",
@@ -559,7 +559,7 @@ class TestClients(BaseTestClass):
             "La Victoria",
         )
 
-        _test_modify_client_valid(
+        _test_edit_client_valid(
             "V-4234678",
             "Perez",
             "Rodriguez",
@@ -569,7 +569,7 @@ class TestClients(BaseTestClass):
             "Bajo un Puente",
         )
 
-        _test_modify_client_valid(
+        _test_edit_client_valid(
             "V-2346789",
             "Nombre",
             "Extraño",

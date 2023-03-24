@@ -57,7 +57,7 @@ class TestVehicles(BaseTestClass):
         self.driver.find_element(By.ID, "password").click()
         self.driver.find_element(By.ID, "password").send_keys("Analyst123.")
         self.driver.find_element(By.CSS_SELECTOR, ".btn-primary").click()
-        self.driver.get(f"{self.base_url}/clients-details/1/")
+        self.driver.get(f"{self.base_url}/client-details/1/")
 
     def _register_vehicle(
         self,
@@ -74,7 +74,7 @@ class TestVehicles(BaseTestClass):
         ).click()
         WebDriverWait(self.driver, 1).until(
             expected_conditions.visibility_of_element_located(
-                (By.CSS_SELECTOR, "#addModal .modal-header")
+                (By.CSS_SELECTOR, "#add-vehicle-modal .modal-header")
             )
         )
 
@@ -93,14 +93,14 @@ class TestVehicles(BaseTestClass):
         self.driver.find_element(By.ID, "problem").click()
         self.driver.find_element(By.ID, "problem").send_keys(problem)
 
-        self.driver.find_element(By.CSS_SELECTOR, "#addModal .btn-primary").click()
+        self.driver.find_element(By.CSS_SELECTOR, "#add-vehicle-modal .btn-primary").click()
         WebDriverWait(self.driver, 1).until(
             expected_conditions.visibility_of_element_located(
                 (By.CSS_SELECTOR, ".toast-body")
             )
         )
 
-    def _modify_vehicle(
+    def _edit_vehicle(
         self,
         license_plate: str,
         brand: str,
@@ -110,36 +110,36 @@ class TestVehicles(BaseTestClass):
         engine_number: str,
         problem: str,
     ):
-        self.driver.find_element(By.CSS_SELECTOR, "#modify0 > .table-button").click()
+        self.driver.find_element(By.CSS_SELECTOR, "#edit0 > .table-button").click()
         WebDriverWait(self.driver, 1).until(
             expected_conditions.visibility_of_element_located(
-                (By.CSS_SELECTOR, "#modifyModal .modal-header")
+                (By.CSS_SELECTOR, "#edit-vehicle-modal .modal-header")
             )
         )
 
-        self.driver.find_element(By.ID, "modify-license-plate").click()
-        self.driver.find_element(By.ID, "modify-license-plate").clear()
-        self.driver.find_element(By.ID, "modify-license-plate").send_keys(license_plate)
-        self.driver.find_element(By.ID, "modify-brand").click()
-        self.driver.find_element(By.ID, "modify-brand").clear()
-        self.driver.find_element(By.ID, "modify-brand").send_keys(brand)
-        self.driver.find_element(By.ID, "modify-model").click()
-        self.driver.find_element(By.ID, "modify-model").clear()
-        self.driver.find_element(By.ID, "modify-model").send_keys(model)
-        self.driver.find_element(By.ID, "modify-year").click()
-        self.driver.find_element(By.ID, "modify-year").clear()
-        self.driver.find_element(By.ID, "modify-year").send_keys(year)
-        self.driver.find_element(By.ID, "modify-body-number").click()
-        self.driver.find_element(By.ID, "modify-body-number").clear()
-        self.driver.find_element(By.ID, "modify-body-number").send_keys(body_number)
-        self.driver.find_element(By.ID, "modify-engine-number").click()
-        self.driver.find_element(By.ID, "modify-engine-number").clear()
-        self.driver.find_element(By.ID, "modify-engine-number").send_keys(engine_number)
-        self.driver.find_element(By.ID, "modify-problem").click()
-        self.driver.find_element(By.ID, "modify-problem").clear()
-        self.driver.find_element(By.ID, "modify-problem").send_keys(problem)
+        self.driver.find_element(By.ID, "edit-license-plate").click()
+        self.driver.find_element(By.ID, "edit-license-plate").clear()
+        self.driver.find_element(By.ID, "edit-license-plate").send_keys(license_plate)
+        self.driver.find_element(By.ID, "edit-brand").click()
+        self.driver.find_element(By.ID, "edit-brand").clear()
+        self.driver.find_element(By.ID, "edit-brand").send_keys(brand)
+        self.driver.find_element(By.ID, "edit-model").click()
+        self.driver.find_element(By.ID, "edit-model").clear()
+        self.driver.find_element(By.ID, "edit-model").send_keys(model)
+        self.driver.find_element(By.ID, "edit-year").click()
+        self.driver.find_element(By.ID, "edit-year").clear()
+        self.driver.find_element(By.ID, "edit-year").send_keys(year)
+        self.driver.find_element(By.ID, "edit-body-number").click()
+        self.driver.find_element(By.ID, "edit-body-number").clear()
+        self.driver.find_element(By.ID, "edit-body-number").send_keys(body_number)
+        self.driver.find_element(By.ID, "edit-engine-number").click()
+        self.driver.find_element(By.ID, "edit-engine-number").clear()
+        self.driver.find_element(By.ID, "edit-engine-number").send_keys(engine_number)
+        self.driver.find_element(By.ID, "edit-problem").click()
+        self.driver.find_element(By.ID, "edit-problem").clear()
+        self.driver.find_element(By.ID, "edit-problem").send_keys(problem)
 
-        self.driver.find_element(By.CSS_SELECTOR, "#modifyModal .btn-primary").click()
+        self.driver.find_element(By.CSS_SELECTOR, "#edit-vehicle-modal .btn-primary").click()
         WebDriverWait(self.driver, 1).until(
             expected_conditions.visibility_of_element_located(
                 (By.CSS_SELECTOR, ".toast-body")
@@ -452,7 +452,7 @@ class TestVehicles(BaseTestClass):
 
         WebDriverWait(self.driver, 1).until(
             expected_conditions.visibility_of_element_located(
-                (By.CSS_SELECTOR, "#deleteModal .modal-header")
+                (By.CSS_SELECTOR, "#delete-vehicle-modal .modal-header")
             )
         )
 
@@ -470,7 +470,7 @@ class TestVehicles(BaseTestClass):
 
         WebDriverWait(self.driver, 1).until(
             expected_conditions.visibility_of_element_located(
-                (By.CSS_SELECTOR, "#deleteModal .modal-header")
+                (By.CSS_SELECTOR, "#delete-vehicle-modal .modal-header")
             )
         )
 
@@ -494,10 +494,10 @@ class TestVehicles(BaseTestClass):
             self.driver.find_element(By.CSS_SELECTOR, ".alert").text,
         )
 
-    def test_modify_vehicle_valid(self):
+    def test_edit_vehicle_valid(self):
         """Testea la creación de vehículos válidos."""
 
-        def _test_modify_modify_valid(
+        def _test_edit_edit_valid(
             license_plate: str,
             brand: str,
             model: str,
@@ -506,7 +506,7 @@ class TestVehicles(BaseTestClass):
             engine_number: str,
             problem: str,
         ):
-            self._modify_vehicle(
+            self._edit_vehicle(
                 license_plate, brand, model, year, body_number, engine_number, problem
             )
             self.assertEqual(
@@ -521,7 +521,7 @@ class TestVehicles(BaseTestClass):
         self._login_analyst()
 
         # Vehículo válido condiciones normales
-        _test_modify_modify_valid(
+        _test_edit_edit_valid(
             "NRR-16D",
             "Chevrolet",
             "Aveo",
@@ -532,7 +532,7 @@ class TestVehicles(BaseTestClass):
         )
 
         # Longitud de placa al borde
-        _test_modify_modify_valid(
+        _test_edit_edit_valid(
             "NR216",
             "Chevrolet",
             "Aveo",
@@ -542,7 +542,7 @@ class TestVehicles(BaseTestClass):
             "Se le dañó la caja!",
         )
 
-        _test_modify_modify_valid(
+        _test_edit_edit_valid(
             "NR2160 DAA",
             "Chevrolet",
             "Aveo",
@@ -553,7 +553,7 @@ class TestVehicles(BaseTestClass):
         )
 
         # Años al borde
-        _test_modify_modify_valid(
+        _test_edit_edit_valid(
             "NR1-16D",
             "Chevrolet",
             "Aveo",
@@ -563,7 +563,7 @@ class TestVehicles(BaseTestClass):
             "Se le dañó la caja!",
         )
 
-        _test_modify_modify_valid(
+        _test_edit_edit_valid(
             "NR2-16D",
             "Chevrolet",
             "Aveo",
@@ -574,7 +574,7 @@ class TestVehicles(BaseTestClass):
         )
 
         # Seriales corto y largo
-        _test_modify_modify_valid(
+        _test_edit_edit_valid(
             "NR2-16A",
             "Chevrolet",
             "Aveo",
@@ -585,7 +585,7 @@ class TestVehicles(BaseTestClass):
         )
 
         # Problemas largo
-        _test_modify_modify_valid(
+        _test_edit_edit_valid(
             "NR3-16D",
             "Chevrolet",
             "Aveo",

@@ -43,7 +43,7 @@ def portfolio() -> Response:
 def create_project() -> Response:
     """Crear y anade un proyecto en la base de datos."""
     description = request.form["description"]
-    start_date = request.form["start_date"]
+    start_date = request.form["start-date"]
     deadline = request.form["deadline"]
 
     try:

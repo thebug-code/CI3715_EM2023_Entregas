@@ -145,7 +145,7 @@ colors = [
 ]
 
 
-@current_app.route("/clients-details/<int:client_id>/", methods=["GET", "POST"])
+@current_app.route("/client-details/<int:client_id>/", methods=["GET", "POST"])
 @requires_roles("Analista de Operaciones")
 def client_vehicles(client_id: int) -> Response:
     """Muestra la lista de clientes añadidos en el sistema"""
@@ -195,7 +195,7 @@ def client_vehicles(client_id: int) -> Response:
     )
 
 
-@current_app.route("/clients-details/<int:client_id>/register/", methods=["POST"])
+@current_app.route("/client-details/<int:client_id>/register/", methods=["POST"])
 @requires_roles("Analista de Operaciones")
 def register_client_vehicle(client_id: int) -> Response:
     """Registra un vehiculo de un cliente en la base de datos."""
