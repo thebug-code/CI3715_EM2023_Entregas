@@ -8,46 +8,21 @@
   </div>
 
   {# Modal de registrar departamento #}
-  <div
-    class="modal fade"
-    id="add-dept-modal"
-    tabindex="-1"
-    aria-labelledby="addModalLabel"
-    aria-hidden="true"
-  >
+  <div class="modal fade" id="add-dept-modal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="addModalLabel">Agregar departamento</h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <form action="{{ url_for('register_dept') }}" method="post">
             <div class="mb-3">
               <label for="description" class="form-label">Descripción</label>
-              <input
-                type="text"
-                class="form-control"
-                id="description"
-                name="description"
-                placeholder="Ingrese la descripción del departamento"
-                required
-                autofocus
-              />
+              <input type="text" class="form-control" id="description" name="description" placeholder="Ingrese la descripción del departamento" required autofocus />
             </div>
             <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Cerrar
-              </button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
               <button type="submit" class="btn btn-primary">Agregar</button>
             </div>
           </form>
@@ -57,40 +32,18 @@
   </div>
 
   {# Modal confirmar eliminar departamento #}
-  <div
-    class="modal fade"
-    id="delete-dept-modal"
-    tabindex="-1"
-    aria-labelledby="deleteModalLabel"
-    aria-hidden="true"
-  >
+  <div class="modal fade" id="delete-dept-modal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5
-            class="modal-title"
-            id="deleteModalLabel"
-          >
-            Eliminar departamento
-          </h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
+          <h5 class="modal-title" id="deleteModalLabel">Eliminar departamento</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <p>¿Está seguro que desea eliminar este departamento?</p>
         </div>
         <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-secondary"
-            data-bs-dismiss="modal"
-          >
-            Cerrar
-          </button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
           <form method="post" class="d-inline" id="delete-dept-form">
             <button type="submit" class="btn btn-danger">Eliminar</button>
           </form>
@@ -100,51 +53,21 @@
   </div>
 
   {# Modal de modificar Departamento #}
-  <div
-    class="modal fade"
-    id="edit-dept-modal"
-    tabindex="-1"
-    aria-labelledby="editModalLabel"
-    aria-hidden="true"
-  >
+  <div class="modal fade" id="edit-dept-modal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="editModalLabel">
-            Modificar departamento
-          </h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
+          <h5 class="modal-title" id="editModalLabel">Modificar departamento</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <form method="post" id="edit-dept-form">
             <div class="mb-3">
-              <label
-                for="description"
-                class="form-label"
-                >Descripción</label
-              >
-              <input
-                type="text"
-                class="form-control"
-                id="description"
-                name="description"
-                placeholder="Ingrese la descripción del departamento"
-                required
-              />
+              <label for="description" class="form-label">Descripción</label>
+              <input type="text" class="form-control" id="description" name="description" placeholder="Ingrese la descripción del departamento" required />
             </div>
             <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Cerrar
-              </button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
               <button type="submit" class="btn btn-primary">Modificar</button>
             </div>
           </form>
@@ -155,41 +78,15 @@
 
   <div class="container">
     {# Barra de filtro de usuarios #}
-    <form
-      class="row search-filter"
-      action="{{ url_for('ws_depts') }}"
-      method="post"
-    >
+    <form class="row search-filter" action="{{ url_for('ws_depts') }}" method="post">
       <div class="col-6 mx-3 my-4">
         <div class="input-group">
-          <input
-            name="dept-filter"
-            type="text"
-            class="form-control"
-            placeholder="Buscar departamento"
-          />
+          <input name="dept-filter" type="text" class="form-control" placeholder="Buscar departamento" />
           <button type="submit" class="btn btn-primary">
-            <img
-              src="{{ url_for('static', filename='img/search.svg') }}"
-              width="34"
-              height="34"
-              style="border-radius: 1rem;"
-              title="Buscar departamento"
-            />
+            <img src="{{ url_for('static', filename='img/search.svg') }}" width="34" height="34" style="border-radius: 1rem;" title="Buscar departamento" />
           </button>
-          <button
-            type="button"
-            class="btn btn-primary"
-            data-bs-toggle="modal"
-            data-bs-target="#add-dept-modal"
-          >
-            <img
-              src="{{ url_for('static', filename='img/add.svg') }}"
-              width="34"
-              height="34"
-              style="border-radius: 1rem;"
-              title="Agregar departamento"
-            />
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-dept-modal">
+            <img src="{{ url_for('static', filename='img/add.svg') }}" width="34" height="34" style="border-radius: 1rem;" title="Agregar departamento" />
           </button>
         </div>
       </div>
@@ -199,12 +96,10 @@
     {# Si no hay departamentos o no se encontraron en la busqueda #}
     {% if departments|length == 0 %}
       <div class="d-flex justify-content-center my-4">
-        <div class="alert alert-danger" role="alert">
-          No se encontraron departamentos
-        </div>
+        <div class="alert alert-danger" role="alert">No se encontraron departamentos</div>
       </div>
     {% else %}
-    {# Tabla de departamentos #}
+      {# Tabla de departamentos #}
       <div class="container table-container">
         <table class="table table-striped table-hover align-middle">
           {# Header de la tabla #}
@@ -223,41 +118,13 @@
                 <td>{{ dept.description }}</td>
                 <td>
                   {# Botón de modificar #}
-                  <button
-                    type="button"
-                    id="edit{{ dept.id }}"
-                    class="btn btn-primary my-2 edit-dept"
-                    data-bs-toggle="modal"
-                  >
-                    <img
-                      src="{{ url_for('static', filename='img/edit.svg') }}"
-                      width="24"
-                      height="24"
-                      fill="white"
-                      class="table-button"
-                      value="submit"
-                      style="border-radius: 5px;"
-                      title="Modificar departamento"
-                    />
+                  <button type="button" id="edit{{ dept.id }}" class="btn btn-primary my-2 edit-dept" data-bs-toggle="modal">
+                    <img src="{{ url_for('static', filename='img/edit.svg') }}" width="24" height="24" fill="white" class="table-button" value="submit" style="border-radius: 5px;" title="Modificar departamento" />
                   </button>
 
                   {# Botón de eliminar #}
-                  <button
-                    id="delete{{ dept.id }}"
-                    type="button"
-                    class="btn btn-primary my-2 delete-dept"
-                    data-bs-toggle="modal"
-                  >
-                    <img
-                      src="{{ url_for('static', filename='img/delete.svg') }}"
-                      width="24"
-                      height="24"
-                      fill="white"
-                      class="table-button"
-                      value="submit"
-                      style="border-radius: 5px;"
-                      title="Eliminar departamento"
-                    />
+                  <button id="delete{{ dept.id }}" type="button" class="btn btn-primary my-2 delete-dept" data-bs-toggle="modal">
+                    <img src="{{ url_for('static', filename='img/delete.svg') }}" width="24" height="24" fill="white" class="table-button" value="submit" style="border-radius: 5px;" title="Eliminar departamento" />
                   </button>
                 </td>
               </tr>

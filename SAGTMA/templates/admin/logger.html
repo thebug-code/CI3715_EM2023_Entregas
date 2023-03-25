@@ -8,27 +8,12 @@
 
   <div class="container">
     {# Barra de filtro de eventos #}
-    <form
-      class="row search-filter"
-      action="{{ url_for('logger') }}"
-      method="post"
-    >
+    <form class="row search-filter" action="{{ url_for('logger') }}" method="post">
       <div class="col-4 mx-3 my-4">
         <div class="input-group">
-          <input
-            name="event-filter"
-            type="text"
-            class="form-control"
-            placeholder="Buscar evento"
-          />
+          <input name="event-filter" type="text" class="form-control" placeholder="Buscar evento" />
           <button type="submit" class="btn btn-primary">
-            <img
-              src="{{ url_for('static', filename='img/search.svg') }}"
-              width="34"
-              height="34"
-              style="border-radius: 1rem;"
-              title="Buscar usuario"
-            />
+            <img src="{{ url_for('static', filename='img/search.svg') }}" width="34" height="34" style="border-radius: 1rem;" title="Buscar usuario" />
           </button>
         </div>
       </div>
@@ -38,9 +23,7 @@
     {# Si no se encontó ningún evento #}
     {% if events|length == 0 %}
       <div class="d-flex justify-content-center my-4">
-        <div class="alert alert-danger" role="alert">
-          No se encontraron eventos
-        </div>
+        <div class="alert alert-danger" role="alert">No se encontraron eventos</div>
       </div>
     {% else %}
       <div class="container table-container">
@@ -59,50 +42,22 @@
           </thead>
           <tbody>
             {% for event in events %}
-            {# Modal confirmar eliminar usuario #}
-              <div
-                class="modal fade"
-                id="deleteModal{{ event.id }}"
-                tabindex="-1"
-                aria-labelledby="deleteModalLabel{{ event.id }}}"
-                aria-hidden="true"
-              >
+              {# Modal confirmar eliminar usuario #}
+              <div class="modal fade" id="deleteModal{{ event.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ event.id }}}" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h5
-                        class="modal-title"
-                        id="deleteModalLabel{{ event.id }}"
-                      >
-                        Eliminar evento
-                      </h5>
-                      <button
-                        type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal"
-                        aria-label="Close"
-                      ></button>
+                      <h5 class="modal-title" id="deleteModalLabel{{ event.id }}">Eliminar evento</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                       <p>¿Está seguro que desea eliminar este evento?</p>
                     </div>
                     <div class="modal-footer">
-                      <button
-                        type="button"
-                        class="btn btn-secondary"
-                        data-bs-dismiss="modal"
-                      >
-                        Cerrar
-                      </button>
-                      <form
-                        action="{{ url_for('delete_event', event_id=event.id) }}"
-                        method="post"
-                        class="d-inline"
-                      >
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                      <form action="{{ url_for('delete_event', event_id=event.id) }}" method="post" class="d-inline">
                         <input type="hidden" name="event-id" id="event-id" />
-                        <button type="submit" class="btn btn-danger">
-                          Eliminar
-                        </button>
+                        <button type="submit" class="btn btn-danger">Eliminar</button>
                       </form>
                     </div>
                   </div>
@@ -119,22 +74,8 @@
                 <td>{{ event.time.strftime('%H:%M:%S') }}</td>
                 <td>
                   {# Botón de eliminar #}
-                  <button
-                    type="button"
-                    class="btn btn-primary"
-                    data-bs-toggle="modal"
-                    data-bs-target="#deleteModal{{ event.id }}"
-                  >
-                    <img
-                      src="{{ url_for('static', filename='img/delete.svg') }}"
-                      width="24"
-                      height="24"
-                      fill="white"
-                      class="table-button"
-                      value="submit"
-                      style="border-radius: 5px;"
-                      title="Eliminar evento"
-                    />
+                  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteModal{{ event.id }}">
+                    <img src="{{ url_for('static', filename='img/delete.svg') }}" width="24" height="24" fill="white" class="table-button" value="submit" style="border-radius: 5px;" title="Eliminar evento" />
                   </button>
                 </td>
               </tr>

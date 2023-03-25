@@ -8,118 +8,45 @@
   </div>
 
   {# Modal de agregar cliente #}
-  <div
-    class="modal fade"
-    id="add-client-modal"
-    tabindex="-1"
-    aria-labelledby="addModalLabel"
-    aria-hidden="true"
-  >
+  <div class="modal fade" id="add-client-modal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="addModalLabel">Agregar cliente</h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <form action="{{ url_for('register_client') }}" method="post">
             <div class="mb-3">
-              <label for="id-number" class="form-label"
-                >Cédula de identidad</label
-              >
-              <input
-                type="text"
-                class="form-control"
-                id="id-number"
-                name="id-number"
-                placeholder="Ingrese la cédula del cliente (X-xxxxxxxx)"
-                required
-                autofocus
-              />
+              <label for="id-number" class="form-label">Cédula de identidad</label>
+              <input type="text" class="form-control" id="id-number" name="id-number" placeholder="Ingrese la cédula del cliente (X-xxxxxxxx)" required autofocus />
             </div>
             <div class="mb-3">
               <label for="names" class="form-label">Nombres</label>
-              <input
-                type="text"
-                class="form-control"
-                id="names"
-                name="names"
-                placeholder="Ingrese los nombres del cliente"
-                required
-              />
+              <input type="text" class="form-control" id="names" name="names" placeholder="Ingrese los nombres del cliente" required />
             </div>
             <div class="mb-3">
               <label for="surnames" class="form-label">Apellidos</label>
-              <input
-                type="text"
-                class="form-control"
-                id="surnames"
-                name="surnames"
-                placeholder="Ingrese los apellidos del cliente"
-                required
-              />
+              <input type="text" class="form-control" id="surnames" name="surnames" placeholder="Ingrese los apellidos del cliente" required />
             </div>
             <div class="mb-3">
-              <label for="birthdate" class="form-label"
-                >Fecha de Nacimiento</label
-              >
-              <input
-                type="date"
-                class="form-control"
-                id="birthdate"
-                name="birthdate"
-                placeholder="Ingrese la fecha de nacimiento del cliente"
-                required
-              />
+              <label for="birthdate" class="form-label">Fecha de Nacimiento</label>
+              <input type="date" class="form-control" id="birthdate" name="birthdate" placeholder="Ingrese la fecha de nacimiento del cliente" required />
             </div>
             <div class="mb-3">
-              <label for="phone-number" class="form-label"
-                >Número de teléfono</label
-              >
-              <input
-                type="text"
-                class="form-control"
-                id="phone-number"
-                name="phone-number"
-                placeholder="Ingrese el contacto del cliente (+58XXXXXXXXXXX)"
-                required
-              />
+              <label for="phone-number" class="form-label">Número de teléfono</label>
+              <input type="text" class="form-control" id="phone-number" name="phone-number" placeholder="Ingrese el contacto del cliente (+58XXXXXXXXXXX)" required />
             </div>
             <div class="mb-3">
               <label for="email" class="form-label">Correo electrónico</label>
-              <input
-                type="email"
-                class="form-control"
-                id="email"
-                name="email"
-                placeholder="Ingrese el correo electrónico del cliente"
-                required
-              />
+              <input type="email" class="form-control" id="email" name="email" placeholder="Ingrese el correo electrónico del cliente" required />
             </div>
             <div class="mb-3">
               <label for="address" class="form-label">Dirección</label>
-              <input
-                type="text"
-                class="form-control"
-                id="address"
-                name="address"
-                placeholder="Ingrese la dirección del cliente"
-                required
-              />
+              <input type="text" class="form-control" id="address" name="address" placeholder="Ingrese la dirección del cliente" required />
             </div>
             <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Cerrar
-              </button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
               <button type="submit" class="btn btn-primary">Agregar</button>
             </div>
           </form>
@@ -129,120 +56,45 @@
   </div>
 
   {# Modal de modificar cliente #}
-  <div
-    class="modal fade"
-    id="edit-client-modal"
-    tabindex="-1"
-    aria-labelledby="editModalLabel"
-    aria-hidden="true"
-  >
+  <div class="modal fade" id="edit-client-modal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="editModalLabel">Modificar cliente</h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <form id="edit-client-form" method="post">
             <div class="mb-3">
-              <label for="edit-id-number" class="form-label"
-                >cédula de identidad</label
-              >
-              <input
-                type="text"
-                class="form-control"
-                id="edit-id-number"
-                name="id-number"
-                placeholder="ingrese la cédula del cliente (x-xxxxxxxx)"
-                required
-                autofocus
-              />
+              <label for="edit-id-number" class="form-label">cédula de identidad</label>
+              <input type="text" class="form-control" id="edit-id-number" name="id-number" placeholder="ingrese la cédula del cliente (x-xxxxxxxx)" required autofocus />
             </div>
             <div class="mb-3">
               <label for="edit-names" class="form-label">Nombres</label>
-              <input
-                type="text"
-                class="form-control"
-                id="edit-names"
-                name="names"
-                placeholder="Ingrese los nombres del cliente"
-                required
-              />
+              <input type="text" class="form-control" id="edit-names" name="names" placeholder="Ingrese los nombres del cliente" required />
             </div>
             <div class="mb-3">
               <label for="edit-surnames" class="form-label">Apellidos</label>
-              <input
-                type="text"
-                class="form-control"
-                id="edit-surnames"
-                name="surnames"
-                placeholder="Ingrese los apellidos del cliente"
-                required
-              />
+              <input type="text" class="form-control" id="edit-surnames" name="surnames" placeholder="Ingrese los apellidos del cliente" required />
             </div>
             <div class="mb-3">
-              <label for="edit-birthdate" class="form-label"
-                >Fecha de Nacimiento</label
-              >
-              <input
-                type="date"
-                class="form-control"
-                id="edit-birthdate"
-                name="birthdate"
-                placeholder="Ingrese la fecha de nacimiento del cliente"
-                required
-              />
+              <label for="edit-birthdate" class="form-label">Fecha de Nacimiento</label>
+              <input type="date" class="form-control" id="edit-birthdate" name="birthdate" placeholder="Ingrese la fecha de nacimiento del cliente" required />
             </div>
             <div class="mb-3">
-              <label for="edit-phone-number" class="form-label"
-                >Número de teléfono</label
-              >
-              <input
-                type="text"
-                class="form-control"
-                id="edit-phone-number"
-                name="phone-number"
-                placeholder="Ingrese el contacto del cliente (+58XXXXXXXXXXX)"
-                required
-              />
+              <label for="edit-phone-number" class="form-label">Número de teléfono</label>
+              <input type="text" class="form-control" id="edit-phone-number" name="phone-number" placeholder="Ingrese el contacto del cliente (+58XXXXXXXXXXX)" required />
             </div>
             <div class="mb-3">
-              <label for="editEmail" class="form-label"
-                >Correo electrónico</label
-              >
-              <input
-                type="email"
-                class="form-control"
-                id="edit-email"
-                name="email"
-                placeholder="Ingrese el correo electrónico del cliente"
-                required
-              />
+              <label for="editEmail" class="form-label">Correo electrónico</label>
+              <input type="email" class="form-control" id="edit-email" name="email" placeholder="Ingrese el correo electrónico del cliente" required />
             </div>
             <div class="mb-3">
               <label for="editAddress" class="form-label">Dirección</label>
-              <input
-                type="text"
-                class="form-control"
-                id="edit-address"
-                name="address"
-                placeholder="Ingrese la dirección del cliente"
-                required
-              />
+              <input type="text" class="form-control" id="edit-address" name="address" placeholder="Ingrese la dirección del cliente" required />
             </div>
             <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Cerrar
-              </button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
               <button type="submit" class="btn btn-primary">Modificar</button>
             </div>
           </form>
@@ -252,35 +104,18 @@
   </div>
 
   {# Modal confirmar eliminar cliente #}
-  <div
-    class="modal fade"
-    id="delete-client-modal"
-    tabindex="-1"
-    aria-labelledby="deleteModalLabel"
-    aria-hidden="true"
-  >
+  <div class="modal fade" id="delete-client-modal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="deleteModalLabel">Eliminar cliente</h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <p>¿Está seguro que desea eliminar este cliente?</p>
         </div>
         <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-secondary"
-            data-bs-dismiss="modal"
-          >
-            Cerrar
-          </button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
           <form method="post" class="d-inline" id="delete-client-form">
             <button type="submit" class="btn btn-danger">Eliminar</button>
           </form>
@@ -291,41 +126,15 @@
 
   <div class="container">
     {# Barra de filtro de clientes #}
-    <form
-      class="row search-filter"
-      action="{{ url_for('client_details') }}"
-      method="post"
-    >
+    <form class="row search-filter" action="{{ url_for('client_details') }}" method="post">
       <div class="col-6 mx-3 my-4">
         <div class="input-group">
-          <input
-            name="client-filter"
-            type="text"
-            class="form-control"
-            placeholder="Buscar cliente"
-          />
+          <input name="client-filter" type="text" class="form-control" placeholder="Buscar cliente" />
           <button type="submit" class="btn btn-primary">
-            <img
-              src="{{ url_for('static', filename='img/search.svg') }}"
-              width="34"
-              height="34"
-              style="border-radius: 1rem;"
-              title="Buscar cliente"
-            />
+            <img src="{{ url_for('static', filename='img/search.svg') }}" width="34" height="34" style="border-radius: 1rem;" title="Buscar cliente" />
           </button>
-          <button
-            type="button"
-            class="btn btn-primary"
-            data-bs-toggle="modal"
-            data-bs-target="#add-client-modal"
-          >
-            <img
-              src="{{ url_for('static', filename='img/add.svg') }}"
-              width="34"
-              height="34"
-              style="border-radius: 1rem;"
-              title="Agregar cliente"
-            />
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-client-modal">
+            <img src="{{ url_for('static', filename='img/add.svg') }}" width="34" height="34" style="border-radius: 1rem;" title="Agregar cliente" />
           </button>
         </div>
       </div>
@@ -335,9 +144,7 @@
     {# Si no hay clientes o no se encontraron en la busqueda #}
     {% if clients|length == 0 %}
       <div class="d-flex justify-content-center my-4">
-        <div class="alert alert-danger" role="alert">
-          No se encontraron clientes
-        </div>
+        <div class="alert alert-danger" role="alert">No se encontraron clientes</div>
       </div>
     {% else %}
       {# Tabla de clientes #}
@@ -370,58 +177,20 @@
                 <td>{{ client.address }}</td>
                 <td>
                   {# Botón de ir a detalles #}
-                  <a
-                    href="{{ url_for('client_vehicles', client_id=client.id) }}"
-                  >
+                  <a href="{{ url_for('client_vehicles', client_id=client.id) }}">
                     <button type="button" class="btn btn-primary">
-                      <img
-                        src="{{ url_for('static', filename='img/detail.svg') }}"
-                        width="24"
-                        height="24"
-                        fill="white"
-                        class="table-button"
-                        style="border-radius: 5px;"
-                        title="Ver vehículos"
-                      />
+                      <img src="{{ url_for('static', filename='img/detail.svg') }}" width="24" height="24" fill="white" class="table-button" style="border-radius: 5px;" title="Ver vehículos" />
                     </button>
                   </a>
 
                   {# Botón de modificar #}
-                  <button
-                    type="button"
-                    id="edit{{ client.id }}"
-                    class="btn btn-primary my-2 edit-client"
-                    data-toggle="modal"
-                  >
-                    <img
-                      src="{{ url_for('static', filename='img/edit.svg') }}"
-                      width="24"
-                      height="24"
-                      fill="white"
-                      class="table-button"
-                      value="submit"
-                      style="border-radius: 5px;"
-                      title="Modificar cliente"
-                    />
+                  <button type="button" id="edit{{ client.id }}" class="btn btn-primary my-2 edit-client" data-toggle="modal">
+                    <img src="{{ url_for('static', filename='img/edit.svg') }}" width="24" height="24" fill="white" class="table-button" value="submit" style="border-radius: 5px;" title="Modificar cliente" />
                   </button>
 
                   {# Botón de eliminar #}
-                  <button
-                    id="delete{{ client.id }}"
-                    type="button"
-                    class="btn btn-primary delete-client"
-                    data-bs-toggle="modal"
-                  >
-                    <img
-                      src="{{ url_for('static', filename='img/delete.svg') }}"
-                      width="24"
-                      height="24"
-                      fill="white"
-                      class="table-button"
-                      value="submit"
-                      style="border-radius: 5px;"
-                      title="Eliminar cliente"
-                    />
+                  <button id="delete{{ client.id }}" type="button" class="btn btn-primary delete-client" data-bs-toggle="modal">
+                    <img src="{{ url_for('static', filename='img/delete.svg') }}" width="24" height="24" fill="white" class="table-button" value="submit" style="border-radius: 5px;" title="Eliminar cliente" />
                   </button>
                 </td>
               </tr>

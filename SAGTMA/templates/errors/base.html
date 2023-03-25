@@ -6,10 +6,7 @@
   <section class="d-flex align-items-center justify-content-center vh-100">
     <div class="text-center">
       <h1 class="display-1 fw-bold">{% block error_code %}{% endblock %}</h1>
-      <p class="fs-3">
-        <span class="text-danger">¡Ups!</span
-        >{% block error_message %}{% endblock %}
-      </p>
+      <p class="fs-3"><span class="text-danger">¡Ups!</span>{% block error_message %}{% endblock %}</p>
       <p class="lead">
         {% block error_explanation %}{% endblock %}
       </p>
