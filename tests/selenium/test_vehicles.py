@@ -1,4 +1,4 @@
-from tests import BaseTestClass
+from tests.selenium import BaseTestClass
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions

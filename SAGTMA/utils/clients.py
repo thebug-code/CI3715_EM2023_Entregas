@@ -69,6 +69,8 @@ def validate_phone_number(phone_number: str) -> str:
         phone_number = phone_number.replace("00", "+")
     elif phone_number.startswith("0"):
         phone_number = phone_number.replace("0", "+58")
+    elif phone_number.startswith("58"):
+        phone_number = f"+{phone_number}"
     elif not phone_number.startswith("+58"):
         phone_number = f"+58{phone_number}"
 

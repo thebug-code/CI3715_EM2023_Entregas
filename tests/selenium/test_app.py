@@ -1,4 +1,4 @@
-from tests import BaseTestClass
+from tests.selenium import BaseTestClass
 
 
 class TestWebApp(BaseTestClass):
