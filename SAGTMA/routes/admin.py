@@ -80,7 +80,7 @@ def register() -> Response:
     return redirect(url_for("users_profiles"))
 
 
-@current_app.route("/user-profiles/delete/<int:user_id>/", methods=["POST"])
+@current_app.route("/user-profiles/<int:user_id>/delete/", methods=["POST"])
 @requires_roles("Administrador")
 def delete_user(user_id: int) -> Response:
     """Elimina un usuario de la base de datos."""
@@ -94,7 +94,7 @@ def delete_user(user_id: int) -> Response:
     return redirect(url_for("users_profiles"))
 
 
-@current_app.route("/user-profiles/edit/<int:user_id>/", methods=["POST"])
+@current_app.route("/user-profiles/<int:user_id>/edit/", methods=["POST"])
 @requires_roles("Administrador")
 def edit_user(user_id: int) -> Response:
     """Modifica los datos de un usuario en la base de datos."""

@@ -2,13 +2,13 @@
 {% set active_page = "profiles" %}
 {% block title %}Perfiles de Usuarios{% endblock %}
 {% block content %}
-  <!-- Título de la página centrado en una barra -->
+{# Título de la página centrado en una barra #}
   <div class="d-flex justify-content-center my-4">
     <h1 class="title-container">Perfiles de Usuarios</h1>
   </div>
 
-  <!-- Modal de registrar usuario -->
-  <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+  {# Modal de registrar usuario #}
+  <div class="modal fade" id="add-user-modal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
@@ -55,6 +55,65 @@
     </div>
   </div>
 
+  {# Modal de modificar usuario #}
+  <div class="modal fade" id="edit-user-modal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editModalLabel">Modificar usuario</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="post" id="edit-user-form">
+            <div class="mb-3">
+              <label for="edit-username" class="form-label">Login</label>
+              <input type="text" class="form-control" id="edit-username" name="username" placeholder="Ingrese el login del usuario" required />
+            </div>
+            <div class="mb-3">
+              <label for="edit-names" class="form-label">Nombres</label>
+              <input type="text" class="form-control" id="edit-names" name="names" placeholder="Ingrese los nombres del usuario" required />
+            </div>
+            <div class="mb-3">
+              <label for="edit-surnames" class="form-label">Apellidos</label>
+              <input type="text" class="form-control" id="edit-surnames" name="surnames" placeholder="Ingrese los apellidos del usuario" required />
+            </div>
+            <div class="mb-3">
+              <label for="edit-roles" class="form-label">Rol</label>
+              <select id="edit-roles" class="form-select" name="role">
+              </select>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+              <button type="submit" class="btn btn-primary">Modificar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {# Modal confirmar eliminar usuario #}
+  <div class="modal fade" id="delete-user-modal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">Eliminar usuario</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>¿Está seguro que desea eliminar este usuario?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <form method="post" class="d-inline" id="delete-user-form">
+            <input type="hidden" name="user-id" id="user-id" />
+            <button type="submit" class="btn btn-danger">Eliminar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="container">
     {# Barra de filtro de usuarios #}
     <form class="row search-filter" action="{{ url_for('users_profiles') }}" method="post">
@@ -70,7 +129,7 @@
           <button type="submit" class="btn btn-primary">
             <img src="{{ url_for('static', filename='img/search.svg') }}" width="34" height="34" style="border-radius: 1rem;" title="Buscar usuario" />
           </button>
-          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-user-modal">
             <img src="{{ url_for('static', filename='img/add.svg') }}" width="34" height="34" style="border-radius: 1rem;" title="Agregar usuario" />
           </button>
         </div>
@@ -100,76 +159,7 @@
             </tr>
           </thead>
           <tbody>
-            {% for user in users %}
-              {# Modal de modificar usuario #}
-              <div class="modal fade" id="modifyModal{{ user.id }}" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="editModalLabel{{ user.id }}">Modificar usuario</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                      <form action="{{ url_for('edit_user', user_id=user.id) }}" method="post">
-                        <div class="mb-3">
-                          <label for="modifyUsername{{ user.id }}" class="form-label">Login</label>
-                          <input type="text" class="form-control" id="modifyUsername{{ user.id }}" name="username" placeholder="Ingrese el login del usuario" value="{{ user.username }}" required />
-                        </div>
-                        <div class="mb-3">
-                          <label for="modifyNames" class="form-label">Nombres</label>
-                          <input type="text" class="form-control" id="modifyNames{{ user.id }}}" name="names" placeholder="Ingrese los nombres del usuario" value="{{ user.names }}" required />
-                        </div>
-                        <div class="mb-3">
-                          <label for="modifySurnames{{ user.id }}" class="form-label">Apellidos</label>
-                          <input type="text" class="form-control" id="modifySurnames{{ user.id }}}" name="surnames" placeholder="Ingrese los apellidos del usuario" value="{{ user.surnames }}" required />
-                        </div>
-                        <div class="mb-3">
-                          <label for="modifyRole{{ user.id }}" class="form-label">Rol</label>
-                          <select class="form-select" name="role">
-                            {% for role in roles %}
-                              <option
-                                value="{{ role.id }}"
-                                {% if role.id == user.role.id %}
-                                  selected="selected"
-                                {% endif %}
-                              >
-                                {{ role.name }}
-                              </option>
-                            {% endfor %}
-                          </select>
-                        </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                          <button type="submit" class="btn btn-primary">Modificar</button>
-                        </div>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {# Modal confirmar eliminar usuario #}
-              <div class="modal fade" id="deleteModal{{ user.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ user.id }}}" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="deleteModalLabel{{ user.id }}">Eliminar usuario</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                      <p>¿Está seguro que desea eliminar este usuario?</p>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                      <form action="{{ url_for('delete_user', user_id=user.id) }}" method="post" class="d-inline">
-                        <input type="hidden" name="user-id" id="user-id" />
-                        <button type="submit" class="btn btn-danger">Eliminar</button>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
+            {% for user in users %} 
               {# Filas de la tabla #}
               <tr>
                 <td>{{ user.id }}</td>
@@ -196,12 +186,12 @@
                 </td>
                 <td>
                   {# Botón de modificar #}
-                  <button type="button" class="btn btn-primary my-2" data-bs-toggle="modal" data-bs-target="#modifyModal{{ user.id }}" data-bs-whatever="{{ user.id }}">
+                  <button id="edit{{ user.id }}" type="button" class="btn btn-primary my-2 edit-user" data-bs-toggle="modal">
                     <img src="{{ url_for('static', filename='img/edit.svg') }}" width="24" height="24" fill="white" class="table-button" value="submit" style="border-radius: 5px;" title="Modificar usuario" />
                   </button>
 
                   {# Botón de eliminar #}
-                  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteModal{{ user.id }}">
+                  <button id="delete{{ user.id }} type="button" class="btn btn-primary delete-user" data-bs-toggle="modal">
                     <img src="{{ url_for('static', filename='img/delete.svg') }}" width="24" height="24" fill="white" class="table-button" value="submit" style="border-radius: 5px;" title="Eliminar usuario" />
                   </button>
                 </td>
@@ -212,4 +202,6 @@
       </div>
     {% endif %}
   </div>
+
+  <script src="{{ url_for('static', filename='js/users.js') }}"></script>
 {% endblock %}
