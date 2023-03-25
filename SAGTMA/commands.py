@@ -1,4 +1,4 @@
-from random import randint
+from random import randint, choice
 from datetime import date
 
 from flask import current_app
@@ -45,16 +45,26 @@ def populate_db():
 
     # Añade un usuario administrador
     admin_user = User(
-        "admin", "Juanito", "Alimaña", profiles.hash_password("Admin123."), roles[1]
+        "V-20786789",
+        "admin",
+        "Juanito",
+        "Alimaña",
+        profiles.hash_password("Admin123."),
+        roles[1]
     )
     db.session.add(admin_user)
 
     # Añade usuarios dummy de distintos roles
     names = ["Juan", "Pedro", "Pablo", "Luis", "Carlos", "Jorge", "Miguel"]
     surnames = ["Pérez", "González", "Gómez", "Rodríguez", "López", "Martínez"]
+    prefixes = ['V', 'E', 'J', 'G', 'C']
+    id_numbers = ( 
+        [f"{choice(prefixes)}-{randint(10000000, 99999999)}" for _ in range(10)]
+    )
     roles_slice = roles[2:]
     for i in range(10):
         user = User(
+            id_numbers[i],
             f"user{i}",
             names[i % len(names)],
             surnames[i % len(surnames)],

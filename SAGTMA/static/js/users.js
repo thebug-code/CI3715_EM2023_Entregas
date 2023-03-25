@@ -15,6 +15,7 @@ $(document).ready(function () {
         $("#edit-username").val(user.username);
         $("#edit-names").val(user.names);
         $("#edit-surnames").val(user.surnames);
+        $("#edit-id-number").val(user.id_number);
         
         // Obtener el select de roles y vaciar su contenido
         const editRolesSelect = $('#edit-roles');

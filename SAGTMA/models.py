@@ -31,6 +31,7 @@ class User(db.Model):
     """Modelo de usuario."""
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id_number = db.Column(db.String(10), unique=True, nullable=False)
     username = db.Column(db.String(20), unique=True, nullable=False)
     names = db.Column(db.String(50), nullable=False)
     surnames = db.Column(db.String(50), nullable=False)
@@ -46,8 +47,15 @@ class User(db.Model):
     events = db.relationship("Event", backref="user", cascade="all, delete-orphan")
 
     def __init__(
-        self, username: str, names: str, surnames: str, password: str, role: Role
+            self,
+            id_number: str,
+            username: str,
+            names: str,
+            surnames: str,
+            password: str,
+            role: Role
     ):
+        self.id_number = id_number
         self.username = username
         self.names = names
         self.surnames = surnames

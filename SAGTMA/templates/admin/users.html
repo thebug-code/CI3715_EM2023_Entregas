@@ -7,7 +7,7 @@
     <h1 class="title-container">Perfiles de Usuarios</h1>
   </div>
 
-  {# Modal de registrar usuario #}
+    {# Modal de registrar usuario #}
   <div class="modal fade" id="add-user-modal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
@@ -36,6 +36,10 @@
             <div class="mb-3">
               <label for="surnames" class="form-label">Apellidos</label>
               <input type="text" class="form-control" id="surnames" name="surnames" placeholder="Ingrese los apellidos del usuario" required />
+            </div>
+            <div class="mb-3">
+              <label for="id-number" class="form-label">Cédula</label>
+              <input type="text" class="form-control" id="id-number" name="id-number" placeholder="Ingrese la cédula del cliente (X-xxxxxxxx)" required />
             </div>
             <div class="mb-3">
               <label for="role" class="form-label">Rol</label>
@@ -78,6 +82,10 @@
               <input type="text" class="form-control" id="edit-surnames" name="surnames" placeholder="Ingrese los apellidos del usuario" required />
             </div>
             <div class="mb-3">
+              <label for="edit-id-number" class="form-label">Cédula</label>
+              <input type="text" class="form-control" id="edit-id-number" name="id-number" placeholder="Ingrese la cédula del cliente (X-xxxxxxxx)" required />
+            </div>
+            <div class="mb-3">
               <label for="edit-roles" class="form-label">Rol</label>
               <select id="edit-roles" class="form-select" name="role">
               </select>
@@ -112,7 +120,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> 
 
   <div class="container">
     {# Barra de filtro de usuarios #}
@@ -151,6 +159,7 @@
             <tr>
               <th>Id</th>
               <th>Login</th>
+              <th style="width: 8.1rem;">Cédula</th>
               <th>Nombres</th>
               <th>Apellidos</th>
               <th>Rol</th>
@@ -164,6 +173,7 @@
               <tr>
                 <td>{{ user.id }}</td>
                 <td>{{ user.username }}</td>
+                <td>{{ user.id_number }}</td>
                 <td>{{ user.names }}</td>
                 <td>{{ user.surnames }}</td>
                 <td>{{ user.role.name }}</td>

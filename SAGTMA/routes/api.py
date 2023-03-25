@@ -22,6 +22,7 @@ def api_users():
     users = [
         {
             "id": user.id,
+            "id_number": user.id_number,
             "username": user.username,
             "names": user.names,
             "surnames": user.surnames,

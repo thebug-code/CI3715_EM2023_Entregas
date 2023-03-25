@@ -60,6 +60,8 @@ def users_profiles() -> Response:
 @requires_roles("Administrador")
 def register() -> Response:
     """Registra un usuario en la base de datos."""
+    # Obtiene los datos del formulario
+    id_number = request.form.get("id-number")
     username = request.form.get("username")
     names = request.form.get("names")
     surnames = request.form.get("surnames")
@@ -69,7 +71,7 @@ def register() -> Response:
 
     try:
         profiles.register_user(
-            username, names, surnames, password, confirm_password, role
+            id_number, username, names, surnames, password, confirm_password, role
         )
     except profiles.AuthenticationError as e:
         flash(f"{e}")
@@ -99,13 +101,14 @@ def delete_user(user_id: int) -> Response:
 def edit_user(user_id: int) -> Response:
     """Modifica los datos de un usuario en la base de datos."""
     # Obtiene los datos del formulario
+    id_number = request.form.get("id-number")
     username = request.form.get("username")
     names = request.form.get("names")
     surnames = request.form.get("surnames")
     role = request.form.get("role")
 
     try:
-        profiles.edit_user(user_id, username, names, surnames, role)
+        profiles.edit_user(user_id, id_number, username, names, surnames, role)
 
         # Si el usuario editado es el mismo que está logueado, cambia su sesión
         if user_id == session["id"]:

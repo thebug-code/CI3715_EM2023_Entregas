@@ -96,6 +96,7 @@ def validate_password(password: str) -> bool:
 
 # ========== Registro ==========
 def register_user(
+    id_number: str,
     username: str,
     names: str,
     surnames: str,
@@ -108,10 +109,16 @@ def register_user(
 
     Lanza una excepción AuthenticationError si hubo algún error.
     """
+    # Elimina los espacios en blanco al inicio y al final de los campos
+    id_number = id_number.strip()
     username = username.strip()
     names = names.strip()
     surnames = surnames.strip()
-    if not all([username, names, surnames, password, confirm_password, role_id]):
+
+    # Verifica que no haya campos vacíos
+    if not all(
+        [id_number, username, names, surnames, password, confirm_password, role_id]
+    ):
         raise AuthenticationError("Todos los campos son obligatorios")
 
     # Verifica si ya existe un usuario con el mismo nombre de usuario
@@ -120,6 +127,7 @@ def register_user(
         raise AuthenticationError("El nombre de usuario ya existe")
 
     # Chequea si los campos ingresados son válidos
+    # validate_id(id_number)
     validate_username(username)
     validate_names(names)
     validate_names(surnames)
@@ -135,7 +143,9 @@ def register_user(
         raise AuthenticationError("El rol ingresado no existe")
 
     # Crea el usuario en la base de datos
-    new_user = User(username, names, surnames, hash_password(password), query_role[0])
+    new_user = User(
+        id_number, username, names, surnames, hash_password(password), query_role[0]
+    )
     db.session.add(new_user)
 
     # Registra el evento en la base de datos
@@ -183,16 +193,29 @@ def get_current_user(user_id: int) -> User:
 
 
 # ========== Edición de datos ==========
-def edit_user(user_id: int, username: str, names: str, surnames: str, role_id: str):
+def edit_user(
+    user_id: int, 
+    id_number: str,
+    username: str,
+    names: str, 
+    surnames: str,
+    role_id: str
+):
     """
     Edita los datos de un usuario en la base de datos.
 
     Lanza una excepción AuthenticationError si hubo algún error.
     """
+    # Elimina los espacios en blanco al principio y al final
+    id_number = id_number.strip()
     username = username.strip()
     names = names.strip()
     surnames = surnames.strip()
-    if not all([user_id, username, names, surnames, role_id]):
+    
+    # Verifica que no haya campos vacíos
+    if not all(
+        [user_id, id_number, username, names, surnames, role_id]
+    ):
         raise AuthenticationError("Todos los campos son obligatorios")
 
     # Busca el usuario en la base de datos
@@ -211,7 +234,11 @@ def edit_user(user_id: int, username: str, names: str, surnames: str, role_id: s
     (new_role,) = result
 
     # Verifica si ya existe un usuario distinto con el mismo nombre de usuario
-    stmt = db.select(User).where(User.username == username).where(User.id != user_id)
+    stmt = (
+        db.select(User)
+        .where(User.username == username)
+        .where(User.id != user_id)
+    )
     result = db.session.execute(stmt).first()
     if result:
         raise AuthenticationError("El nombre de usuario ya existe")
@@ -233,6 +260,7 @@ def edit_user(user_id: int, username: str, names: str, surnames: str, role_id: s
             raise AuthenticationError("No se puede editar el rol de un administrador")
 
     # Edita el usuario en la base de datos
+    edited_user.id_number = id_number
     edited_user.username = username
     edited_user.names = names
     edited_user.surnames = surnames
