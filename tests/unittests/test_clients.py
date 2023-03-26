@@ -50,17 +50,14 @@ class TestClients(BaseTestClass):
         db.session.add_all([analyst_user, client])
         db.session.commit()
 
-    def _register_client(
-        self,
-        id_number: str,
-        names: str,
-        surnames: str,
-        birthdate: str,
-        phone: str,
-        email: str,
-        address: str,
-    ):
-        pass
+    def _login_analyst(self):
+        """Inicia sesión con un usuario Analista de Operaciones."""
+
+        return self.client.post(
+            "/login/",
+            data={"username":"analyst", "password":"Analyst123."},
+            follow_redirects=True,
+        )
 
     def test_validate_phone_number_valid(self):
         """Testea la validación de números de teléfonos válidos."""
@@ -129,6 +126,57 @@ class TestClients(BaseTestClass):
 
         # Hoy
         _test_validate_birthdate_invalid(datetime.date.today())
+
+    def test_validate_email_valid(self):
+        """Testea la validación de correos electrónicos válidos."""
+
+        def _test_validate_email_valid(email: str):
+            self.assertIsNone(clients.validate_email(email))
+
+        # Dirección de correo electrónico válida
+        _test_validate_email_valid("johndoe@example.com")
+
+        # Dirección de correo electrónico válida con mayúsculas
+        _test_validate_email_valid("JohnDoe@example.com")
+
+    def test_validate_email_invalid(self):
+        """Testea la validación de correos electrónicos inválidos."""
+
+        def _test_validate_email_invalid(email: str):
+            with self.assertRaises(clients.ClientError):
+                clients.validate_email(email)
+
+        # Faltan caracteres después del punto
+        _test_validate_email_invalid("johndoe@example.")
+
+        # Caracteres no permitidos en el dominio
+        _test_validate_email_invalid("johndoe@exam_ple.com")
+
+        # Dominio con sólo 1 letra
+        _test_validate_email_invalid("johndoe@xorg.c")
+
+        # Dirección de correo electrónico inválida - dominio con más de 7 letras
+        _test_validate_email_invalid("johndoe@example.aguacate")
+
+    def test_register_client_valid(self):
+        """Testea la creación de clientes válidos."""
+
+        with self.app.test_request_context():
+            print(self._login_analyst())
+            clients.register_client(
+                "V-11127345",
+                "Cliente",
+                "De Prueba",
+                "2001-12-30",
+                "+584143642514",
+                "usb@usb.usb",
+                "Universida Simo Boliva",
+            )
+
+            stmt = db.select(Client).where(Client.id_number == "V-11127345")
+            self.assertIsNotNone(
+                db.session.execute(stmt).first()
+            )
 
     def test_register_client_already_registered(self):
         """Testea la creación de clientes con cédula ya registrada."""

@@ -6,10 +6,11 @@ from SAGTMA.utils.profiles import hash_password
 
 
 class BaseTestClass(unittest.TestCase):
+    app = SAGTMA.test_app()
+
     def setUp(self):
         # Puebla la base de datos para el conjunto de tests, si es necesario
         # Crea la aplicación y un cliente para las pruebas
-        self.app = SAGTMA.test_app()
         self.client = self.app.test_client()
         self.ctx = self.app.app_context()
         self.ctx.push()

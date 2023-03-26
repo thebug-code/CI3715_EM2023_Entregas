@@ -19,6 +19,7 @@ def login() -> Response:
     """Inicia la sesión de un usuario y guarda el correo electrónico y nombre
     en la sesión.
     """
+
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
