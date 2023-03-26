@@ -100,6 +100,11 @@ def register_user(
     if db.session.execute(stmt).first():
         raise ProfileError("El nombre de usuario ya existe")
 
+    # Verifica si ya existe un usuario con el mismo id_number
+    stmt = db.select(User).where(User.id_number == id_number)
+    if db.session.execute(stmt).first():
+        raise AuthenticationError("El número de identificación ya existe")
+
     # Chequea si los campos ingresados son válidos
     validate_id(id_number, ProfileError)
     validate_username(username)
@@ -172,6 +177,16 @@ def edit_user(
     result = db.session.execute(stmt).first()
     if result:
         raise ProfileError("El nombre de usuario ya existe")
+
+    # Verifica si ya existe un usuario distinto con el mismo id_number
+    stmt = (
+        db.select(User)
+        .where(User.id_number == id_number)
+        .where(User.id != user_id)
+    )
+    result = db.session.execute(stmt).first()
+    if result:
+        raise AuthenticationError("El número de identificación ya existe")
 
     # Chequea si los campos ingresados son válidos
     validate_id(id_number, ProfileError)
