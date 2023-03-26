@@ -15,7 +15,12 @@ class TestClients(BaseTestClass):
 
         # Añade un usuario Gerente de Operaciones
         analyst_user = User(
-            "analyst", "Bad", "Bunny", hash_password("Analyst123."), analyst
+            "V-1000000",
+            "analyst",
+            "Bad",
+            "Bunny",
+            hash_password("Analyst123."),
+            analyst,
         )
 
         # Añade un cliente y un vehículo

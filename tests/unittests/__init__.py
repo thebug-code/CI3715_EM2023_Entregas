@@ -43,7 +43,12 @@ class BaseTestClass(unittest.TestCase):
 
         # Añade un usuario administrador
         admin_user = User(
-            "admin", "Juanito", "Alimaña", hash_password("Admin123."), roles[1]
+            "V-11457851",
+            "admin",
+            "Juanito",
+            "Alimaña",
+            hash_password("Admin123."),
+            roles[1],
         )
         db.session.add(admin_user)
 

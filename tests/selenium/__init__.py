@@ -50,38 +50,35 @@ class BaseTestClass(unittest.TestCase):
 
     def populate_db(self):
         # Crea los roles
-        user = Role("Usuario (Dummy)")
-        admin = Role("Administrador")
-        manager = Role("Gerente de Operaciones")
-        analyst = Role("Analista de Operaciones")
-        mechanics_supervisor = Role("Supervisor del Área de Mecánica General")
-        painting_supervisor = Role("Supervisor del Área de Latonería y Pintura")
-        mechanics_specialist = Role("Especialista en Mecánica")
-        electronics_specialist = Role("Especialista en Electrónica")
-        electricity_specialist = Role("Especialista en Electricidad")
-
-        roles = [
-            user,
-            admin,
-            analyst,
-            manager,
-            mechanics_supervisor,
-            painting_supervisor,
-            mechanics_specialist,
-            electronics_specialist,
-            electricity_specialist,
+        role_names = [
+            "Usuario (Dummy)",
+            "Administrador",
+            "Gerente de Operaciones",
+            "Analista de Operaciones",
+            "Gerente de Mecánica General",
+            "Especialista en Mecánica",
+            "Gerente de Estructura",
+            "Especialista en Estructura",
+            "Gerente de Revestimiento",
+            "Especialista en Revestimiento",
+            "Gerente de Electrónica",
+            "Especialista en Electrónica",
+            "Gerente de Electricidad",
+            "Especialista en Electricidad",
+            "Gerente de Proyectos",
         ]
 
+        roles = [Role(name) for name in role_names]
         db.session.add_all(roles)
 
         # Añade un usuario administrador
         admin_user = User(
-            "V-48912714",
+            "V-11457851",
             "admin",
             "Juanito",
             "Alimaña",
             hash_password("Admin123."),
-            admin,
+            roles[1],
         )
         db.session.add(admin_user)
 
