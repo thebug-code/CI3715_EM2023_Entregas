@@ -4,7 +4,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 from SAGTMA.models import User, Role, Client, Vehicle, db
-from SAGTMA.utils.profiles import hash_password
+from SAGTMA.utils.auth import hash_password
 import datetime
 
 
@@ -17,7 +17,12 @@ class TestVehicles(BaseTestClass):
 
         # Añade un usuario Gerente de Operaciones y un cliente
         analyst_user = User(
-            "analyst", "Bad", "Bunny", hash_password("Analyst123."), analyst
+            "V-58912714",
+            "analyst",
+            "Bad",
+            "Bunny",
+            hash_password("Analyst123."),
+            analyst,
         )
 
         new_client = Client(
@@ -93,7 +98,9 @@ class TestVehicles(BaseTestClass):
         self.driver.find_element(By.ID, "problem").click()
         self.driver.find_element(By.ID, "problem").send_keys(problem)
 
-        self.driver.find_element(By.CSS_SELECTOR, "#add-vehicle-modal .btn-primary").click()
+        self.driver.find_element(
+            By.CSS_SELECTOR, "#add-vehicle-modal .btn-primary"
+        ).click()
         WebDriverWait(self.driver, 1).until(
             expected_conditions.visibility_of_element_located(
                 (By.CSS_SELECTOR, ".toast-body")
@@ -139,7 +146,9 @@ class TestVehicles(BaseTestClass):
         self.driver.find_element(By.ID, "edit-problem").clear()
         self.driver.find_element(By.ID, "edit-problem").send_keys(problem)
 
-        self.driver.find_element(By.CSS_SELECTOR, "#edit-vehicle-modal .btn-primary").click()
+        self.driver.find_element(
+            By.CSS_SELECTOR, "#edit-vehicle-modal .btn-primary"
+        ).click()
         WebDriverWait(self.driver, 1).until(
             expected_conditions.visibility_of_element_located(
                 (By.CSS_SELECTOR, ".toast-body")

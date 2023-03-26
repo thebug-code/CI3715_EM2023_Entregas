@@ -4,7 +4,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 from SAGTMA.models import User, Role, db
-from SAGTMA.utils.profiles import hash_password
+from SAGTMA.utils.auth import hash_password
 
 
 class TestPortfolio(BaseTestClass):
@@ -16,7 +16,12 @@ class TestPortfolio(BaseTestClass):
 
         # Añade un usuario Gerente de Operaciones
         admin_user = User(
-            "manager", "Heisenberg", "The Danger", hash_password("Manager123."), manager
+            "V-48912114",
+            "manager",
+            "Heisenberg",
+            "The Danger",
+            hash_password("Manager123."),
+            manager,
         )
         db.session.add(admin_user)
 
@@ -49,8 +54,10 @@ class TestPortfolio(BaseTestClass):
         self.driver.find_element(By.ID, "start-date").click()
         self.driver.find_element(By.ID, "deadline").click()
         self.driver.find_element(By.ID, "deadline").send_keys(deadline)
-        
-        self.driver.find_element(By.CSS_SELECTOR, "#add-project-modal .btn-primary").click()
+
+        self.driver.find_element(
+            By.CSS_SELECTOR, "#add-project-modal .btn-primary"
+        ).click()
         WebDriverWait(self.driver, 1).until(
             expected_conditions.visibility_of_element_located(
                 (By.CSS_SELECTOR, ".toast-body")

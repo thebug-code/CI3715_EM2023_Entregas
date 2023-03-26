@@ -47,13 +47,13 @@ class User(db.Model):
     events = db.relationship("Event", backref="user", cascade="all, delete-orphan")
 
     def __init__(
-            self,
-            id_number: str,
-            username: str,
-            names: str,
-            surnames: str,
-            password: str,
-            role: Role
+        self,
+        id_number: str,
+        username: str,
+        names: str,
+        surnames: str,
+        password: str,
+        role: Role,
     ):
         self.id_number = id_number
         self.username = username

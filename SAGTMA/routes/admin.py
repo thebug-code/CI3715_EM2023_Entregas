@@ -73,7 +73,7 @@ def register() -> Response:
         profiles.register_user(
             id_number, username, names, surnames, password, confirm_password, role
         )
-    except profiles.AuthenticationError as e:
+    except profiles.ProfileError as e:
         flash(f"{e}")
         return redirect(url_for("users_profiles"))
 
@@ -88,7 +88,7 @@ def delete_user(user_id: int) -> Response:
     """Elimina un usuario de la base de datos."""
     try:
         profiles.delete_user(user_id)
-    except profiles.AuthenticationError as e:
+    except profiles.ProfileError as e:
         flash(f"{e}")
         return redirect(url_for("users_profiles"))
 
@@ -113,7 +113,7 @@ def edit_user(user_id: int) -> Response:
         # Si el usuario editado es el mismo que está logueado, cambia su sesión
         if user_id == session["id"]:
             session["username"] = username
-    except profiles.AuthenticationError as e:
+    except profiles.ProfileError as e:
         flash(f"{e}")
         return redirect(url_for("users_profiles"))
 

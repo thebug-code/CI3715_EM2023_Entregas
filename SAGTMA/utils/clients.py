@@ -3,7 +3,7 @@ import datetime
 
 from SAGTMA.models import Client, db
 from SAGTMA.utils import events
-from SAGTMA.utils.profiles import validate_names
+from SAGTMA.utils.validations import validate_id, validate_name
 
 
 class ClientError(ValueError):
@@ -11,36 +11,6 @@ class ClientError(ValueError):
 
 
 # ========== Validaciones ==========
-def validate_id(id_number: str) -> str:
-    """
-    Lanza una excepción si una cédula no es válida.
-
-    El formato del una cédula válida es:
-     - Comienza con V, E, J, G, C, mayúscula o minúscula.
-     - Seguido de un guión y 8 dígitos.
-     - Puede contener espacios o puntos como separadores.
-
-    Retorna la cédula transformada a un formato estándar:
-     - Comienza con V.
-    -  Seguido de un guión y 8 dígitos.
-    """
-    # Remueve espacios y puntos del número
-    table = str.maketrans("", "", ". ")
-    id_number = id_number.translate(table)
-
-    # Transforma a mayúsculas
-    id_number = id_number.upper()
-
-    # Expresión regular para validar cédulas de identidad
-    regex = r"[V|E|J|G|C]-\d{7,8}"
-    if not re.fullmatch(regex, id_number):
-        raise ClientError(
-            "La cédula ingresada es inválida, debe tener el formato V-12345678"
-        )
-
-    return id_number
-
-
 def validate_phone_number(phone_number: str) -> str:
     """
     Lanza una excepción si el número telefónico no es válido.
@@ -129,9 +99,9 @@ def register_client(
         raise ClientError("Todos los campos son obligatorios")
 
     # Chequea si los campos son válidos
-    id_number = validate_id(id_number)
-    validate_names(names)
-    validate_names(surnames)
+    id_number = validate_id(id_number, ClientError)
+    validate_name(names, ClientError)
+    validate_name(surnames, ClientError)
     phone_number = validate_phone_number(phone_number)
     validate_email(email)
 
@@ -194,9 +164,9 @@ def edit_client(
         raise ClientError("Todos los campos son obligatorios")
 
     # Chequea si los campos son válidos
-    id_number = validate_id(id_number)
-    validate_names(names)
-    validate_names(surnames)
+    id_number = validate_id(id_number, ClientError)
+    validate_name(names, ClientError)
+    validate_name(surnames, ClientError)
     phone_number = validate_phone_number(phone_number)
     validate_email(email)
 

@@ -4,6 +4,7 @@ from SAGTMA.utils.decorators import login_required, requires_roles
 
 from SAGTMA.models import User, Project, Client, Vehicle, Department, Role, db
 
+
 @current_app.route("/api/v1/users")
 @login_required
 @requires_roles("Administrador")
@@ -30,7 +31,7 @@ def api_users():
         }
         for user, in result
     ]
-    
+
     # Consulta los roles
     stmt = db.select(Role).where(Role.id != 1)
     result = db.session.execute(stmt).fetchall()

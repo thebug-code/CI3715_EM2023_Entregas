@@ -3,7 +3,7 @@ from datetime import date
 from SAGTMA.models import Vehicle, Client, db
 from SAGTMA.utils import events
 from datetime import date
-from SAGTMA.utils.profiles import validate_names
+from SAGTMA.utils.validations import validate_name
 
 
 class VehicleError(ValueError):
@@ -134,8 +134,8 @@ def register_client_vehicle(
 
     # Chequea si los campos son válidos
     validate_license_plate(license_plate)
-    validate_names(brand)
-    validate_names(model)
+    validate_name(brand, VehicleError)
+    validate_name(model, VehicleError)
     validate_serial_number(body_number)
     validate_serial_number(engine_number)
     validate_color(color)
@@ -201,8 +201,8 @@ def edit_vehicle(
 
     # Chequea si los campos son válidos
     validate_license_plate(license_plate)
-    validate_names(brand)
-    validate_names(model)
+    validate_name(brand, VehicleError)
+    validate_name(model, VehicleError)
     validate_serial_number(body_number)
     validate_serial_number(engine_number)
     validate_color(color)
