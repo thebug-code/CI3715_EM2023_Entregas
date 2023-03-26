@@ -1,11 +1,12 @@
-from tests.selenium import BaseTestClass
+import datetime
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
-from SAGTMA.models import User, Role, Client, Vehicle, db
+
+from SAGTMA.models import Client, Role, User, Vehicle, db
 from SAGTMA.utils.auth import hash_password
-import datetime
+from tests.selenium import BaseTestClass
 
 
 class TestVehicles(BaseTestClass):

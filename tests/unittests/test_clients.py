@@ -45,7 +45,6 @@ class TestClients(BaseTestClass):
         db.session.add_all([analyst_user, client])
         db.session.commit()
 
-
     def _register_client(
         self,
         id_number: str,
@@ -94,11 +93,11 @@ class TestClients(BaseTestClass):
         # 18 años
         eighteen_years = datetime.date.today() - datetime.timedelta(days=365 * 18 + 1)
         _test_validate_birthdate_valid(eighteen_years)
-        
+
         # 25 años
         twenty_five_years = datetime.date.today() - datetime.timedelta(days=365 * 25)
         _test_validate_birthdate_valid(twenty_five_years)
-        
+
         # 100 años
         one_hundred_years = datetime.date.today() - datetime.timedelta(days=365 * 100)
         _test_validate_birthdate_valid(one_hundred_years)

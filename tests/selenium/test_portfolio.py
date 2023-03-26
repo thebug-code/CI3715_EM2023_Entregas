@@ -1,10 +1,10 @@
-from tests.selenium import BaseTestClass
-
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
-from SAGTMA.models import User, Role, db
+
+from SAGTMA.models import Role, User, db
 from SAGTMA.utils.auth import hash_password
+from tests.selenium import BaseTestClass
 
 
 class TestPortfolio(BaseTestClass):

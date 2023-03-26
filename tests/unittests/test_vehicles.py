@@ -93,7 +93,9 @@ class TestVehicles(BaseTestClass):
         self.driver.find_element(By.ID, "problem").click()
         self.driver.find_element(By.ID, "problem").send_keys(problem)
 
-        self.driver.find_element(By.CSS_SELECTOR, "#add-vehicle-modal .btn-primary").click()
+        self.driver.find_element(
+            By.CSS_SELECTOR, "#add-vehicle-modal .btn-primary"
+        ).click()
         WebDriverWait(self.driver, 1).until(
             expected_conditions.visibility_of_element_located(
                 (By.CSS_SELECTOR, ".toast-body")
@@ -139,7 +141,9 @@ class TestVehicles(BaseTestClass):
         self.driver.find_element(By.ID, "edit-problem").clear()
         self.driver.find_element(By.ID, "edit-problem").send_keys(problem)
 
-        self.driver.find_element(By.CSS_SELECTOR, "#edit-vehicle-modal .btn-primary").click()
+        self.driver.find_element(
+            By.CSS_SELECTOR, "#edit-vehicle-modal .btn-primary"
+        ).click()
         WebDriverWait(self.driver, 1).until(
             expected_conditions.visibility_of_element_located(
                 (By.CSS_SELECTOR, ".toast-body")

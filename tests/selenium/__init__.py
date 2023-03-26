@@ -4,7 +4,7 @@ from os import environ
 from selenium import webdriver
 import SAGTMA
 from SAGTMA.models import Role, User, db
-from SAGTMA.utils.profiles import hash_password
+from SAGTMA.utils.auth import hash_password
 
 
 class BaseTestClass(unittest.TestCase):
@@ -76,7 +76,12 @@ class BaseTestClass(unittest.TestCase):
 
         # Añade un usuario administrador
         admin_user = User(
-            "admin", "Juanito", "Alimaña", hash_password("Admin123."), admin
+            "V-48912714",
+            "admin",
+            "Juanito",
+            "Alimaña",
+            hash_password("Admin123."),
+            admin,
         )
         db.session.add(admin_user)
 

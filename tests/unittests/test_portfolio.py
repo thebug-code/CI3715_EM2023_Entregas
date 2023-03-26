@@ -49,8 +49,10 @@ class TestPortfolio(BaseTestClass):
         self.driver.find_element(By.ID, "start-date").click()
         self.driver.find_element(By.ID, "deadline").click()
         self.driver.find_element(By.ID, "deadline").send_keys(deadline)
-        
-        self.driver.find_element(By.CSS_SELECTOR, "#add-project-modal .btn-primary").click()
+
+        self.driver.find_element(
+            By.CSS_SELECTOR, "#add-project-modal .btn-primary"
+        ).click()
         WebDriverWait(self.driver, 1).until(
             expected_conditions.visibility_of_element_located(
                 (By.CSS_SELECTOR, ".toast-body")
