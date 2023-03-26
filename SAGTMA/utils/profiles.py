@@ -95,7 +95,6 @@ def register_user(
     ):
         raise ProfileError("Todos los campos son obligatorios")
 
-
     # Verifica si ya existe un usuario con el mismo nombre de usuario
     stmt = db.select(User).where(User.username == username)
     if db.session.execute(stmt).first():
