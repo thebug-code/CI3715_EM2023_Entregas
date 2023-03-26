@@ -55,7 +55,7 @@ class TestClients(BaseTestClass):
 
         return self.client.post(
             "/login/",
-            data={"username":"analyst", "password":"Analyst123."},
+            data={"username": "analyst", "password": "Analyst123."},
             follow_redirects=True,
         )
 
@@ -93,7 +93,7 @@ class TestClients(BaseTestClass):
             self.assertIsNone(clients.validate_birthdate(birthdate))
 
         # 18 años
-        eighteen_years = datetime.date.today() - datetime.timedelta(days=365 * 18 + 1)
+        eighteen_years = datetime.date.today() - datetime.timedelta(days=365 * 18 + 10)
         _test_validate_birthdate_valid(eighteen_years)
 
         # 25 años
@@ -160,32 +160,83 @@ class TestClients(BaseTestClass):
 
     def test_register_client_valid(self):
         """Testea la creación de clientes válidos."""
+        self._login_analyst()
 
-        with self.app.test_request_context():
-            print(self._login_analyst())
-            clients.register_client(
-                "V-11127345",
-                "Cliente",
-                "De Prueba",
-                "2001-12-30",
-                "+584143642514",
-                "usb@usb.usb",
-                "Universida Simo Boliva",
-            )
+        self.client.post(
+            "/client-details/register/",
+            data={
+                "id-number": "V-12457845",
+                "names": "Test",
+                "surnames": "Client",
+                "birthdate": "2000-12-30",
+                "phone-number": "+584124568789",
+                "email": "aaaa@aaa.usb",
+                "address": "Address AA123",
+            },
+            follow_redirects=True,
+        )
 
-            stmt = db.select(Client).where(Client.id_number == "V-11127345")
-            self.assertIsNotNone(
-                db.session.execute(stmt).first()
-            )
+        stmt = db.select(Client).where(Client.id_number == "V-12457845")
+        self.assertIsNotNone(db.session.execute(stmt).first())
 
     def test_register_client_already_registered(self):
         """Testea la creación de clientes con cédula ya registrada."""
-        pass
+        self._login_analyst()
+
+        stmt = db.select(Client).where(Client.id_number == "V-11122345")
+
+        self.client.post(
+            "/client-details/register/",
+            data={
+                "id-number": "V-11122345",
+                "names": "Test",
+                "surnames": "Client",
+                "birthdate": "2000-12-30",
+                "phone-number": "+584124568789",
+                "email": "aaaa@aaa.usb",
+                "address": "Address AA123",
+            },
+            follow_redirects=True,
+        )
+
+        self.assertEqual(len(db.session.execute(stmt).fetchall()), 1)
 
     def test_delete_client(self):
         """Testea la eliminación de clientes."""
-        pass
+        self._login_analyst()
+
+        self.client.post("/client-details/delete/0/", follow_redirects=True)
+
+        # Verifica que se elimino el cliente
+        stmt = db.select(Client).where(Client.id_number == "V-11122345")
+        self.assertIsNone(db.session.execute(stmt).first())
+
+        # Verifica que se eliminó su vehiculos
+        stmt = db.select(Vehicle).where(Vehicle.license_plate == "ABC-123")
+        self.assertIsNone(db.session.execute(stmt).first())
 
     def test_edit_client_valid(self):
         """Testea la creación de clientes válidos."""
-        pass
+        self._login_analyst()
+
+        self.client.post(
+            "/client-details/edit/0/",
+            data={
+                "id-number": "V-12121212",
+                "names": "Test",
+                "surnames": "Client",
+                "birthdate": "2000-12-30",
+                "phone-number": "+584124568789",
+                "email": "aaaa@aaa.usb",
+                "address": "Address AA123",
+            },
+            follow_redirects=True,
+        )
+
+        # Verifica que el cliente anterior no existe
+        stmt = db.select(Client).where(Client.id_number == "V-11122345")
+        self.assertIsNone(db.session.execute(stmt).first())
+
+        # Verifica que el cliente editado existe
+        stmt = db.select(Client).where(Client.id_number == "V-12121212")
+        self.assertIsNotNone(db.session.execute(stmt).first())
