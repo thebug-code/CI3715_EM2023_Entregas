@@ -60,6 +60,8 @@ def users_profiles() -> Response:
 @requires_roles("Administrador")
 def register() -> Response:
     """Registra un usuario en la base de datos."""
+    # Obtiene los datos del formulario
+    id_number = request.form.get("id-number")
     username = request.form.get("username")
     names = request.form.get("names")
     surnames = request.form.get("surnames")
@@ -69,9 +71,9 @@ def register() -> Response:
 
     try:
         profiles.register_user(
-            username, names, surnames, password, confirm_password, role
+            id_number, username, names, surnames, password, confirm_password, role
         )
-    except profiles.AuthenticationError as e:
+    except profiles.ProfileError as e:
         flash(f"{e}")
         return redirect(url_for("users_profiles"))
 
@@ -80,13 +82,13 @@ def register() -> Response:
     return redirect(url_for("users_profiles"))
 
 
-@current_app.route("/user-profiles/delete/<int:user_id>/", methods=["POST"])
+@current_app.route("/user-profiles/<int:user_id>/delete/", methods=["POST"])
 @requires_roles("Administrador")
 def delete_user(user_id: int) -> Response:
     """Elimina un usuario de la base de datos."""
     try:
         profiles.delete_user(user_id)
-    except profiles.AuthenticationError as e:
+    except profiles.ProfileError as e:
         flash(f"{e}")
         return redirect(url_for("users_profiles"))
 
@@ -94,23 +96,24 @@ def delete_user(user_id: int) -> Response:
     return redirect(url_for("users_profiles"))
 
 
-@current_app.route("/user-profiles/edit/<int:user_id>/", methods=["POST"])
+@current_app.route("/user-profiles/<int:user_id>/edit/", methods=["POST"])
 @requires_roles("Administrador")
 def edit_user(user_id: int) -> Response:
     """Modifica los datos de un usuario en la base de datos."""
     # Obtiene los datos del formulario
+    id_number = request.form.get("id-number")
     username = request.form.get("username")
     names = request.form.get("names")
     surnames = request.form.get("surnames")
     role = request.form.get("role")
 
     try:
-        profiles.edit_user(user_id, username, names, surnames, role)
+        profiles.edit_user(user_id, id_number, username, names, surnames, role)
 
         # Si el usuario editado es el mismo que está logueado, cambia su sesión
         if user_id == session["id"]:
             session["username"] = username
-    except profiles.AuthenticationError as e:
+    except profiles.ProfileError as e:
         flash(f"{e}")
         return redirect(url_for("users_profiles"))
 

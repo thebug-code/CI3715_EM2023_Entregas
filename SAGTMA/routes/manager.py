@@ -100,9 +100,7 @@ def delete_project(project_id) -> Response:
     return redirect(url_for("portfolio"))
 
 
-@current_app.route(
-    "/project-portfolio/edit/<int:project_id>/status/", methods=["POST"]
-)
+@current_app.route("/project-portfolio/edit/<int:project_id>/status/", methods=["POST"])
 @login_required
 @requires_roles("Gerente de Operaciones")
 def change_project_status(project_id):
@@ -128,9 +126,9 @@ def change_project_status(project_id):
 
 
 # ========== Gerente de Proyectos ==========
-#@current_app.route("/project-portfolio/<int:project_id>", methods=["GET", "POST"])
-#@requires_roles("Gerente de Proyectos")
-#def portfolio() -> Response:
+# @current_app.route("/project-portfolio/<int:project_id>", methods=["GET", "POST"])
+# @requires_roles("Gerente de Proyectos")
+# def portfolio() -> Response:
 #    """Muestra la lista de proyectos anadidos en el sistema"""
 #    if request.method == "POST":
 #        # Obtiene los datos del formulario

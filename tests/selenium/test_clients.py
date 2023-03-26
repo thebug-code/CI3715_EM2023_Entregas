@@ -4,7 +4,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 from SAGTMA.models import User, Role, Client, Vehicle, db
-from SAGTMA.utils.profiles import hash_password
+from SAGTMA.utils.auth import hash_password
 import datetime
 
 
@@ -17,7 +17,12 @@ class TestClients(BaseTestClass):
 
         # Añade un usuario Gerente de Operaciones
         analyst_user = User(
-            "analyst", "Bad", "Bunny", hash_password("Analyst123."), analyst
+            "V-48112714",
+            "analyst",
+            "Bad",
+            "Bunny",
+            hash_password("Analyst123."),
+            analyst,
         )
 
         # Añade un cliente y un vehículo
@@ -91,7 +96,9 @@ class TestClients(BaseTestClass):
         self.driver.find_element(By.ID, "address").click()
         self.driver.find_element(By.ID, "address").send_keys(address)
 
-        self.driver.find_element(By.CSS_SELECTOR, "#add-client-modal .btn-primary").click()
+        self.driver.find_element(
+            By.CSS_SELECTOR, "#add-client-modal .btn-primary"
+        ).click()
         WebDriverWait(self.driver, 1).until(
             expected_conditions.visibility_of_element_located(
                 (By.CSS_SELECTOR, ".toast-body")
@@ -137,7 +144,9 @@ class TestClients(BaseTestClass):
         self.driver.find_element(By.ID, "edit-address").clear()
         self.driver.find_element(By.ID, "edit-address").send_keys(address)
 
-        self.driver.find_element(By.CSS_SELECTOR, "#edit-client-modal .btn-primary").click()
+        self.driver.find_element(
+            By.CSS_SELECTOR, "#edit-client-modal .btn-primary"
+        ).click()
         WebDriverWait(self.driver, 1).until(
             expected_conditions.visibility_of_element_located(
                 (By.CSS_SELECTOR, ".toast-body")
@@ -310,7 +319,7 @@ class TestClients(BaseTestClass):
         # Letra al final
         _test_register_client_invalid_id("V-123456789a")
 
-    def test_register_invalid_birthdate(self):
+    def test_register_client_invalid_birthdate(self):
         """Testea la creación de clientes con fecha de nacimiento inválido."""
 
         def _test_register_client_invalid_birthdate(birthdate: str, message: str):

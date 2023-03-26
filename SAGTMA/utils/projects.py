@@ -32,7 +32,8 @@ def validate_descrip_project(description: str) -> bool:
 
 def validate_date(start_date: date, deadline: date) -> bool:
     """
-    Lanza una excepción si la fecha de inicio de un proyecto es despues que su fecha de cierre"""
+    Lanza una excepción si la fecha de inicio de un proyecto es despues que su fecha de cierre
+    """
 
     if start_date > deadline:
         raise ProjectError(

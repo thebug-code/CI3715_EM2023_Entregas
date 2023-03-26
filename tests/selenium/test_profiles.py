@@ -4,6 +4,7 @@ from tests.selenium import BaseTestClass
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
+from random import randint
 
 
 class TestProfiles(BaseTestClass):
@@ -28,7 +29,7 @@ class TestProfiles(BaseTestClass):
         self.driver.find_element(By.CSS_SELECTOR, ".btn-primary:nth-child(4)").click()
         WebDriverWait(self.driver, 1).until(
             expected_conditions.visibility_of_element_located(
-                (By.CSS_SELECTOR, "#addModal .modal-header")
+                (By.CSS_SELECTOR, "#add-user-modal .modal-header")
             )
         )
         self.driver.find_element(By.ID, "username").click()
@@ -41,8 +42,11 @@ class TestProfiles(BaseTestClass):
         self.driver.find_element(By.ID, "names").send_keys(names)
         self.driver.find_element(By.ID, "surnames").click()
         self.driver.find_element(By.ID, "surnames").send_keys(surnames)
+        self.driver.find_element(By.ID, "id-number").send_keys(
+            f"V-{randint(1000000, 99999999)}"
+        )
         self.driver.find_element(
-            By.CSS_SELECTOR, ".modal-footer:nth-child(7) > .btn-primary"
+            By.CSS_SELECTOR, ".modal-footer:nth-child(8) > .btn-primary"
         ).click()
         self.driver.find_element(By.CSS_SELECTOR, ".toast-body").click()
         WebDriverWait(self.driver, 1).until(
