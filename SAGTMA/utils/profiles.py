@@ -84,16 +84,17 @@ def register_user(
     Lanza una excepción ProfileError si hubo algún error.
     """
     # Elimina los espacios en blanco al inicio y al final de los campos
-    id_number = id_number.strip()
-    username = username.strip()
-    names = names.strip()
-    surnames = surnames.strip()
+    id_number = id_number.strip() if id_number is not None else None
+    username = username.strip() if username is not None else None
+    names = names.strip() if names is not None else None
+    surnames = surnames.strip() if surnames is not None else None
 
     # Verifica que no haya campos vacíos
     if not all(
         [id_number, username, names, surnames, password, confirm_password, role_id]
     ):
         raise ProfileError("Todos los campos son obligatorios")
+
 
     # Verifica si ya existe un usuario con el mismo nombre de usuario
     stmt = db.select(User).where(User.username == username)
@@ -103,7 +104,7 @@ def register_user(
     # Verifica si ya existe un usuario con el mismo id_number
     stmt = db.select(User).where(User.id_number == id_number)
     if db.session.execute(stmt).first():
-        raise AuthenticationError("El número de identificación ya existe")
+        raise ProfileError("El número de identificación ya existe")
 
     # Chequea si los campos ingresados son válidos
     validate_id(id_number, ProfileError)
@@ -182,7 +183,7 @@ def edit_user(
     stmt = db.select(User).where(User.id_number == id_number).where(User.id != user_id)
     result = db.session.execute(stmt).first()
     if result:
-        raise AuthenticationError("El número de identificación ya existe")
+        raise ProfileError("El número de identificación ya existe")
 
     # Chequea si los campos ingresados son válidos
     validate_id(id_number, ProfileError)
