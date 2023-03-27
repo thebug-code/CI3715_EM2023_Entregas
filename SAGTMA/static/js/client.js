@@ -34,7 +34,7 @@ $(document).ready(function () {
     $("#delete-client-modal").modal("show");
     $("#delete-client-form").attr(
       "action",
-      "/client-details/delete/"+ id + "/"
+      "/client-details/delete/" + id + "/"
     );
   });
 });

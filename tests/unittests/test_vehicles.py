@@ -17,7 +17,12 @@ class TestVehicles(BaseTestClass):
 
         # Añade un usuario Gerente de Operaciones y un cliente
         analyst_user = User(
-            "analyst", "Bad", "Bunny", hash_password("Analyst123."), analyst
+            "V-1000000",
+            "analyst",
+            "Bad",
+            "Bunny",
+            hash_password("Analyst123."),
+            analyst,
         )
 
         new_client = Client(
@@ -34,7 +39,7 @@ class TestVehicles(BaseTestClass):
             "AAA-111",
             "Toyota",
             "Corolla",
-            2010,
+            "2010",
             "123456789A",
             "A987654321",
             "Gris",
@@ -451,7 +456,6 @@ class TestVehicles(BaseTestClass):
 
         self._login_analyst()
 
-        self
         self.driver.find_element(By.CSS_SELECTOR, "#delete0 > .table-button").click()
 
         WebDriverWait(self.driver, 1).until(

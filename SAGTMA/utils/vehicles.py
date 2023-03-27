@@ -87,19 +87,25 @@ def validate_color(color: str):
             )
 
 
-def validate_year(year: int):
+def validate_year(year: str) -> int:
     """
-    Lanza una excepción si el año no es válido.
+    Lanza una excepción si el año no es válido. De lo contrario, devuelve el
+    año como un entero.
 
     Un año es válido si:
       -Es un número entero
       -Es menor o igual al año actual
     """
+    if not year.isdigit():
+        raise VehicleError("El año debe ser un número entero")
+    year = int(year)
+
     if year < 1900 or year > date.today().year + 1:
         raise VehicleError(
             "El año debe ser un número entero entre 1900 y el año posterior al actual"
         )
 
+    return year
 
 # ========== Registro de Vehiculos ==========
 def register_client_vehicle(
@@ -107,7 +113,7 @@ def register_client_vehicle(
     license_plate: str,
     brand: str,
     model: str,
-    year: int,
+    year: str,
     body_number: str,
     engine_number: str,
     color: str,
@@ -122,11 +128,12 @@ def register_client_vehicle(
     license_plate = license_plate.strip()
     brand = brand.strip()
     model = model.strip()
+    year = year.strip()
     body_number = body_number.strip()
     engine_number = engine_number.strip()
     problem = problem.strip()
 
-    # Verifica si no hay campos vacios
+    # Verifica que todos los campos estén completos
     if not all(
         [license_plate, brand, model, year, body_number, engine_number, color, problem]
     ):
@@ -139,13 +146,13 @@ def register_client_vehicle(
     validate_serial_number(body_number)
     validate_serial_number(engine_number)
     validate_color(color)
-    validate_year(year)
+    year = validate_year(year)
 
     if len(problem) > 120:
         raise VehicleError(
             "La descripción del problema no puede tener más de 120 caracteres"
         )
-
+    
     # Verifica si ya existe un vehiculo con la misma placa
     stmt = db.select(Vehicle).where(Vehicle.license_plate == license_plate)
     if db.session.execute(stmt).first():
@@ -156,10 +163,16 @@ def register_client_vehicle(
         license_plate, brand, model, year, body_number, engine_number, color, problem
     )
 
-    # Busca al cliente y le añade su nuevo vehiculo
+
+    # Seleciona el cliente con el id indicado y verifica que exista
     stmt = db.select(Client).where(Client.id == client_id)
     client_query = db.session.execute(stmt).first()
-    client_query[0].vehicles.append(new_vehicle)
+    if not client_query:
+        raise VehicleError("El cliente indicado no existe")
+    client = client_query[0]
+    
+    # Anade el vehiculo a la lista de vehiculos del cliente
+    client.vehicles.append(new_vehicle)
 
     # Registra el evento en la base de datos
     events.add_event(
@@ -174,7 +187,7 @@ def edit_vehicle(
     license_plate: str,
     brand: str,
     model: str,
-    year: int,
+    year: str,
     body_number: str,
     engine_number: str,
     color: str,
@@ -189,11 +202,12 @@ def edit_vehicle(
     license_plate = license_plate.strip()
     brand = brand.strip()
     model = model.strip()
+    year = year.strip()
     body_number = body_number.strip()
     engine_number = engine_number.strip()
     problem = problem.strip()
 
-    # Verifica si no hay campos vacios
+    # Verifica que todos los campos esten llenos
     if not all(
         [license_plate, brand, model, year, body_number, engine_number, color, problem]
     ):
@@ -206,7 +220,7 @@ def edit_vehicle(
     validate_serial_number(body_number)
     validate_serial_number(engine_number)
     validate_color(color)
-    validate_year(year)
+    year = validate_year(year)
 
     if len(problem) > 120:
         raise VehicleError(
@@ -222,12 +236,12 @@ def edit_vehicle(
     if db.session.execute(stmt).first():
         raise VehicleError("El vehículo ya existe")
 
-    # Busca el vehiculo con el id indicado y verifica si existe
+    # Selecciona el vehiculo con el id indicado y verifica que exista
     stmt = db.select(Vehicle).where(Vehicle.id == vehicle_id)
     vehicle_query = db.session.execute(stmt).first()
     if not vehicle_query:
         raise VehicleError("El vehículo indicado no existe")
-    (edited_vehicle,) = vehicle_query
+    edited_vehicle = vehicle_query[0]
 
     # Actualiza los datos del vehiculo
     edited_vehicle.license_plate = license_plate
@@ -252,17 +266,18 @@ def delete_vehicle(vehicle_id: int) -> int:
 
     Lanza una excepción VehicleError si hubo algún error.
     """
-    # Busca el vehiculo con el id indicado y verifica si existe
+    # Selecciona el vehiculo con el id indicado y verifica que exista
     stmt = db.select(Vehicle).where(Vehicle.id == vehicle_id)
-    result = db.session.execute(stmt).first()
-    if not result:
+    vehicle_query = db.session.execute(stmt).first()
+    if not vehicle_query:
         raise VehicleError("El vehículo indicado no existe")
+    deleted_vehicle = vehicle_query[0]
 
     # Elimina el vehiculo de la base de datos
-    db.session.delete(result[0])
+    db.session.delete(deleted_vehicle)
 
     # Registra el evento en la base de datos
     events.add_event(
         "Vehículos de los Clientes",
-        f"Eliminar vehiculo '{result[0].brand}' del cliente '{result[0].owner.id_number}'",
+        f"Eliminar vehiculo '{deleted_vehicle.brand}' del cliente '{deleted_vehicle.owner.id_number}'", 
     )

@@ -84,12 +84,12 @@ def register_user(
     Lanza una excepción ProfileError si hubo algún error.
     """
     # Elimina los espacios en blanco al inicio y al final de los campos
-    id_number = id_number.strip() if id_number is not None else None
-    username = username.strip() if username is not None else None
-    names = names.strip() if names is not None else None
-    surnames = surnames.strip() if surnames is not None else None
+    id_number = id_number.strip()
+    username = username.strip()
+    names = names.strip()
+    surnames = surnames.strip()
 
-    # Verifica que no haya campos vacíos
+    # Verifica que todos los campos estén llenos
     if not all(
         [id_number, username, names, surnames, password, confirm_password, role_id]
     ):
@@ -116,20 +116,23 @@ def register_user(
     if password != confirm_password:
         raise ProfileError("Las contraseñas ingresadas no coinciden")
 
-    # Busca el rol con el nombre ingresado
+    # Secciona el rol indicado y verifica que exista
     stmt = db.select(Role).where(Role.id == role_id)
     query_role = db.session.execute(stmt).first()
     if not query_role:
         raise ProfileError("El rol ingresado no existe")
+    role = query_role[0]
 
     # Crea el usuario en la base de datos
     new_user = User(
-        id_number, username, names, surnames, hash_password(password), query_role[0]
+        id_number, username, names, surnames, hash_password(password), role
     )
     db.session.add(new_user)
 
     # Registra el evento en la base de datos
-    events.add_event("Perfiles de Usuarios", f"Agregar usuario '{new_user.username}'")
+    events.add_event(
+        "Perfiles de Usuarios", f"Agregar usuario '{new_user.username}'"
+    )
 
 
 # ========== Obtención de datos ==========
@@ -141,10 +144,15 @@ def get_current_user(user_id: int) -> User:
 
 # ========== Edición de datos ==========
 def edit_user(
-    user_id: int, id_number: str, username: str, names: str, surnames: str, role_id: str
+    user_id: int,
+    id_number: str,
+    username: str,
+    names: str,
+    surnames: str,
+    role_id: str
 ):
     """
-    Edita los datos de un usuario en la base de datos.
+    Modifica los datos de un usuario en la base de datos.
 
     Lanza una excepción ProfileError si hubo algún error.
     """
@@ -154,35 +162,40 @@ def edit_user(
     names = names.strip()
     surnames = surnames.strip()
 
-    # Verifica que no haya campos vacíos
+    # Verifica que todos los campos estén completos
     if not all([user_id, id_number, username, names, surnames, role_id]):
         raise ProfileError("Todos los campos son obligatorios")
 
-    # Busca el usuario en la base de datos
+    # Seleciona el usuario indicado y verifica que exista
     stmt = db.select(User).where(User.id == user_id)
-    result = db.session.execute(stmt).fetchone()
-    if not result:
+    user_query = db.session.execute(stmt).first()
+    if not user_query:
         raise ProfileError("El usuario indicado no existe")
-    (edited_user,) = result
+    edited_user = user_query[0]
 
-    # Busca el rol en la base de datos
+    # Selecciona el rol indicado y verifica que exista
     stmt = db.select(Role).where(Role.id == role_id)
-    result = db.session.execute(stmt).fetchone()
-    if not result:
-        # Si no existe, se permanece en la página
+    role_query = db.session.execute(stmt).first()
+    if not role_query:
         raise ProfileError("El rol indicado no existe")
-    (new_role,) = result
+    new_role = rol_query[0]
 
-    # Verifica si ya existe un usuario distinto con el mismo nombre de usuario
-    stmt = db.select(User).where(User.username == username).where(User.id != user_id)
-    result = db.session.execute(stmt).first()
-    if result:
+    # Verifica si existe un usuario distinto con el mismo nombre de usuario
+    stmt = (
+        db.select(User)
+        .where(User.username == username)
+        .where(User.id != user_id)
+    )
+    if db.session.execute(stmt).first():
         raise ProfileError("El nombre de usuario ya existe")
 
-    # Verifica si ya existe un usuario distinto con el mismo id_number
-    stmt = db.select(User).where(User.id_number == id_number).where(User.id != user_id)
-    result = db.session.execute(stmt).first()
-    if result:
+    # Verifica si existe un usuario distinto con el mismo id_number
+    stmt = (
+        db.select(User)
+        .where(User.id_number == id_number)
+        .where(User.id != user_id)
+    )
+    if db.session.execute(stmt).first():
         raise ProfileError("El número de identificación ya existe")
 
     # Chequea si los campos ingresados son válidos
@@ -209,9 +222,7 @@ def edit_user(
     edited_user.surnames = surnames
     edited_user.role = new_role
 
-    db.session.commit()
-
-    # Añade el evento de edición
+    # Registra el evento en la base de datos
     events.add_event("Perfiles de Usuarios", f"Editar usuario '{username}'")
 
 
@@ -225,12 +236,12 @@ def delete_user(user_id: int):
     if not user_id:
         raise ProfileError("Todos los campos son obligatorios")
 
-    # Busca el usuario en la base de datos
+    # Secciona el usuario indicado y verifica que exista
     stmt = db.select(User).where(User.id == user_id)
-    result = db.session.execute(stmt).fetchone()
-    if not result:
+    user_query = db.session.execute(stmt).first()
+    if not user_query:
         raise ProfileError("El usuario indicado no existe")
-    (deleted_user,) = result
+    deleted_user = user_query[0]
 
     # No se puede eliminar un administrador
     if deleted_user.role.name == "Administrador":
@@ -239,9 +250,7 @@ def delete_user(user_id: int):
     # Elimina el usuario de la base de datos
     db.session.delete(deleted_user)
 
-    db.session.commit()
-
-    # Añade el evento de eliminación
+    # Registra el evento en la base de datos
     events.add_event(
         "Perfiles de Usuarios", f"Eliminar usuario '{deleted_user.username}'"
     )

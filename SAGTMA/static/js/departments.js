@@ -7,7 +7,7 @@ $(document).ready(function() {
     $("#delete-dept-modal").modal('show');
     $("#delete-dept-form").attr(
       "action",
-      "/workshop-departments/delete/" + id + "/"
+      "/workshop-departments/" + id + "/delete/"
     );
   });
 
@@ -26,7 +26,7 @@ $(document).ready(function() {
         $("#edit-description").val(dept.description);
         $("#edit-dept-form").attr(
           "action",
-          "/workshop-departments/edit/" + id + "/"
+          "/workshop-departments/" + id + "/edit/"
         );
       },
     });

@@ -21,8 +21,9 @@ def portfolio() -> Response:
     """Muestra la lista de proyectos anadidos en el sistema"""
     if request.method == "POST":
         # Obtiene los datos del formulario
-        descrip = request.form.get("descrip-filter")
-
+        descrip = request.form.get("descrip-filter", '').lower().strip()
+        
+        # WHERE description LIKE '%descrip%'
         stmt = db.select(Project).where(Project.description.like(f"%{descrip}%"))
 
         # Añade el evento de búsqueda
@@ -42,9 +43,10 @@ def portfolio() -> Response:
 @requires_roles("Gerente de Operaciones")
 def create_project() -> Response:
     """Crear y anade un proyecto en la base de datos."""
-    description = request.form["description"]
-    start_date = request.form["start-date"]
-    deadline = request.form["deadline"]
+    # Obtiene los datos del formulario
+    description = request.form.get("description", '')
+    start_date = request.form.get("start-date", '')
+    deadline = request.form.get("deadline", '')
 
     try:
         projects.create_project(description, start_date, deadline)
@@ -57,14 +59,15 @@ def create_project() -> Response:
     return redirect(url_for("portfolio"))
 
 
-@current_app.route("/project-portfolio/edit/<int:project_id>/", methods=["POST"])
+@current_app.route("/project-portfolio/<int:project_id>/edit/", methods=["POST"])
 @login_required
 @requires_roles("Gerente de Operaciones")
 def edit_project(project_id):
     """Modifica los datos de un proyecto en la base de datos"""
-    description = request.form["description"]
-    start_date = request.form["start-date"]
-    deadline = request.form["deadline"]
+    # Obtiene los datos del formulario
+    description = request.form.get("description", '')
+    start_date = request.form.get("start-date", '')
+    deadline = request.form.get("deadline", '')
 
     try:
         projects.edit_project(project_id, description, start_date, deadline)
@@ -75,28 +78,19 @@ def edit_project(project_id):
     return redirect(url_for("portfolio"))
 
 
-@current_app.route("/project-portfolio/delete/<int:project_id>/", methods=["POST"])
+@current_app.route("/project-portfolio/<int:project_id>/delete/", methods=["POST"])
 @login_required
 @requires_roles("Gerente de Operaciones")
 def delete_project(project_id) -> Response:
     """Elimina un proyecto de la base de datos"""
-    # Busca el proyecto con el id indicado
-    stmt = db.select(Project).where(Project.id == project_id)
-    result = db.session.execute(stmt).first()
-    if not result:
-        flash("El proyecto indicado no existe")
+    try:
+        projects.delete_project(project_id)
+    except projects.ProjectError as e:
+        flash(f"{e}")
         return redirect(url_for("portfolio"))
 
-    # Elimina el proyecto de la base de datos
-    db.session.delete(result[0])
-    db.session.commit()
-
-    # Registra el evento en la base de datos
-    events.add_event("Portafolio de Proyectos", f"Eliminar '{result[0].description}'")
-
-    flash("Proyecto eliminado exitosamente")
-
     # Se permanece en la pagina
+    flash("Proyecto eliminado exitosamente")
     return redirect(url_for("portfolio"))
 
 
@@ -105,23 +99,14 @@ def delete_project(project_id) -> Response:
 @requires_roles("Gerente de Operaciones")
 def change_project_status(project_id):
     """Activa o desactiva un proyecto de la base de datos"""
-    # Busca el proyecto con el id indicado
-    stmt = db.select(Project).where(Project.id == project_id)
-    result = db.session.execute(stmt).first()
-    if not result:
-        flash("El proyecto indicado no existe")
+    try:
+        projects.change_project_status(project_id)
+    except projects.ProjectError as e:
+        flash(f"{e}")
         return redirect(url_for("portfolio"))
 
-    # Verifica si hay que habilitar o desactivar proyecto
-    if "enable-project" in request.form:
-        result[0].active = True
-    else:
-        result[0].active = False
-
-    db.session.commit()
-    flash("Status de proyecto actualizado exitosamente")
-
     # Se permanece en la pagina
+    flash("Status de proyecto actualizado exitosamente")
     return redirect(url_for("portfolio"))
 
 

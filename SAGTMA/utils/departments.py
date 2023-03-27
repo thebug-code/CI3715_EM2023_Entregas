@@ -68,18 +68,19 @@ def delete_dept(dept_id: int):
 
     Lanza una excepción DepartmentError si hubo algún error.
     """
-    # Busca el departamento con el id indicado y verifica si existe
+    # Selecciona el departamento con el id indicado y verifica si existe
     stmt = db.select(Department).where(Department.id == dept_id)
-    result = db.session.execute(stmt).first()
-    if not result:
+    dept_query = db.session.execute(stmt).first()
+    if not dept_query:
         raise DepartmentError("El departamento indicado no existe")
+    dept = dept_query[0]
 
     # Elimina el departamento de la base de datos
-    db.session.delete(result[0])
-
+    db.session.delete(dept)
+    
     # Registra el evento en la base de datos
     events.add_event(
-        "Departamentos del Taller", f"Eliminar departamento '{result[0].description}'"
+        "Departamentos del Taller", f"Eliminar departamento '{dept.description}'"
     )
 
 
@@ -105,19 +106,20 @@ def edit_dept(dept_id: int, description: str):
     if db.session.execute(smt).first():
         raise DepartmentError("Ya existe un departamento con la misma descripción")
 
-    # Busca el departamento con el id indicado y verifica si existe
+    # Selecciona el departamento con el id indicado y verifica si existe
     stmt = db.select(Department).where(Department.id == dept_id)
-    result = db.session.execute(stmt).first()
-    if not result:
+    dept_query = db.session.execute(stmt).first()
+    if not dept_query:
         raise DepartmentError("El departamento indicado no existe")
+    edited_dept = dept_query[0]
 
     # Chequea si la descripción es válida
     validate_descrip_dept(description)
 
     # Modifica el departamento en la base de datos
-    result[0].description = description
+    edited_dept.description = description
 
     # Registra el evento en la base de datos
     events.add_event(
-        "Departamentos del Taller", f"Modificar departamento '{result[0].description}'"
+        "Departamentos del Taller", f"Modificar departamento '{edited_dept.description}'"
     )

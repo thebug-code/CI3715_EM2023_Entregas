@@ -26,7 +26,7 @@ def client_details() -> Response:
 
     if request.method == "POST":
         # Obtiene los datos del formulario
-        client = request.form.get("client-filter")
+        client = request.form.get("client-filter", '').lower().strip()
 
         if client:
             # WHERE (names || surnames) LIKE '%client%' OR
@@ -59,13 +59,14 @@ def client_details() -> Response:
 @requires_roles("Analista de Operaciones")
 def register_client() -> Response:
     """Registra un cliente en la base de datos."""
-    id_number = request.form.get("id-number")
-    names = request.form.get("names")
-    surnames = request.form.get("surnames")
-    birthdate = request.form.get("birthdate")
-    phone_number = request.form.get("phone-number")
-    email = request.form.get("email")
-    address = request.form.get("address")
+    # Obtiene los datos del formulario
+    id_number = request.form.get("id-number", '')
+    names = request.form.get("names", '')
+    surnames = request.form.get("surnames", '')
+    birthdate = request.form.get("birthdate", '')
+    phone_number = request.form.get("phone-number", '')
+    email = request.form.get("email", '')
+    address = request.form.get("address", '')
 
     try:
         clients.register_client(
@@ -85,13 +86,14 @@ def register_client() -> Response:
 @requires_roles("Analista de Operaciones")
 def edit_client(client_id):
     """Modifica los datos de un cliente en la base de datos"""
-    id_number = request.form.get("id-number")
-    names = request.form.get("names")
-    surnames = request.form.get("surnames")
-    birthdate = request.form.get("birthdate")
-    phone_number = request.form.get("phone-number")
-    email = request.form.get("email")
-    address = request.form.get("address")
+    # Obtiene los datos del formulario
+    id_number = request.form.get("id-number", '')
+    names = request.form.get("names", '')
+    surnames = request.form.get("surnames", '')
+    birthdate = request.form.get("birthdate", '')
+    phone_number = request.form.get("phone-number", '')
+    email = request.form.get("email", '')
+    address = request.form.get("address", '')
 
     try:
         clients.edit_client(
@@ -149,10 +151,14 @@ colors = [
 @requires_roles("Analista de Operaciones")
 def client_vehicles(client_id: int) -> Response:
     """Muestra la lista de clientes añadidos en el sistema"""
-    # Obtiene los datos del cliente
+    # Selecciona el cliente con el id indicado y verifica que exista
     stmt = db.select(Client).where(Client.id == client_id)
-    result = db.session.execute(stmt).fetchone()
-    client = result[0]  # Verificar que no sea None
+    client_query = db.session.execute(stmt).first()
+    if not client_query:
+        flash("El cliente indicado no existe")
+        return redirect(url_for("client_details"))
+    # Obtiene el cliente 
+    client = client_query[0]
 
     # Obtiene los vehículos del cliente
     stmt = db.select(Vehicle).where(Vehicle.owner_id == client_id)
@@ -181,7 +187,7 @@ def client_vehicles(client_id: int) -> Response:
                 )
             )
 
-        # Añade el evento de búsqueda
+        # Registra el evento en base de datos
         events.add_event(
             "Vehículos de los Clientes",
             f"Buscar '{vehicle}' del cliente '{client.id_number}'",
@@ -199,14 +205,14 @@ def client_vehicles(client_id: int) -> Response:
 @requires_roles("Analista de Operaciones")
 def register_client_vehicle(client_id: int) -> Response:
     """Registra un vehiculo de un cliente en la base de datos."""
-    license_plate = request.form.get("license-plate")
-    brand = request.form.get("brand")
-    model = request.form.get("model")
-    year = int(request.form.get("year"))
-    body_number = request.form.get("body-number")
-    engine_number = request.form.get("engine-number")
-    color = request.form.get("color")
-    problem = request.form.get("problem")
+    license_plate = request.form.get("license-plate", '')
+    brand = request.form.get("brand", '')
+    model = request.form.get("model", '')
+    year = request.form.get("year", '')
+    body_number = request.form.get("body-number", '')
+    engine_number = request.form.get("engine-number", '')
+    color = request.form.get("color", '')
+    problem = request.form.get("problem", '')
 
     try:
         vehicles.register_client_vehicle(
@@ -234,14 +240,15 @@ def register_client_vehicle(client_id: int) -> Response:
 @requires_roles("Analista de Operaciones")
 def edit_client_vehicle(vehicle_id) -> Response:
     """Modifica los datos de un vehiculo de un cliente de la base de datos"""
-    license_plate = request.form.get("license-plate")
-    brand = request.form.get("brand")
-    model = request.form.get("model")
-    year = int(request.form.get("year"))
-    body_number = request.form.get("body-number")
-    engine_number = request.form.get("engine-number")
-    color = request.form.get("color")
-    problem = request.form.get("problem")
+    # Obtiene los datos del formulario
+    license_plate = request.form.get("license-plate", '')
+    brand = request.form.get("brand", '')
+    model = request.form.get("model", '')
+    year = request.form.get("year", '')
+    body_number = request.form.get("body-number", '')
+    engine_number = request.form.get("engine-number", '')
+    color = request.form.get("color", '')
+    problem = request.form.get("problem", '')
     client_id = int(request.form.get("client-id"))
 
     try:
@@ -257,7 +264,6 @@ def edit_client_vehicle(vehicle_id) -> Response:
             problem,
         )
     except vehicles.VehicleError as e:
-        # El vehiculo indicado no existe
         flash(f"{e}")
         return redirect(url_for("client_vehicles", client_id=client_id))
 
@@ -271,12 +277,12 @@ def edit_client_vehicle(vehicle_id) -> Response:
 @requires_roles("Analista de Operaciones")
 def delete_client_vehicle(vehicle_id) -> Response:
     """Elimina un vehiculo de un cliente de la base de datos"""
+    # Obtiene los datos del formulario
     client_id = int(request.form.get("client-id"))
 
     try:
         vehicles.delete_vehicle(vehicle_id)
     except vehicles.VehicleError as e:
-        # El vehiculo indicado no existe
         flash(f"{e}")
         return redirect(url_for("client_vehicles", client_id=client_id))
 

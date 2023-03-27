@@ -41,7 +41,7 @@ def validate_date(start_date: date, deadline: date) -> bool:
         )
 
 
-# ========== Anadidura ==========
+# ========== Registro de Proyectos ==========
 def create_project(description: str, start_date: str, deadline: str):
     """
     Crea y anade un usuario en la base de datos.
@@ -50,6 +50,10 @@ def create_project(description: str, start_date: str, deadline: str):
     """
     # Eliminar espacios al comienzo y final de la descripción
     description = description.strip()
+    start_date = start_date.strip()
+    deadline = deadline.strip()
+
+    # Verifica que todos los campos estén completos
     if not all([description, start_date, deadline]):
         raise ProjectError("Todos los campos son obligatorios")
 
@@ -79,17 +83,23 @@ def create_project(description: str, start_date: str, deadline: str):
     )
 
 
-# ========== Modificar ==========
+# ========== Modification de Proyectos ==========
 def edit_project(project_id: int, description: str, start_date: str, deadline: str):
     """
     Modifica los datos de un proyecto en la base de datos
 
     Lanza una excepción ProyectError si hubo algún error.
     """
+    # Elimina espacios al comienzo y final del input del form
+    description = description.strip()
+    start_date = start_date.strip()
+    deadline = deadline.strip()
+
+    # Verifica que todos los campos estén completos
     if not all([description, start_date, deadline]):
         raise ProjectError("Todos los campos son obligatorios")
 
-    # Verifica si ya existe un proyecto con la mima descripción
+    # Verifica si ya existe un proyecto con la misma descripción
     stmt = (
         db.select(Project)
         .where(Project.description == description)
@@ -98,13 +108,14 @@ def edit_project(project_id: int, description: str, start_date: str, deadline: s
     if db.session.execute(stmt).first():
         raise ProjectError("El proyecto ya existe")
 
-    # Busca el proyecto con el id indicado
+    # Selecciona el proyecto con el id indicado y verifica que exista
     stmt = db.select(Project).where(Project.id == project_id)
     project_query = db.session.execute(stmt).first()
     if not project_query:
         raise ProjectError("El proyecto indicado no existe")
+    edited_project = project_query[0]
 
-    # Convert fechas a tipo Date
+    # Convert fechas a tipo Date usando la libreria datetime
     y, m, d = start_date.split("-")
     start_date_t = date(int(y), int(m), int(d))
 
@@ -116,11 +127,57 @@ def edit_project(project_id: int, description: str, start_date: str, deadline: s
     validate_date(start_date_t, deadline_t)
 
     # Actualiza los datos del proyecto
-    project_query[0].description = description.strip()
-    project_query[0].start_date = start_date_t
-    project_query[0].end_date = deadline_t
+    edited_project.description = description
+    edited_project.start_date = start_date_t
+    edited_project.end_date = deadline_t
 
     # Registra el evento en la base de datos
     events.add_event("Portafolio de Proyectos", f"Modificar '{description.strip()}'")
 
-    db.session.commit()
+
+# ========== Eliminación de Proyectos ==========
+def delete_project(project_id: int):
+    """
+    Elimina un proyecto de la base de datos
+
+    Lanza una excepción ProyectError si hubo algún error.
+    """
+    # Selecciona el proyecto con el id indicado y verifica que exista
+    stmt = db.select(Project).where(Project.id == project_id)
+    project_query = db.session.execute(stmt).first()
+    if not project_query:
+        raise ProjectError("El proyecto indicado no existe")
+    deleted_project = project_query[0]
+
+    # Elimina el proyecto
+    db.session.delete(deleted_project)
+
+    # Registra el evento en la base de datos
+    events.add_event("Portafolio de Proyectos", f"Eliminar '{deleted_project.description}'")
+
+
+# ========== Cambio de estado de Proyectos ==========
+def toggle_project_status(project_id: int):
+    """
+    Cambia el estado de un proyecto de la base de datos.
+
+    Lanza una excepción ProyectError si hubo algún error.
+    """
+    # Selecciona el proyecto con el id indicado y verifica que exista
+    stmt = db.select(Project).where(Project.id == project_id)
+    project_query = db.session.execute(stmt).first()
+    if not project_query:
+        raise ProjectError("El proyecto indicado no existe")
+    project = project_query[0]
+
+    # Cambia el estado del proyecto
+    project.state = not project.state
+
+    # Determina el nuevo estado del proyecto
+    state = "Activo" if project.state else "Inactivo"
+
+    # Registra el evento en la base de datos
+    events.add_event(
+        "Portafolio de Proyectos",
+        f"Cambiar estado de '{project.description}' a '{state}'",
+    )

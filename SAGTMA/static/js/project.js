@@ -30,7 +30,7 @@ $(document).ready(function () {
     $("#delete-project-modal").modal("show");
     $("#delete-project-form").attr(
       "action",
-      "/project-portfolio/delete/" + id + "/"
+      "/project-portfolio/" + id + "/delete/"
     );
   });
 

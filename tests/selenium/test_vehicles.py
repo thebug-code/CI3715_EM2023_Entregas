@@ -40,7 +40,7 @@ class TestVehicles(BaseTestClass):
             "AAA-111",
             "Toyota",
             "Corolla",
-            2010,
+            "2010",
             "123456789A",
             "A987654321",
             "Gris",

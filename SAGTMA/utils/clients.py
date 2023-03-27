@@ -161,7 +161,7 @@ def edit_client(
     email = email.strip()
     address = address.strip()
 
-    # Verifica si todos los campos fueron ingresados
+    # Verifica que todos los campos estén llenos
     if not all([id_number, names, surnames, birthdate, phone_number, email, address]):
         raise ClientError("Todos los campos son obligatorios")
 
@@ -186,11 +186,12 @@ def edit_client(
     if db.session.execute(stmt).first():
         raise ClientError("Ya existe un cliente con la misma cédula")
 
-    # Busca el cliente con el id indicado y verifica si existe
+    # Selecciona el cliente con el id indicado y verifica que exista
     stmt = db.select(Client).where(Client.id == client_id)
     client_query = db.session.execute(stmt).first()
     if not client_query:
         raise ClientError("El cliente indicado no existe")
+    edited_client = client_query[0]
 
     # Convert birthdate a tipo Date usando la libreria datetime
     y, m, d = birthdate.split("-")
@@ -200,14 +201,14 @@ def edit_client(
     validate_birthdate(birthdate_t)
 
     # Actualiza los datos del cliente
-    client_query[0].id_number = id_number
-    client_query[0].names = names.strip()
-    client_query[0].surnames = surnames.strip()
-    client_query[0].birthdate = birthdate_t
-    client_query[0].phone_number = phone_number
-    client_query[0].email = email.strip()
-    client_query[0].address = address.strip()
-
+    edited_client.id_number = id_number
+    edited_client.names = names
+    edited_client.surnames = surnames
+    edited_client.birthdate = birthdate_t
+    edited_client.phone_number = phone_number
+    edited_client.email = email
+    edited_client.address = address
+    
     # Registra el evento en la base de datos
     events.add_event("Detalles de los Clientes", f"Modificar cliente '{id_number}'")
 
@@ -219,16 +220,17 @@ def delete_client(client_id: int):
 
     Lanza una excepción ClientError si hubo algún error.
     """
-    # Busca el cliente con el id indicado y verifica si existe
+    # Selecciona el cliente con el id indicado y verifica que exista
     stmt = db.select(Client).where(Client.id == client_id)
-    result = db.session.execute(stmt).first()
-    if not result:
+    client_query = db.session.execute(stmt).first()
+    if not client_query:
         raise ClientError("El cliente indicado no existe")
+    client = client_query[0]
 
     # Elimina el cliente de la base de datos
-    db.session.delete(result[0])
+    db.session.delete(client)
 
     # Registra el evento en la base de datos
     events.add_event(
-        "Detalles de los Clientes", f"Eliminar cliente '{result[0].id_number}'"
+        "Detalles de los Clientes", f"Eliminar cliente '{client.id_number}'"
     )

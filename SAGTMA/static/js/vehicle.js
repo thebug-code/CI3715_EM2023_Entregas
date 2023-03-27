@@ -21,7 +21,7 @@ $(document).ready(function () {
         $("#edit-problem").val(client.problem);
         $("#edit-vehicle-form").attr(
           "action",
-          "/client-details/" + id + "/edit"
+          "/client-details/" + id + "/edit/"
         );
       },
     });
@@ -35,6 +35,7 @@ $(document).ready(function () {
     $("#delete-vehicle-modal").modal("show");
     $("#delete-vehicle-form").attr(
       "action",
-      "/client-details/" + id + "/delete");
+      "/client-details/" + id + "/delete/"
+    );
   });
 });

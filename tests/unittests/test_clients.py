@@ -38,7 +38,7 @@ class TestClients(BaseTestClass):
             "ABC-123",
             "Toyota",
             "Corolla",
-            2018,
+            "2018",
             "A123456789",
             "987654321B",
             "Negro",
