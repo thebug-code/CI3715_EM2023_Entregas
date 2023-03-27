@@ -100,7 +100,7 @@ def delete_project(project_id) -> Response:
 def change_project_status(project_id):
     """Activa o desactiva un proyecto de la base de datos"""
     try:
-        projects.change_project_status(project_id)
+        projects.toggle_project_status(project_id)
     except projects.ProjectError as e:
         flash(f"{e}")
         return redirect(url_for("portfolio"))
