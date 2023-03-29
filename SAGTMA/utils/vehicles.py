@@ -96,9 +96,10 @@ def validate_year(year: str) -> int:
       -Es un número entero
       -Es menor o igual al año actual
     """
-    if not year.isdigit():
-        raise VehicleError("El año debe ser un número entero")
-    year = int(year)
+    if isinstance(year, str):
+        if not year.isdigit():
+            raise VehicleError("El año debe ser un número entero")
+        year = int(year)
 
     if year < 1900 or year > date.today().year + 1:
         raise VehicleError(

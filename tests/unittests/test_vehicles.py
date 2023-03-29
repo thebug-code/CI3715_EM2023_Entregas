@@ -135,7 +135,7 @@ class TestVehicles(BaseTestClass):
         """Testea la validacion de años con años válidos."""
 
         def _test_validate_year_valid(year: str):
-            self.assertIsNone(vehicles.validate_year(year))
+            self.assertEqual(vehicles.validate_year(year), int(year))
 
         # Años al límite
         actual_year = datetime.datetime.now().year

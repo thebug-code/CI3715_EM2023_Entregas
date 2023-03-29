@@ -109,7 +109,7 @@ class TestPortfolio(BaseTestClass):
         self._login_manager()
 
         # Elimina un proyecto existente
-        self.client.post(f"/project-portfolio/delete/0/", follow_redirects=True)
+        self.client.post(f"/project-portfolio/0/delete/", follow_redirects=True)
 
         # Verifica que se eliminó el proyecto
         stmt = db.select(Project).where(Project.description == "Proyecto Automotriz 1")
@@ -120,7 +120,7 @@ class TestPortfolio(BaseTestClass):
         self._login_manager()
 
         self.client.post(
-            "/project-portfolio/edit/0/",
+            "/project-portfolio/0/edit/",
             data={
                 "description": "Proyecto Editado",
                 "start-date": "2023-03-26",
