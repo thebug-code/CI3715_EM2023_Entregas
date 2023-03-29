@@ -171,10 +171,10 @@ def toggle_project_status(project_id: int):
     project = project_query[0]
 
     # Cambia el estado del proyecto
-    project.state = not project.state
+    project.active = not project.active
 
     # Determina el nuevo estado del proyecto
-    state = "Activo" if project.state else "Inactivo"
+        state = "Activo" if project.active else "Inactivo"
 
     # Registra el evento en la base de datos
     events.add_event(
