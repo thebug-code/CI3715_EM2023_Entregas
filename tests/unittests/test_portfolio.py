@@ -1,10 +1,9 @@
 from tests.unittests import BaseTestClass
 
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions
-from selenium.webdriver.support.wait import WebDriverWait
-from SAGTMA.models import User, Role, db
-from SAGTMA.utils.profiles import hash_password
+from SAGTMA.models import User, Role, db, Project
+from SAGTMA.utils.auth import hash_password
+from SAGTMA.utils import projects
+from datetime import date
 
 
 class TestPortfolio(BaseTestClass):
@@ -15,71 +14,125 @@ class TestPortfolio(BaseTestClass):
         (manager,) = db.session.execute(stmt).fetchone()
 
         # Añade un usuario Gerente de Operaciones
-        admin_user = User(
-            "manager", "Heisenberg", "The Danger", hash_password("Manager123."), manager
+        manager_user = User(
+            "V-1000000",
+            "manager",
+            "Bad",
+            "Bunny",
+            hash_password("Manager123."),
+            manager,
         )
-        db.session.add(admin_user)
 
+        # Añade un proyecto
+        project = Project(f"Proyecto Automotriz 1", date(2021, 4, 1), date(2023, 4, 1))
+
+        project.id = 0
+
+        db.session.add_all([manager_user, project])
         db.session.commit()
 
     def _login_manager(self):
-        self.driver.get(f"{self.base_url}/login/")
-
-        self.driver.find_element(By.ID, "username").click()
-        self.driver.find_element(By.ID, "username").send_keys("manager")
-        self.driver.find_element(By.ID, "password").click()
-        self.driver.find_element(By.ID, "password").click()
-        self.driver.find_element(By.ID, "password").send_keys("Manager123.")
-        self.driver.find_element(By.CSS_SELECTOR, ".btn-primary").click()
-
-    def _register_project(self, description: str, start_date: str, deadline: str):
-        self.driver.find_element(
-            By.CSS_SELECTOR, ".btn-primary:nth-child(3) > .table-button"
-        ).click()
-        WebDriverWait(self.driver, 1).until(
-            expected_conditions.visibility_of_element_located(
-                (By.CSS_SELECTOR, "#add-project-modal .modal-header")
-            )
-        )
-
-        self.driver.find_element(By.ID, "description").click()
-        self.driver.find_element(By.ID, "description").send_keys(description)
-        self.driver.find_element(By.ID, "start-date").click()
-        self.driver.find_element(By.ID, "start-date").send_keys(start_date)
-        self.driver.find_element(By.ID, "start-date").click()
-        self.driver.find_element(By.ID, "deadline").click()
-        self.driver.find_element(By.ID, "deadline").send_keys(deadline)
-
-        self.driver.find_element(
-            By.CSS_SELECTOR, "#add-project-modal .btn-primary"
-        ).click()
-        WebDriverWait(self.driver, 1).until(
-            expected_conditions.visibility_of_element_located(
-                (By.CSS_SELECTOR, ".toast-body")
-            )
+        return self.client.post(
+            "/login/",
+            data={"username": "manager", "password": "Manager123."},
+            follow_redirects=True,
         )
 
     def test_register_project_valid(self):
         """Testea la creación de proyecto válidos."""
-
-        def _test_register_project_valid(description: str):
-            self._register_project(description, "02/14/2023", "03/30/2023")
-            self.assertEqual(
-                self.driver.find_element(By.CSS_SELECTOR, ".toast-body").text,
-                "Proyecto creado exitosamente",
-            )
-
-            self.assertIn(
-                description, self.driver.find_element(By.CSS_SELECTOR, ".table").text
-            )
-
         self._login_manager()
 
         # Proyecto válido con descripción corta
-        _test_register_project_valid("Proyec")
-
-        # Proyecto válido con descripción larga
-        _test_register_project_valid(
-            "Esta es la descripción de proyecto automotriz válido más largo que"
-            " puede darse según el sistema, si."
+        self.client.post(
+            "/project-portfolio/add/",
+            data={
+                "description": "Proyecto de ejemplo",
+                "start-date": "2022-04-01",
+                "deadline": "2022-06-30",
+            },
+            follow_redirects=True,
         )
+
+        stmt = db.select(Project).where(Project.description == "Proyecto de ejemplo")
+        self.assertIsNotNone(db.session.execute(stmt).first())
+
+    def test_validate_descrip_project_valid(self):
+        "Testea la validacion de descripciones de proyecto válidas"
+
+        def _test_validate_descrip_project_valid(description: str):
+            self.assertIsNone(projects.validate_descrip_project(description))
+
+        # Descripciones de 6 y 100 caracteres
+        _test_validate_descrip_project_valid("Hello!")
+        _test_validate_descrip_project_valid(
+            "A project description of 100 characters should be valid... right? No se que escribir aqui para llena"
+        )
+
+        # Valor nominal
+        _test_validate_descrip_project_valid(
+            "Esta es una descripción de proyecto válida!"
+        )
+
+    def test_validate_descrip_project_invalid(self):
+        "Testea la validacion de descripciones de proyecto inválidas"
+
+        def _test_validate_descrip_project_invalid(description: str):
+            with self.assertRaises(projects.ProjectError):
+                projects.validate_descrip_project(description)
+
+        # Descripciones de 5 y 101 caracteres
+        _test_validate_descrip_project_invalid("Nope")
+        _test_validate_descrip_project_invalid(
+            "Una descripción de proyecto que tome literalmente CIENTO UN CARACTERES no debe ser valida, es así???."
+        )
+
+        # Descripción con caracteres no válidos
+        _test_validate_descrip_project_invalid("Descripcion con caracteres *invalidos*")
+
+    def test_validate_date_valid(self):
+        """Testea la validación de fechas de proyecto válidas."""
+        start_date = date(2023, 1, 1)
+        deadline = date(2023, 1, 31)
+
+        self.assertIsNone(projects.validate_date(start_date, deadline))
+
+    def test_validate_date_invalid(self):
+        """Testea la validación de fechas de proyecto inválidas."""
+        start_date = date(2023, 2, 1)
+        deadline = date(2023, 1, 31)
+
+        with self.assertRaises(projects.ProjectError):
+            projects.validate_date(start_date, deadline)
+
+    def test_delete_project(self):
+        """Testea la eliminación de proyectos."""
+        self._login_manager()
+
+        # Elimina un proyecto existente
+        self.client.post(f"/project-portfolio/delete/0/", follow_redirects=True)
+
+        # Verifica que se eliminó el proyecto
+        stmt = db.select(Project).where(Project.description == "Proyecto Automotriz 1")
+        self.assertIsNone(db.session.execute(stmt).first())
+
+    def test_edit_project_valid(self):
+        """Testea la edición de un proyecto válido."""
+        self._login_manager()
+
+        self.client.post(
+            "/project-portfolio/edit/0/",
+            data={
+                "description": "Proyecto Editado",
+                "start-date": "2023-03-26",
+                "deadline": "2023-06-30",
+            },
+            follow_redirects=True,
+        )
+
+        # Verifica que el proyecto anterior no existe
+        stmt = db.select(Project).where(Project.description == "Proyecto Automotriz 1")
+        self.assertIsNone(db.session.execute(stmt).first())
+
+        # Verifica que el proyecto editado existe
+        stmt = db.select(Project).where(Project.description == "Proyecto Editado")
+        self.assertIsNotNone(db.session.execute(stmt).first())

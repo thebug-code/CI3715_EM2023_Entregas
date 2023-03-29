@@ -2,6 +2,7 @@ from tests.unittests import BaseTestClass
 from SAGTMA.utils import profiles
 from SAGTMA.models import User, db
 
+
 class TestProfiles(BaseTestClass):
     def _login_admin(self):
         """Inicia sesión con un usuario Analista de Operaciones."""
@@ -23,6 +24,7 @@ class TestProfiles(BaseTestClass):
          - Sin minúsculas.
          - Sin caracteres especiales.
         """
+
         def _test_validate_password_invalid(password: str):
             with self.assertRaises(profiles.ProfileError):
                 profiles.validate_password(password)
@@ -81,7 +83,7 @@ class TestProfiles(BaseTestClass):
 
         # Usuario que comienza con número
         _test_validate_username_invalid("1test")
-        
+
     def test_validate_username_valid(self):
         """Testea la creación de usuarios con nombre de usuario válidos
 

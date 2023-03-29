@@ -12,8 +12,8 @@ def validate_id(id_number: str, exception_type: Type[BaseException]) -> str:
      - Puede contener espacios o puntos como separadores.
 
     Retorna la cédula transformada a un formato estándar:
-     - Comienza con V.
-    -  Seguido de un guión y 8 dígitos.
+     - Comienza con mayúscula.
+    -  Seguido de un guión y 7 u 8 dígitos.
     """
     # Remueve espacios y puntos del número
     table = str.maketrans("", "", ". ")
