@@ -31,12 +31,12 @@ class User(db.Model):
     """Modelo de usuario."""
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    role_id = db.Column(db.Integer, db.ForeignKey("role.id"), nullable=False)
     id_number = db.Column(db.String(10), unique=True, nullable=False)
     username = db.Column(db.String(20), unique=True, nullable=False)
     names = db.Column(db.String(50), nullable=False)
     surnames = db.Column(db.String(50), nullable=False)
     password = db.Column(db.String(80), nullable=False)
-    role_id = db.Column(db.Integer, db.ForeignKey("role.id"), nullable=False)
 
     # Relación n:n entre usuarios y proyectos
     projects = db.relationship(
@@ -45,6 +45,10 @@ class User(db.Model):
 
     # Relación 1:n entre usuarios y eventos
     events = db.relationship("Event", backref="user", cascade="all, delete-orphan")
+
+    # Relación 1:n entre usuarios y detalles de proyectos (mosca con el
+    # cascade)
+    project_details = db.relationship("Project_Detail", backref="manager", cascade="all, delete-orphan")
 
     def __init__(
         self,
@@ -75,6 +79,10 @@ class Project(db.Model):
     start_date = db.Column(db.Date, nullable=False)
     end_date = db.Column(db.Date, nullable=False)
 
+    # Relación 1:n entre proyectos y detalles de proyectos
+    project_details = db.relationship("Project_Detail", backref="project",\
+        cascade="all, delete-orphan")
+
     def __init__(self, description: str, start_date, end_date):
         self.description = description
         self.start_date = start_date
@@ -82,6 +90,40 @@ class Project(db.Model):
 
     def __repr__(self) -> str:
         return f'Project<{self.description}: {self.start_date} - {self.end_date}, {"Activo" if self.active else "Inactivo"}>'
+
+
+class Project_Detail(db.Model):
+    """Modelo de detalles de proyectos."""
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    project_id = db.Column(db.Integer, db.ForeignKey("project.id"), nullable=False)
+    vehicle_id = db.Column(db.Integer, db.ForeignKey("vehicle.id"), nullable=False)
+    department_id = db.Column(db.Integer, db.ForeignKey("department.id"), nullable=False)
+    project_manager_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    solution = db.Column(db.String(100), nullable=False)
+    amount = db.Column(db.Float, nullable=False)
+    observations = db.Column(db.String(100), nullable=False)
+    
+    def __init__(
+        self,
+        project_id,
+        vehicle_id,
+        department_id,
+        project_manager_id,
+        solution,
+        amount,
+        observations
+    ):
+        self.project_id = project_id
+        self.vehicle_id = vehicle_id
+        self.department_id = department_id
+        self.project_manager_id = project_manager_id
+        self.solution = solution
+        self.amount = amount
+        self.observations = observations
+
+    def __repr__(self) -> str:
+        return f'Project_Detail<{self.project_id}: {self.vehicle_id} - {self.department_id}, {self.project_manager_id}, {self.solution}, {self.amount}, {self.observations}>'
 
 
 class Event(db.Model):
@@ -115,6 +157,8 @@ class Client(db.Model):
     phone_number = db.Column(db.String(20), nullable=False)
     email = db.Column(db.String(80), nullable=False)
     address = db.Column(db.String(120), nullable=False)
+
+    # Relación 1:n entre clientes y vehículos
     vehicles = db.relationship("Vehicle", backref="owner", cascade="all, delete-orphan")
 
     def __init__(
@@ -143,6 +187,7 @@ class Vehicle(db.Model):
     """Modelo de vehículo."""
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    owner_id = db.Column(db.Integer, db.ForeignKey("client.id"), nullable=False)
     license_plate = db.Column(db.String(10), unique=True, nullable=False)
     brand = db.Column(db.String(50), nullable=False)
     model = db.Column(db.String(50), nullable=False)
@@ -151,7 +196,9 @@ class Vehicle(db.Model):
     engine_number = db.Column(db.String(20), nullable=False)
     color = db.Column(db.String(20), nullable=False)
     problem = db.Column(db.String(120), nullable=False)
-    owner_id = db.Column(db.Integer, db.ForeignKey("client.id"), nullable=False)
+
+    # Relacion 1:N entre vehículos y detalles de proyectos (ojo con el cascade)
+    project_details = db.relationship("Project_Detail", backref="vehicle", cascade="all, delete-orphan")
 
     def __init__(
         self,
@@ -182,6 +229,10 @@ class Department(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     description = db.Column(db.String(100), unique=True, nullable=False)
+
+    # Relacion 1:N entre departamentos y detalles de proyectos (mosca con el
+    # cascade)
+    project_details = db.relationship("Project_Detail", backref="department", cascade="all, delete-orphan")
 
     def __init__(self, description: str):
         self.description = description
