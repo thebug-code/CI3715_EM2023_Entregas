@@ -3,7 +3,7 @@ from datetime import date
 
 from flask import current_app
 
-from SAGTMA.models import Project, Role, User, Client, Vehicle, db
+from SAGTMA.models import Project, Role, User, Client, Vehicle, Department, db
 from SAGTMA.utils.auth import hash_password
 
 
@@ -57,7 +57,7 @@ def populate_db():
     # Añade usuarios dummy de distintos roles
     names = ["Juan", "Pedro", "Pablo", "Luis", "Carlos", "Jorge", "Miguel"]
     surnames = ["Pérez", "González", "Gómez", "Rodríguez", "López", "Martínez"]
-    prefixes = ["V", "E", "J", "G", "C"]
+    prefixes = ['V', 'E', 'J', 'G', 'C']
     id_numbers = [
         f"{choice(prefixes)}-{randint(10000000, 99999999)}" for _ in range(10)
     ]
@@ -126,4 +126,17 @@ def populate_db():
     client.vehicles.append(car2)
 
     db.session.add(client)
+
+    # Anade departamentos
+    dept_names = [
+        "Mecánica",
+        "Esctructura",
+        "Revestimiento",
+        "Electricidad",
+        "Electrónica",
+    ]
+
+    depts = [Department(dept) for dept in dept_names]
+    db.session.add_all(depts)
+
     db.session.commit()

@@ -2,7 +2,6 @@ from datetime import date
 
 from SAGTMA.models import Vehicle, Client, db
 from SAGTMA.utils import events
-from datetime import date
 from SAGTMA.utils.validations import validate_name
 
 

@@ -152,3 +152,56 @@ def api_departments():
     ]
 
     return depts
+
+
+@current_app.route('/api/v1/project-details-dropdown-data', methods=['GET'])
+@login_required
+@requires_roles("Gerente de Operaciones")
+def get_project_details_dropdown_data():
+    # SELECT * FROM user
+    stmt = db.select(User)
+    result = db.session.execute(stmt).fetchall()
+    users = [
+        {
+            'id': u.id,
+            'names': u.names,
+            'surnames': u.surnames,
+            'id_number': u.id_number
+        } 
+        for u, in result
+    ]
+
+    # SELECT * FROM department
+    stmt = db.select(Department)
+    result = db.session.execute(stmt).fetchall()
+    departments = [
+        {
+            'id': d.id,
+            'description': d.description
+        }
+        for d, in result
+    ]
+
+    # SELECT * FROM vehicle
+    stmt = db.select(Vehicle)
+    result = db.session.execute(stmt).fetchall()
+    vehicles = [
+        {
+            'id': v.id,
+            'license_plate': v.license_plate,
+            'brand': v.brand,
+            'id_number': v.owner.id_number,
+            'names': v.owner.names,
+            'surnames': v.owner.surnames,
+            'problem': v.problem
+        }
+        for v, in result
+    ]
+
+    data = {
+        'users': users,
+        'departments': departments,
+        'vehicles': vehicles
+    }
+    
+    return data

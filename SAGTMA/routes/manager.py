@@ -8,10 +8,10 @@ from flask import (
     url_for,
 )
 
-from SAGTMA.utils import projects, events
+from SAGTMA.utils import projects, events, project_details
 from SAGTMA.utils.decorators import login_required, requires_roles
 
-from SAGTMA.models import Project, db
+from SAGTMA.models import Project, Project_Detail, db
 
 
 # ========== Gerente de Operaciones ==========
@@ -110,24 +110,70 @@ def change_project_status(project_id):
     return redirect(url_for("portfolio"))
 
 
-# ========== Gerente de Proyectos ==========
-# @current_app.route("/project-portfolio/<int:project_id>", methods=["GET", "POST"])
-# @requires_roles("Gerente de Proyectos")
-# def portfolio() -> Response:
-#    """Muestra la lista de proyectos anadidos en el sistema"""
-#    if request.method == "POST":
-#        # Obtiene los datos del formulario
-#        descrip = request.form.get("descrip-filter")
-#
-#        stmt = db.select(Project).where(Project.description.like(f"%{descrip}%"))
-#
-#        # Añade el evento de búsqueda
-#        events.add_event("Portafolio de Proyectos", f"Buscar '{descrip}'")
-#    else:
-#        # Selecciona los proyectos de la base de datos
-#        stmt = db.select(Project)
-#
-#    result = db.session.execute(stmt).fetchall()
-#    _projects = [r for r, in result]
-#
-#    return render_template("manager/portfolio.html", projects=_projects)
+# ========== Detalles del proyecto ==========
+@current_app.route("/project-details/<int:project_id>/", methods=["GET", "POST"])
+@requires_roles("Gerente de Operaciones")
+def project_data(project_id) -> Response:
+    """Muestra la lista de datos de proyectos anadidos en el sistema"""
+    # Selecciona el proyecto con el id indicado y verifica que exista
+    stmt = db.select(Project).where(Project.id == project_id)
+    project_query = db.session.execute(stmt).first()
+    if not project_query:
+        flash("El proyecto indicado no existe")
+        return redirect(url_for("portfolio"))
+    # Obtiene el proyecto
+    _project = project_query[0]
+
+    if request.method == "POST":
+        pass
+       # Obtiene los datos del formulario
+       #descrip = request.form.get("data-filter")
+
+       #stmt = db.select(Project).where(Project.description.like(f"%{descrip}%"))
+
+       # Añade el evento de búsqueda
+       #events.add_event("Portafolio de Proyectos", f"Buscar '{descrip}'")
+    else:
+       # Selecciona los datos del proyecto en la base de datos
+        stmt = (
+            db.select(Project_Detail)
+            .where(Project_Detail.project_id == project_id)
+        )
+    
+    result = db.session.execute(stmt).fetchall()
+    _project_details = [r for r, in result]
+    
+    return render_template("manager/project_details.html",\
+        project_details=_project_details, project=_project)
+
+
+@current_app.route("/project-details/<int:project_id>/register/", methods=["POST"])
+@login_required
+@requires_roles("Gerente de Operaciones")
+def register_project_data(project_id) -> Response:
+    """Registrar y anade un detalle de proyecto en la base de datos."""
+    # Obtiene los datos del formulario
+    vehicle = request.form.get("vehicle", '') 
+    department = request.form.get("department", '')
+    manager = request.form.get("manager", '')
+    solution = request.form.get("solution", '')
+    amount = request.form.get("amount", '')
+    observations = request.form.get("observations", '')
+    
+    try:
+        project_details.register_project_detail(
+            project_id, 
+            vehicle,
+            department,
+            manager,
+            solution,
+            amount, 
+            observations
+        )
+    except project_details.ProjectDetailError as e:
+        flash(f"{e}")
+        return redirect(url_for("project_data", project_id=project_id))
+
+    # Se permanece en la página
+    flash("Detalle de proyecto registrado exitosamente")
+    return redirect(url_for("project_data", project_id=project_id))

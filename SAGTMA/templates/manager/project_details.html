@@ -1,0 +1,139 @@
+{% extends 'base/base.html' %}
+{% set active_page = "portfolio" %}
+{% block title %}Datos del proyecto{% endblock %}
+{% block content %}
+  <div class="d-flex justify-content-center my-4">
+    <h1 class="title-container">Datos del Proyecto</h1>
+  </div>
+
+  {# Modal agregar detalle de proyecto #}
+  <div class="modal fade" id="add-project-detail-modal" tabindex="-1" role="dialog" aria-labelledby="AddModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="AddModalLabel">Agregar detalle de proyecto</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="post" id="add-project-detail-form">
+            <div class="mb-3">
+              <label for="vehicle" class="form-label">Vehículo</label>
+              <select class="form-select" aria-label="Default select example" name="vehicle" id="add-vehicle" onchange="updateProblemField()">
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="department">Departamento</label>
+              <select class="form-select" aria-label="Default select example" name="department" id="add-department">
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="manager">Gerente de proyecto</label>
+              <select class="form-select" aria-label="Default select example" name="manager" id="add-manager">
+              </select>
+            </div>
+            <div class="mb-3" id="problem-field">
+            </div>
+            <div class="mb-3">
+              <label for="solution" class="form-label">Solución</label>
+              <input type="text" class="form-control" id="add-solution" name="solution" placeholder="Ingrese la solución del problema" required>
+            </div>
+            <div class="mb-3">
+              <label for="amount" class="form-label">Monto</label>
+              <input type="number" class="form-control" id="add-amount" name="amount" placeholder="Ingrese el monto del proyecto" required>
+            </div>
+            <div class="mb-3">
+              <label for="observations" class="form-label">Observaciones</label>
+              <input type="text" class="form-control" id="add-observation" name="observations" placeholder="Ingrese las observaciones del proyecto" required>
+            </div>
+
+            {# Id del proyecto #}
+            <input type="hidden" name="project-id" value="{{ project.id }}">
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="clearProblemField()">Cerrar</button>
+              <button type="submit" class="btn btn-primary">Agregar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {# Barra de filtro de detalles del proyecto #}
+  <div class="container">
+    <form class="row search-filter" action="{{ url_for('project_data', project_id=project.id) }}" method="post">
+      <div class="col-sm-12">
+        <div class="input-group">
+          <input name="data-filter" id="data-filter" type="text" class="form-control" placeholder="Buscar datos del proyecto" />
+          <button type="submit" class="btn btn-primary" style="border-radius: 5px;margin-left: 10px;" data-bs-toggle="modal">
+            <img src="{{ url_for('static', filename='img/search.svg') }}" width="40" height="40" fill="white" class="table-button" value="submit" style="border-radius: 5px;" title="Buscar datos del proyecto" />
+          </button>
+
+          {# Boton de agregar datos del proyecto #}
+          <button type="button" class="btn btn-primary add-project-detail" style="border-radius: 5px;margin-left: 10px;" data-bs-toggle="modal" id=add-detail{{ project.id }}>
+            <img src="{{ url_for('static', filename='img/add.svg') }}" width="40" height="40" fill="white" class="table-button" value="submit" style="border-radius: 5px;" />
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  {# Si no hay datos del proyecto o no se encontraron en la busqueda #}
+  {% if project_details|length == 0 %}
+    <div class="d-flex justify-content-center my-4">
+      <div class="alert alert-danger" role="alert">No se encontraron datos del proyecto</div>
+    </div>
+  {% else %}
+    {# Tabla de datos del proyecto #}
+    <div class="container">
+      <div class="container table-container">
+        <table class="table table-striped table-hover">
+          {# Header de la tabla #}
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Vehículo (placa)</th>
+              <th>Departamento</th>
+              <th>Gerente de proyecto (CI)</th>
+              <th>Problema</th>
+              <th>Solución</th>
+              <th>Monto</th>
+              <th>Observaciones</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for detail in project_details %}
+              <tr>
+                <td>{{ detail.id }}</td>
+                <td>{{ detail.vehicle.license_plate }}</td>
+                <td>{{ detail.department.description }}</td>
+                <td>{{ detail.manager.id_number }}</td>
+                <td>{{ detail.vehicle.problem }}</td>
+                <td>{{ detail.solution }}</td>
+                <td>{{ detail.amount }}</td>
+                <td>{{ detail.observations }}</td>
+                <td>
+                  {# Boton de presupuesto #}
+
+                  {# Botón de modificar #}
+                  <button id="edit{{ detail.id }}" type="button" class="btn btn-primary my-2 edit-project-data" data-bs-toggle="modal">
+                    <img src="{{ url_for('static', filename='img/edit.svg') }}" width="24" height="24" fill="white" class="table-button" value="submit" style="border-radius: 5px;" title="Modificar dato del proyecto" />
+                  </button>
+
+                  {# Botón de eliminar #}
+                  <button id="delete{{ detail.id }}" type="button" class="btn btn-primary delete-project-data" data-bs-toggle="modal">
+                    <img src="{{ url_for('static', filename='img/delete.svg') }}" width="24" height="24" fill="white" class="table-button" value="submit" style="border-radius: 5px;" title="Eliminar dato del proyecto" />
+                  </button>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  {% endif %}
+
+  <script src="{{ url_for('static', filename='js/project_details.js') }}"></script>
+{% endblock %}
+

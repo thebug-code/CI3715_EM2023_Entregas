@@ -161,18 +161,20 @@
                   <input type="date" style="background-color:transparent;border-radius: 5px;" value="{{ project.end_date }}" disabled />
                 </td>
                 <td>
-                  {# Generar #}
-                  <button
-                    type="button"
-                    class="my-2 btn {% if project.active %}
-                      btn-primary
-                    {% else %}
-                      btn-secondary
-                    {% endif %}"
-                    {% if not project.active %}disabled{% endif %}
-                  >
-                    <img src="{{ url_for('static', filename='img/generate.svg') }}" width="24" height="24" fill="white" class="table-button" value="submit" style="border-radius: 5px;" title="Generar proyecto" />
-                  </button>
+                  {# Botón de ir a detalles #}
+                  <a href="{{ url_for('project_data', project_id=project.id) }}">
+                    <button
+                      type="button"
+                      class="my-2 btn {% if project.active %}
+                        btn-primary 
+                        {% else %}
+                        btn-secondary
+                        {% endif %}" 
+                        {% if not project.active %} disabled {% endif %}
+                    >
+                      <img src="{{ url_for('static', filename='img/detail.svg') }}" width="24" height="24" fill="white" class="table-button" style="border-radius: 5px;" title="Ver Datos"/>
+                    </button>
+                  </a>
 
                   {# Modificar #}
                   <button

@@ -2,7 +2,6 @@ from datetime import date
 
 from SAGTMA.models import Project, db
 from SAGTMA.utils import events
-from datetime import date
 
 
 class ProjectError(ValueError):
@@ -174,7 +173,7 @@ def toggle_project_status(project_id: int):
     project.active = not project.active
 
     # Determina el nuevo estado del proyecto
-        state = "Activo" if project.active else "Inactivo"
+    state = "Activo" if project.active else "Inactivo"
 
     # Registra el evento en la base de datos
     events.add_event(
