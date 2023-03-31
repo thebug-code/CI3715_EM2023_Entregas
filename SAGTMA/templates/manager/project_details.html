@@ -113,6 +113,29 @@
     </div>
   </div>
 
+  {# Modal confirmar eliminar detalle de proyecto #}
+  <div class="modal fade" id="delete-project-detail-modal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">Eliminar dato de proyecto</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>¿Está seguro que desea eliminar este dato del proyecto?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <form method="post" id="delete-project-detail-form" class="d-inline">
+            <button type="submit" class="btn btn-danger">Eliminar</button>
+            {# Id del proyecto #}
+            <input type="hidden" name="project-id" value="{{ project.id }}">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
   {# Barra de filtro de detalles del proyecto #}
   <div class="container">
     <form class="row search-filter" action="{{ url_for('project_data', project_id=project.id) }}" method="post">
@@ -176,7 +199,7 @@
                   </button>
 
                   {# Botón de eliminar #}
-                  <button id="delete{{ detail.id }}" type="button" class="btn btn-primary delete-project-data" data-bs-toggle="modal">
+                  <button id="delete{{ detail.id }}" type="button" class="btn btn-primary delete-project-detail" data-bs-toggle="modal">
                     <img src="{{ url_for('static', filename='img/delete.svg') }}" width="24" height="24" fill="white" class="table-button" value="submit" style="border-radius: 5px;" title="Eliminar dato del proyecto" />
                   </button>
                 </td>

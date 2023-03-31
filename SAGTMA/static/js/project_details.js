@@ -176,6 +176,18 @@ $(document).ready(function () {
       },
     });
   });
+
+  // Eliminar detalles de proyecto
+  $(document).on('click', '.delete-project-detail', function () {
+    var form = $(this);
+    id = form.attr("id").match(/\d+/)[0];
+
+    $('#delete-project-detail-modal').modal('show');
+    $('#delete-project-detail-form').attr(
+      'action',
+      '/project-details/' + id + '/delete/'
+    ); 
+  });
 });
 
 // Actualizar el campo de problema al seleccionar un vehículo

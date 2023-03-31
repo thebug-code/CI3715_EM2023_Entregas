@@ -231,3 +231,27 @@ def edit_project_detail(
     events.add_event(
             "Datos de proyectos", f"Editar dato de proyecto {edited_detail.id}"
     )
+
+
+# ========== Eliminación de detalle de proyecto ==========
+def delete_project_detail(detail_id: int):
+    """
+    Elimina un detalle de proyecto de la base de datos.
+
+    Lanza una excepción si:
+        -El detalle de proyecto no existe
+    """
+    # Selecciona el detalle de proyecto con el id indicado y virifica que exista
+    smt = db.select(Project_Detail).where(Project_Detail.id == detail_id)
+    detail_query = db.session.execute(smt).first()
+    if not detail_query:
+        raise ProjectDetailError("El detalle de proyecto no existe")
+    detail = detail_query[0]
+
+    # Elimina el detalle de proyecto de la base de datos
+    db.session.delete(detail)
+
+    # Registra el evento en la base de datos
+    events.add_event(
+        "Datos de proyectos", f"Eliminar dato de proyecto {detail.id} del proyecto {detail.project.description}"
+    )

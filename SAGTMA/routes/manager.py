@@ -210,3 +210,22 @@ def edit_project_data(detail_id) -> Response:
     # Se permanece en la página
     flash("Detalle de proyecto registrado exitosamente")
     return redirect(url_for("project_data", project_id=project_id))
+
+
+@current_app.route("/project-details/<int:detail_id>/delete/", methods=["POST"])
+@login_required
+@requires_roles("Gerente de Operaciones")
+def delete_project_data(detail_id) -> Response:
+    """Elimina un detalle de proyecto de la base de datos"""
+    # Obtiene el id del proyecto
+    project_id = int(request.form.get("project-id"))
+
+    try:
+        project_details.delete_project_detail(detail_id)
+    except project_details.ProjectDetailError as e:
+        flash(f"{e}")
+        return redirect(url_for("project_data", project_id=project_id))
+
+    # Se permanece en la pagina
+    flash("Detalle de proyecto eliminado exitosamente")
+    return redirect(url_for("project_data", project_id=project_id))
