@@ -11,7 +11,7 @@ from flask import (
 from SAGTMA.utils import projects, events, project_details
 from SAGTMA.utils.decorators import login_required, requires_roles
 
-from SAGTMA.models import Project, Project_Detail, db
+from SAGTMA.models import Project, Project_Detail, Vehicle, Department, User, db
 
 
 # ========== Gerente de Operaciones ==========
@@ -124,17 +124,41 @@ def project_data(project_id) -> Response:
     # Obtiene el proyecto
     _project = project_query[0]
 
+    # Selecciona los detalles del proyecto con el id indicado y une las tablas
+    # necesarias para mostrar los datos
+    stmt = (
+        db.select(Project_Detail)
+        .where(Project_Detail.project_id == project_id)
+        .join(Vehicle)
+        .join(User)
+        .join(Department)
+    )
+
     if request.method == "POST":
-        pass
-       # Obtiene los datos del formulario
-       #descrip = request.form.get("data-filter")
+        # Obtiene los datos del formulario
+        detail = request.form.get("data-filter", '').lower().strip()
 
-       #stmt = db.select(Project).where(Project.description.like(f"%{descrip}%"))
-
-       # Añade el evento de búsqueda
-       #events.add_event("Portafolio de Proyectos", f"Buscar '{descrip}'")
+        if detail:
+            # WHERE (license_plate) LIKE '%detail%' OR
+            #       (department) LIKE '%detail%' OR
+            #       (manager) LIKE '%detail%' OR
+            #       (problem) LIKE '%detail%' OR
+            #       (solution) LIKE '%detail%' OR
+            #       (solution) LINKE '%observations%'
+            stmt = stmt.where(
+                db.or_(
+                    Vehicle.license_plate.like(f"%{detail}%"),
+                    Department.description.like(f"%{detail}%"),
+                    User.id_number.like(f"%{detail}%"),
+                    Vehicle.problem.like(f"%{detail}%"),
+                    Project_Detail.solution.like(f"%{detail}%"),
+                    Project_Detail.observations.like(f"%{detail}%"),
+                )
+            )
+        # Registra el evento en la base de datos
+        events.add_event("Detalles de Proyecto", f"Buscar '{detail}' del proyecto '{_project.description}'")
     else:
-       # Selecciona los datos del proyecto en la base de datos
+       # Selecciona los datos del proyecto con el id indicado
         stmt = (
             db.select(Project_Detail)
             .where(Project_Detail.project_id == project_id)
