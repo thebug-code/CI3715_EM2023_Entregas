@@ -2,7 +2,9 @@ from flask import current_app, request, json
 
 from SAGTMA.utils.decorators import login_required, requires_roles
 
-from SAGTMA.models import User, Project, Client, Vehicle, Department, Role, db
+from SAGTMA.models import (
+    User, Project, Client, Vehicle, Department, Role, Project_Detail, db
+)
 
 
 @current_app.route("/api/v1/users")
@@ -205,3 +207,41 @@ def get_project_details_dropdown_data():
     }
     
     return data
+
+
+@current_app.route('/api/v1/project-details', methods=['GET'])
+@login_required
+@requires_roles("Gerente de Operaciones")
+def api_project_details():
+    # SELECT * FROM project_detail
+    stmt = db.select(Project_Detail)
+
+    # Obtiene los parámetros de la request para filtrar por id
+    # y filtra de ser necesario
+    project_detail_id = request.args.get("id")
+    if project_detail_id:
+        stmt = stmt.where(Project_Detail.id == project_detail_id)
+
+    # Consulta los detalles de proyecto requeridos
+    result = db.session.execute(stmt).fetchall()
+    project_details = [
+        {
+            'id': pd.id,
+            'project_id': pd.project.id,
+            'manager_id': pd.manager.id,
+            'department_id': pd.department.id,
+            'vehicle_id': pd.vehicle.id,
+            'solution': pd.solution,
+            'amount': pd.amount,
+            'observations': pd.observations,
+        }
+        for pd, in result
+    ]
+
+    # Obtiene los datos del dropdown
+    data = get_project_details_dropdown_data()
+
+    return {
+        'project_details': project_details,
+        'dropdown_data': data
+    }

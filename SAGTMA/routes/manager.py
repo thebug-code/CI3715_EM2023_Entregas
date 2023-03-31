@@ -177,3 +177,36 @@ def register_project_data(project_id) -> Response:
     # Se permanece en la página
     flash("Detalle de proyecto registrado exitosamente")
     return redirect(url_for("project_data", project_id=project_id))
+
+
+@current_app.route("/project-details/<int:detail_id>/edit/", methods=["POST"])
+@login_required
+@requires_roles("Gerente de Operaciones")
+def edit_project_data(detail_id) -> Response:
+    """Registrar y anade un detalle de proyecto en la base de datos."""
+    # Obtiene los datos del formulario
+    vehicle = request.form.get("vehicle", '') 
+    department = request.form.get("department", '')
+    manager = request.form.get("manager", '')
+    solution = request.form.get("solution", '')
+    amount = request.form.get("amount", '')
+    observations = request.form.get("observations", '')
+    project_id = int(request.form.get("project-id"))
+    
+    try:
+        project_details.edit_project_detail(
+            detail_id,
+            vehicle,
+            department,
+            manager,
+            solution,
+            amount, 
+            observations
+        )
+    except project_details.ProjectDetailError as e:
+        flash(f"{e}")
+        return redirect(url_for("project_data", project_id=project_id))
+
+    # Se permanece en la página
+    flash("Detalle de proyecto registrado exitosamente")
+    return redirect(url_for("project_data", project_id=project_id))

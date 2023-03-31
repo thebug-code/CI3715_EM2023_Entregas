@@ -2,12 +2,12 @@ $(document).ready(function () {
   // Agregar detalles de proyecto
   $(document).on('click', '.add-project-detail', function () {
     var form = $(this);
-    id = form.attr("id").match(/\d+/)[0];
+    id = form.attr('id').match(/\d+/)[0];
     
     $.getJSON({
-      url: "/api/v1/project-details-dropdown-data",
+      url: '/api/v1/project-details-dropdown-data',
       success: function (data) {
-        $("#add-project-detail-modal").modal("show");
+        $('#add-project-detail-modal').modal('show');
         var users = data.users;
         var vehicles = data.vehicles;
         var departments = data.departments;
@@ -57,88 +57,139 @@ $(document).ready(function () {
         });
 
         // Set the initial value of the problem field based on the selected vehicle
-        updateProblemField();
+        updateProblemField('vehicle-select-add', 'add-problem-field');
 
         // Attach an event listener to update the problem field when the user selects a different vehicle
-        //addVehiclesSelect.on('change', updateProblemField);
+        addVehiclesSelect.change(function() {
+          updateProblemField('vehicle-select-add', 'add-problem-field');
+        });
 
-        $("#add-project-detail-form").attr(
-          "action",
-          "/project-details/" + id + "/register/"
+        // Clear the problem field when the modal is closed
+        $('#add-project-detail-modal').on('hidden.bs.modal', function () {
+          clearProblemField('add-problem-field');
+        });
+
+        $('#add-project-detail-form').attr(
+          'action',
+          '/project-details/' + id + '/register/'
         );
       },
     });
   });
 
-  // Modificar usuario
-  //$(document).on("click", ".edit-user", function () {
-  //  var form = $(this);
-  //  id = form.attr("id").match(/\d+/)[0];
+  // Modificar detalles de proyecto
+  $(document).on('click', '.edit-project-detail', function () {
+    var form = $(this);
+    id = form.attr("id").match(/\d+/)[0];
 
-  //  $.getJSON({
-  //    url: "/api/v1/users",
-  //    data: { id },
-  //    success: function (data) {
-  //      $("#edit-user-modal").modal("show");
-  //      var user = data.users[0];
-  //      var roles = data.roles;
+    $.getJSON({
+      url: '/api/v1/project-details',
+      data: { id },
+      success: function (data) {
+        $('#edit-project-detail-modal').modal('show');
+        var projectDetail = data.project_details[0];
+        var users = data.dropdown_data.users;
+        var vehicles = data.dropdown_data.vehicles;
+        var departments = data.dropdown_data.departments;
+        
+        // Obtener el select de los vehiculos y vaciar su contenido
+        const editVehiclesSelect = $('#edit-vehicle');
+        editVehiclesSelect.empty();
 
-  //      $("#edit-username").val(user.username);
-  //      $("#edit-names").val(user.names);
-  //      $("#edit-surnames").val(user.surnames);
-  //      $("#edit-id-number").val(user.id_number);
-  //      
-  //      // Obtener el select de roles y vaciar su contenido
-  //      const editRolesSelect = $('#edit-roles');
-  //      editRolesSelect.empty();
+        // Agregar una opción por cada vehiculo
+        vehicles.forEach(function(vehicle) {
+          const option = $('<option>')
+          .attr('value', vehicle.id)
+          .attr('data-problem', vehicle.problem)
+          .text(vehicle.license_plate + ' - ' + vehicle.brand + ' - ' +
+            vehicle.id_number + ' - ' + vehicle.names + ' ' + vehicle.surnames);
 
-  //      // Agregar una opción por cada rol
-  //      roles.forEach(function(role) {
-  //        const option = $('<option>')
-  //        .attr('value', role.id)
-  //        .text(role.name);
-  //  
-  //      // Si el rol es el actual, seleccionarlo por defecto
-  //      if (role.id === user.role_id) {
-  //        option.attr('selected', 'selected');
-  //      }
+          // Si el vehiculo es el actual, seleccionarlo por defecto
+          if (vehicle.id === projectDetail.vehicle_id) {
+            option.attr('selected', 'selected');
+          }
 
-  //      // Agregar la opción al select
-  //      editRolesSelect.append(option);
-  //    });
+          // Agregar la opción al select
+          editVehiclesSelect.append(option);
+        });
 
-  //      $("#edit-user-form").attr(
-  //        "action",
-  //        "/user-profiles/" + id + "/edit/"
-  //      );
-  //    },
-  //  });
-  //});
+        // Obtener el select de los departamentos y vaciar su contenido
+        const editDepartmentsSelect = $('#edit-department');
+        editDepartmentsSelect.empty();
 
-  // Eliminar usuario
-  //$(document).on("click", ".delete-user", function () {
-  //  var form = $(this);
-  //  id = form.attr("id").match(/\d+/)[0];
+        // Agregar una opción por cada departamento
+        departments.forEach(function(department) {
+          const option = $('<option>')
+          .attr('value', department.id)
+          .text(department.description);
 
-  //  $("#delete-user-modal").modal("show");
-  //  $("#delete-user-form").attr(
-  //    "action",
-  //    "/user-profiles/" + id + "/delete/");
-  //});
+          // Si el departamento es el actual, seleccionarlo por defecto
+          if (department.id === projectDetail.department_id) {
+            option.attr('selected', 'selected');
+          }
+
+          // Agregar la opción al select
+          editDepartmentsSelect.append(option);
+        });
+
+        // Obtener el select de los usuarios y vaciar su contenido
+        const editUsersSelect = $('#edit-manager');
+        editUsersSelect.empty();
+
+        // Agregar una opción por cada usuario
+        users.forEach(function(user) {
+          const option = $('<option>')
+          .attr('value', user.id)
+          .text(user.id_number + ' - ' + user.names + ' ' + user.surnames);
+
+          // Si el usuario es el actual, seleccionarlo por defecto
+          if (user.id === projectDetail.manager_id) {
+            option.attr('selected', 'selected');
+          }
+
+          // Agregar la opción al select
+          editUsersSelect.append(option);
+        });
+
+        // Set the initial value of the problem field based on the selected vehicle
+        updateProblemField('vehicle-select-edit', 'edit-problem-field');
+        
+        // Attach an event listener to update the problem field when the user selects a different vehicle
+        editVehiclesSelect.change(function() {
+          updateProblemField('vehicle-select-edit', 'edit-problem-field');
+        });
+
+        // Clear the problem field when the modal is closed
+        $('#edit-project-detail-modal').on('hidden.bs.modal', function () {
+          clearProblemField('edit-problem-field');
+        });
+
+
+        $('#edit-solution').val(projectDetail.solution);
+        $('#edit-amount').val(projectDetail.amount);
+        $('#edit-observations').val(projectDetail.observations);
+
+        $('#edit-project-detail-form').attr(
+          'action',
+          '/project-details/' + id + '/edit/'
+        );
+      },
+    });
+  });
 });
 
 // Actualizar el campo de problema al seleccionar un vehículo
-function updateProblemField() {
-  var vehicleSelect = document.getElementsByName('vehicle')[0];
+function updateProblemField(selectClass, selectId) {
+  var vehicleSelect = document.getElementsByClassName(selectClass)[0];
   var selectedVehicleOption = vehicleSelect.options[vehicleSelect.selectedIndex];
   var problem = selectedVehicleOption.getAttribute('data-problem');
 
-  var problemField = document.getElementById('problem-field');
+  var problemField = document.getElementById(selectId);
   problemField.innerHTML = '<label class="form-label" for="problem">Problema</label> <input type="text" class="form-control" name="problem" value="' + problem + '" readonly>';
 }
 
 // Limpiar el campo de problema
-function clearProblemField() {
-    var problemField = document.getElementById('problem-field');
-    problemField.innerHTML = '';
+function clearProblemField(selectId) {
+  var problemField = document.getElementById(selectId);
+  problemField.innerHTML = '';
 }
