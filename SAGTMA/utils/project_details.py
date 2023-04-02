@@ -1,6 +1,6 @@
 import re
 
-from SAGTMA.models import Project, Project_Detail, Vehicle, Department, User, db
+from SAGTMA.models import Project, ProjectDetail, Vehicle, Department, User, db
 from SAGTMA.utils import events
 
 
@@ -38,14 +38,20 @@ def validate_input_text(input_text: str, flag: bool):
         if flag:
             raise ProjectDetailError("La solucion debe tener entre 5 y 100 caracteres")
         else:
-            raise ProjectDetailError("Las observaciones deben tener entre 5 y 100 caracteres")
+            raise ProjectDetailError(
+                "Las observaciones deben tener entre 5 y 100 caracteres"
+            )
 
     regex = r"^[\w\s\-a-zA-Z0-9_.¡!,;:]*$"
     if not re.match(regex, input_text):
         if flag:
-            raise ProjectDetailError("La solucion solo puede contener caracteres alfanuméricos, guiones y espacios")
+            raise ProjectDetailError(
+                "La solucion solo puede contener caracteres alfanuméricos, guiones y espacios"
+            )
         else:
-            raise ProjectDetailError("Las observaciones solo pueden contener caracteres alfanuméricos, guiones y espacios")
+            raise ProjectDetailError(
+                "Las observaciones solo pueden contener caracteres alfanuméricos, guiones y espacios"
+            )
 
 
 # ========== Registro de detalle de proyecto ==========
@@ -56,7 +62,7 @@ def register_project_detail(
     manager: str,
     solution: str,
     amount: str,
-    observations: str
+    observations: str,
 ):
     """
     Registra un nuevo detalle de proyecto en la base de datos.
@@ -88,10 +94,11 @@ def register_project_detail(
         raise ProjectDetailError("El proyecto no existe")
     project = project_query[0]
 
-
     # Verifica que el id del vehículo es un número entero positivo
     if not vehicle.isdigit():
-        raise ProjectDetailError("El id del vehículo debe ser un número entero positivo")
+        raise ProjectDetailError(
+            "El id del vehículo debe ser un número entero positivo"
+        )
     vehicle_id = int(vehicle)
 
     # Verifica que el vehículo exista
@@ -101,14 +108,16 @@ def register_project_detail(
 
     # Verifica que el id del departamento es un número entero positivo
     if not department.isdigit():
-        raise ProjectDetailError("El id del departamento debe ser un número entero positivo")
+        raise ProjectDetailError(
+            "El id del departamento debe ser un número entero positivo"
+        )
     department_id = int(department)
 
     # Verifica que el departamento exista
     smt = db.select(Department).where(Department.id == department_id)
     if not db.session.execute(smt).first():
         raise ProjectDetailError("El departamento no existe")
-    
+
     # Verifica que el id del gerente es un número entero positivo
     if not manager.isdigit():
         raise ProjectDetailError("El id del gerente debe ser un número entero positivo")
@@ -125,7 +134,7 @@ def register_project_detail(
     validate_input_text(observations, False)
 
     # Crea el nuevo detalle de proyecto
-    project_detail = Project_Detail(
+    project_detail = ProjectDetail(
         project_id,
         vehicle_id,
         department_id,
@@ -140,19 +149,20 @@ def register_project_detail(
 
     # Registra el evento en la base de datos
     events.add_event(
-            "Datos de proyectos", f"Agregar dato de proyecto para el proyecto {project.description}"
+        "Datos de proyectos",
+        f"Agregar dato de proyecto para el proyecto {project.description}",
     )
 
 
 # ========== Edición de detalle de proyecto ==========
 def edit_project_detail(
-    detail_id: int, 
+    detail_id: int,
     vehicle: str,
     department: str,
     manager: str,
     solution: str,
     amount: str,
-    observations: str
+    observations: str,
 ):
     """
     Edita un detalle de proyecto en la base de datos.
@@ -178,7 +188,7 @@ def edit_project_detail(
         raise ProjectDetailError("Todos los campos son obligatorios")
 
     # Verifica que el detalle de proyecto exista
-    smt = db.select(Project_Detail).where(Project_Detail.id == detail_id)
+    smt = db.select(ProjectDetail).where(ProjectDetail.id == detail_id)
     detail_query = db.session.execute(smt).first()
     if not detail_query:
         raise ProjectDetailError("El detalle de proyecto no existe")
@@ -186,7 +196,9 @@ def edit_project_detail(
 
     # Verifica que el id del vehículo es un número entero positivo
     if not vehicle.isdigit():
-        raise ProjectDetailError("El id del vehículo debe ser un número entero positivo")
+        raise ProjectDetailError(
+            "El id del vehículo debe ser un número entero positivo"
+        )
     vehicle_id = int(vehicle)
 
     # Verifica que el vehículo exista
@@ -196,7 +208,9 @@ def edit_project_detail(
 
     # Verifica que el id del departamento es un número entero positivo
     if not department.isdigit():
-        raise ProjectDetailError("El id del departamento debe ser un número entero positivo")
+        raise ProjectDetailError(
+            "El id del departamento debe ser un número entero positivo"
+        )
     department_id = int(department)
 
     # Verifica que el departamento exista
@@ -229,7 +243,7 @@ def edit_project_detail(
 
     # Registra el evento en la base de datos
     events.add_event(
-            "Datos de proyectos", f"Editar dato de proyecto {edited_detail.id}"
+        "Datos de proyectos", f"Editar dato de proyecto {edited_detail.id}"
     )
 
 
@@ -242,7 +256,7 @@ def delete_project_detail(detail_id: int):
         -El detalle de proyecto no existe
     """
     # Selecciona el detalle de proyecto con el id indicado y virifica que exista
-    smt = db.select(Project_Detail).where(Project_Detail.id == detail_id)
+    smt = db.select(ProjectDetail).where(ProjectDetail.id == detail_id)
     detail_query = db.session.execute(smt).first()
     if not detail_query:
         raise ProjectDetailError("El detalle de proyecto no existe")
@@ -253,5 +267,6 @@ def delete_project_detail(detail_id: int):
 
     # Registra el evento en la base de datos
     events.add_event(
-        "Datos de proyectos", f"Eliminar dato de proyecto {detail.id} del proyecto {detail.project.description}"
+        "Datos de proyectos",
+        f"Eliminar dato de proyecto {detail.id} del proyecto {detail.project.description}",
     )

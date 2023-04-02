@@ -166,13 +166,13 @@
                     <button
                       type="button"
                       class="my-2 btn {% if project.active %}
-                        btn-primary 
-                        {% else %}
+                        btn-primary
+                      {% else %}
                         btn-secondary
-                        {% endif %}" 
-                        {% if not project.active %} disabled {% endif %}
+                      {% endif %}"
+                      {% if not project.active %}disabled{% endif %}
                     >
-                      <img src="{{ url_for('static', filename='img/detail.svg') }}" width="24" height="24" fill="white" class="table-button" style="border-radius: 5px;" title="Ver Datos"/>
+                      <img src="{{ url_for('static', filename='img/detail.svg') }}" width="24" height="24" fill="white" class="table-button" style="border-radius: 5px;" title="Ver Datos" />
                     </button>
                   </a>
 

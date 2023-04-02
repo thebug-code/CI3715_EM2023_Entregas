@@ -123,15 +123,11 @@ def register_user(
     role = query_role[0]
 
     # Crea el usuario en la base de datos
-    new_user = User(
-        id_number, username, names, surnames, hash_password(password), role
-    )
+    new_user = User(id_number, username, names, surnames, hash_password(password), role)
     db.session.add(new_user)
 
     # Registra el evento en la base de datos
-    events.add_event(
-        "Perfiles de Usuarios", f"Agregar usuario '{new_user.username}'"
-    )
+    events.add_event("Perfiles de Usuarios", f"Agregar usuario '{new_user.username}'")
 
 
 # ========== Obtención de datos ==========
@@ -143,12 +139,7 @@ def get_current_user(user_id: int) -> User:
 
 # ========== Edición de datos ==========
 def edit_user(
-    user_id: int,
-    id_number: str,
-    username: str,
-    names: str,
-    surnames: str,
-    role_id: str
+    user_id: int, id_number: str, username: str, names: str, surnames: str, role_id: str
 ):
     """
     Modifica los datos de un usuario en la base de datos.
@@ -180,20 +171,12 @@ def edit_user(
     new_role = rol_query[0]
 
     # Verifica si existe un usuario distinto con el mismo nombre de usuario
-    stmt = (
-        db.select(User)
-        .where(User.username == username)
-        .where(User.id != user_id)
-    )
+    stmt = db.select(User).where(User.username == username).where(User.id != user_id)
     if db.session.execute(stmt).first():
         raise ProfileError("El nombre de usuario ya existe")
 
     # Verifica si existe un usuario distinto con el mismo id_number
-    stmt = (
-        db.select(User)
-        .where(User.id_number == id_number)
-        .where(User.id != user_id)
-    )
+    stmt = db.select(User).where(User.id_number == id_number).where(User.id != user_id)
     if db.session.execute(stmt).first():
         raise ProfileError("El número de identificación ya existe")
 

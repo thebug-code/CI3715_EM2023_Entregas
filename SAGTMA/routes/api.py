@@ -3,7 +3,14 @@ from flask import current_app, request, json
 from SAGTMA.utils.decorators import login_required, requires_roles
 
 from SAGTMA.models import (
-    User, Project, Client, Vehicle, Department, Role, Project_Detail, db
+    User,
+    Project,
+    Client,
+    Vehicle,
+    Department,
+    Role,
+    ProjectDetail,
+    db,
 )
 
 
@@ -156,7 +163,7 @@ def api_departments():
     return depts
 
 
-@current_app.route('/api/v1/project-details-dropdown-data', methods=['GET'])
+@current_app.route("/api/v1/project-details-dropdown-data", methods=["GET"])
 @login_required
 @requires_roles("Gerente de Operaciones")
 def get_project_details_dropdown_data():
@@ -164,76 +171,61 @@ def get_project_details_dropdown_data():
     stmt = db.select(User)
     result = db.session.execute(stmt).fetchall()
     users = [
-        {
-            'id': u.id,
-            'names': u.names,
-            'surnames': u.surnames,
-            'id_number': u.id_number
-        } 
+        {"id": u.id, "names": u.names, "surnames": u.surnames, "id_number": u.id_number}
         for u, in result
     ]
 
     # SELECT * FROM department
     stmt = db.select(Department)
     result = db.session.execute(stmt).fetchall()
-    departments = [
-        {
-            'id': d.id,
-            'description': d.description
-        }
-        for d, in result
-    ]
+    departments = [{"id": d.id, "description": d.description} for d, in result]
 
     # SELECT * FROM vehicle
     stmt = db.select(Vehicle)
     result = db.session.execute(stmt).fetchall()
     vehicles = [
         {
-            'id': v.id,
-            'license_plate': v.license_plate,
-            'brand': v.brand,
-            'id_number': v.owner.id_number,
-            'names': v.owner.names,
-            'surnames': v.owner.surnames,
-            'problem': v.problem
+            "id": v.id,
+            "license_plate": v.license_plate,
+            "brand": v.brand,
+            "id_number": v.owner.id_number,
+            "names": v.owner.names,
+            "surnames": v.owner.surnames,
+            "problem": v.problem,
         }
         for v, in result
     ]
 
-    data = {
-        'users': users,
-        'departments': departments,
-        'vehicles': vehicles
-    }
-    
+    data = {"users": users, "departments": departments, "vehicles": vehicles}
+
     return data
 
 
-@current_app.route('/api/v1/project-details', methods=['GET'])
+@current_app.route("/api/v1/project-details", methods=["GET"])
 @login_required
 @requires_roles("Gerente de Operaciones")
 def api_project_details():
     # SELECT * FROM project_detail
-    stmt = db.select(Project_Detail)
+    stmt = db.select(ProjectDetail)
 
     # Obtiene los parámetros de la request para filtrar por id
     # y filtra de ser necesario
     project_detail_id = request.args.get("id")
     if project_detail_id:
-        stmt = stmt.where(Project_Detail.id == project_detail_id)
+        stmt = stmt.where(ProjectDetail.id == project_detail_id)
 
     # Consulta los detalles de proyecto requeridos
     result = db.session.execute(stmt).fetchall()
     project_details = [
         {
-            'id': pd.id,
-            'project_id': pd.project.id,
-            'manager_id': pd.manager.id,
-            'department_id': pd.department.id,
-            'vehicle_id': pd.vehicle.id,
-            'solution': pd.solution,
-            'amount': pd.amount,
-            'observations': pd.observations,
+            "id": pd.id,
+            "project_id": pd.project.id,
+            "manager_id": pd.manager.id,
+            "department_id": pd.department.id,
+            "vehicle_id": pd.vehicle.id,
+            "solution": pd.solution,
+            "amount": pd.amount,
+            "observations": pd.observations,
         }
         for pd, in result
     ]
@@ -241,7 +233,4 @@ def api_project_details():
     # Obtiene los datos del dropdown
     data = get_project_details_dropdown_data()
 
-    return {
-        'project_details': project_details,
-        'dropdown_data': data
-    }
+    return {"project_details": project_details, "dropdown_data": data}

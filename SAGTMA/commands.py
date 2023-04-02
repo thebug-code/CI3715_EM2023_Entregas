@@ -57,7 +57,7 @@ def populate_db():
     # Añade usuarios dummy de distintos roles
     names = ["Juan", "Pedro", "Pablo", "Luis", "Carlos", "Jorge", "Miguel"]
     surnames = ["Pérez", "González", "Gómez", "Rodríguez", "López", "Martínez"]
-    prefixes = ['V', 'E', 'J', 'G', 'C']
+    prefixes = ["V", "E", "J", "G", "C"]
     id_numbers = [
         f"{choice(prefixes)}-{randint(10000000, 99999999)}" for _ in range(10)
     ]

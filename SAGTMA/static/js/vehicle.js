@@ -19,10 +19,7 @@ $(document).ready(function () {
         $("#edit-engine-number").val(client.engine_number);
         $("#edit-color").val(client.color);
         $("#edit-problem").val(client.problem);
-        $("#edit-vehicle-form").attr(
-          "action",
-          "/client-details/" + id + "/edit/"
-        );
+        $("#edit-vehicle-form").attr("action", "/client-details/" + id + "/edit/");
       },
     });
   });
@@ -33,9 +30,6 @@ $(document).ready(function () {
     id = form.attr("id").match(/\d+/)[0];
 
     $("#delete-vehicle-modal").modal("show");
-    $("#delete-vehicle-form").attr(
-      "action",
-      "/client-details/" + id + "/delete/"
-    );
+    $("#delete-vehicle-form").attr("action", "/client-details/" + id + "/delete/");
   });
 });

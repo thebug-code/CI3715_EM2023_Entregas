@@ -16,30 +16,25 @@ $(document).ready(function () {
         $("#edit-names").val(user.names);
         $("#edit-surnames").val(user.surnames);
         $("#edit-id-number").val(user.id_number);
-        
+
         // Obtener el select de roles y vaciar su contenido
-        const editRolesSelect = $('#edit-roles');
+        const editRolesSelect = $("#edit-roles");
         editRolesSelect.empty();
 
         // Agregar una opción por cada rol
-        roles.forEach(function(role) {
-          const option = $('<option>')
-          .attr('value', role.id)
-          .text(role.name);
-    
-        // Si el rol es el actual, seleccionarlo por defecto
-        if (role.id === user.role_id) {
-          option.attr('selected', 'selected');
-        }
+        roles.forEach(function (role) {
+          const option = $("<option>").attr("value", role.id).text(role.name);
 
-        // Agregar la opción al select
-        editRolesSelect.append(option);
-      });
+          // Si el rol es el actual, seleccionarlo por defecto
+          if (role.id === user.role_id) {
+            option.attr("selected", "selected");
+          }
 
-        $("#edit-user-form").attr(
-          "action",
-          "/user-profiles/" + id + "/edit/"
-        );
+          // Agregar la opción al select
+          editRolesSelect.append(option);
+        });
+
+        $("#edit-user-form").attr("action", "/user-profiles/" + id + "/edit/");
       },
     });
   });
@@ -50,8 +45,6 @@ $(document).ready(function () {
     id = form.attr("id").match(/\d+/)[0];
 
     $("#delete-user-modal").modal("show");
-    $("#delete-user-form").attr(
-      "action",
-      "/user-profiles/" + id + "/delete/");
+    $("#delete-user-form").attr("action", "/user-profiles/" + id + "/delete/");
   });
 });

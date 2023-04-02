@@ -26,7 +26,7 @@ def client_details() -> Response:
 
     if request.method == "POST":
         # Obtiene los datos del formulario
-        client = request.form.get("client-filter", '').lower().strip()
+        client = request.form.get("client-filter", "").lower().strip()
 
         if client:
             # WHERE (names || surnames) LIKE '%client%' OR
@@ -60,13 +60,13 @@ def client_details() -> Response:
 def register_client() -> Response:
     """Registra un cliente en la base de datos."""
     # Obtiene los datos del formulario
-    id_number = request.form.get("id-number", '')
-    names = request.form.get("names", '')
-    surnames = request.form.get("surnames", '')
-    birthdate = request.form.get("birthdate", '')
-    phone_number = request.form.get("phone-number", '')
-    email = request.form.get("email", '')
-    address = request.form.get("address", '')
+    id_number = request.form.get("id-number", "")
+    names = request.form.get("names", "")
+    surnames = request.form.get("surnames", "")
+    birthdate = request.form.get("birthdate", "")
+    phone_number = request.form.get("phone-number", "")
+    email = request.form.get("email", "")
+    address = request.form.get("address", "")
 
     try:
         clients.register_client(
@@ -87,13 +87,13 @@ def register_client() -> Response:
 def edit_client(client_id):
     """Modifica los datos de un cliente en la base de datos"""
     # Obtiene los datos del formulario
-    id_number = request.form.get("id-number", '')
-    names = request.form.get("names", '')
-    surnames = request.form.get("surnames", '')
-    birthdate = request.form.get("birthdate", '')
-    phone_number = request.form.get("phone-number", '')
-    email = request.form.get("email", '')
-    address = request.form.get("address", '')
+    id_number = request.form.get("id-number", "")
+    names = request.form.get("names", "")
+    surnames = request.form.get("surnames", "")
+    birthdate = request.form.get("birthdate", "")
+    phone_number = request.form.get("phone-number", "")
+    email = request.form.get("email", "")
+    address = request.form.get("address", "")
 
     try:
         clients.edit_client(
@@ -157,7 +157,7 @@ def client_vehicles(client_id: int) -> Response:
     if not client_query:
         flash("El cliente indicado no existe")
         return redirect(url_for("client_details"))
-    # Obtiene el cliente 
+    # Obtiene el cliente
     client = client_query[0]
 
     # Obtiene los vehículos del cliente
@@ -205,14 +205,14 @@ def client_vehicles(client_id: int) -> Response:
 @requires_roles("Analista de Operaciones")
 def register_client_vehicle(client_id: int) -> Response:
     """Registra un vehiculo de un cliente en la base de datos."""
-    license_plate = request.form.get("license-plate", '')
-    brand = request.form.get("brand", '')
-    model = request.form.get("model", '')
-    year = request.form.get("year", '')
-    body_number = request.form.get("body-number", '')
-    engine_number = request.form.get("engine-number", '')
-    color = request.form.get("color", '')
-    problem = request.form.get("problem", '')
+    license_plate = request.form.get("license-plate", "")
+    brand = request.form.get("brand", "")
+    model = request.form.get("model", "")
+    year = request.form.get("year", "")
+    body_number = request.form.get("body-number", "")
+    engine_number = request.form.get("engine-number", "")
+    color = request.form.get("color", "")
+    problem = request.form.get("problem", "")
 
     try:
         vehicles.register_client_vehicle(
@@ -241,14 +241,14 @@ def register_client_vehicle(client_id: int) -> Response:
 def edit_client_vehicle(vehicle_id) -> Response:
     """Modifica los datos de un vehiculo de un cliente de la base de datos"""
     # Obtiene los datos del formulario
-    license_plate = request.form.get("license-plate", '')
-    brand = request.form.get("brand", '')
-    model = request.form.get("model", '')
-    year = request.form.get("year", '')
-    body_number = request.form.get("body-number", '')
-    engine_number = request.form.get("engine-number", '')
-    color = request.form.get("color", '')
-    problem = request.form.get("problem", '')
+    license_plate = request.form.get("license-plate", "")
+    brand = request.form.get("brand", "")
+    model = request.form.get("model", "")
+    year = request.form.get("year", "")
+    body_number = request.form.get("body-number", "")
+    engine_number = request.form.get("engine-number", "")
+    color = request.form.get("color", "")
+    problem = request.form.get("problem", "")
     client_id = int(request.form.get("client-id"))
 
     try:

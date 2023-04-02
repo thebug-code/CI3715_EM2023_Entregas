@@ -208,7 +208,7 @@ def edit_client(
     edited_client.phone_number = phone_number
     edited_client.email = email
     edited_client.address = address
-    
+
     # Registra el evento en la base de datos
     events.add_event("Detalles de los Clientes", f"Modificar cliente '{id_number}'")
 

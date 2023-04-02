@@ -77,7 +77,7 @@ def delete_dept(dept_id: int):
 
     # Elimina el departamento de la base de datos
     db.session.delete(dept)
-    
+
     # Registra el evento en la base de datos
     events.add_event(
         "Departamentos del Taller", f"Eliminar departamento '{dept.description}'"
@@ -121,5 +121,6 @@ def edit_dept(dept_id: int, description: str):
 
     # Registra el evento en la base de datos
     events.add_event(
-        "Departamentos del Taller", f"Modificar departamento '{edited_dept.description}'"
+        "Departamentos del Taller",
+        f"Modificar departamento '{edited_dept.description}'",
     )

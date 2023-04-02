@@ -18,36 +18,32 @@
           <form method="post" id="add-project-detail-form">
             <div class="mb-3">
               <label for="vehicle" class="form-label">Vehículo</label>
-              <select class="form-select vehicle-select-add" aria-label="Default select example" name="vehicle" id="add-vehicle">
-              </select>
+              <select class="form-select vehicle-select-add" aria-label="Default select example" name="vehicle" id="add-vehicle"></select>
             </div>
             <div class="mb-3">
               <label class="form-label" for="department">Departamento</label>
-              <select class="form-select" aria-label="Default select example" name="department" id="add-department">
-              </select>
+              <select class="form-select" aria-label="Default select example" name="department" id="add-department"></select>
             </div>
             <div class="mb-3">
               <label class="form-label" for="manager">Gerente de proyecto</label>
-              <select class="form-select" aria-label="Default select example" name="manager" id="add-manager">
-              </select>
+              <select class="form-select" aria-label="Default select example" name="manager" id="add-manager"></select>
             </div>
-            <div class="mb-3" id="add-problem-field">
-            </div>
+            <div class="mb-3" id="add-problem-field"></div>
             <div class="mb-3">
               <label for="solution" class="form-label">Solución</label>
-              <input type="text" class="form-control" id="add-solution" name="solution" placeholder="Ingrese la solución del problema" required>
+              <input type="text" class="form-control" id="add-solution" name="solution" placeholder="Ingrese la solución del problema" required />
             </div>
             <div class="mb-3">
               <label for="amount" class="form-label">Monto</label>
-              <input type="number" class="form-control" id="add-amount" name="amount" placeholder="Ingrese el monto del proyecto" required>
+              <input type="number" class="form-control" id="add-amount" name="amount" placeholder="Ingrese el monto del proyecto" required />
             </div>
             <div class="mb-3">
               <label for="observations" class="form-label">Observaciones</label>
-              <input type="text" class="form-control" id="add-observation" name="observations" placeholder="Ingrese las observaciones del proyecto" required>
+              <input type="text" class="form-control" id="add-observation" name="observations" placeholder="Ingrese las observaciones del proyecto" required />
             </div>
 
             {# Id del proyecto #}
-            <input type="hidden" name="project-id" value="{{ project.id }}">
+            <input type="hidden" name="project-id" value="{{ project.id }}" />
 
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -58,7 +54,6 @@
       </div>
     </div>
   </div>
-
 
   {# Modal editar detalle de proyecto #}
   <div class="modal fade" id="edit-project-detail-modal" tabindex="-1" role="dialog" aria-labelledby="EditModalLabel" aria-hidden="true">
@@ -72,36 +67,32 @@
           <form method="post" id="edit-project-detail-form">
             <div class="mb-3">
               <label for="vehicle" class="form-label">Vehículo</label>
-              <select class="form-select vehicle-select-edit" aria-label="Default select example" name="vehicle" id="edit-vehicle">
-              </select>
+              <select class="form-select vehicle-select-edit" aria-label="Default select example" name="vehicle" id="edit-vehicle"></select>
             </div>
             <div class="mb-3">
               <label class="form-label" for="department">Departamento</label>
-              <select class="form-select" aria-label="Default select example" name="department" id="edit-department">
-              </select>
+              <select class="form-select" aria-label="Default select example" name="department" id="edit-department"></select>
             </div>
             <div class="mb-3">
               <label class="form-label" for="manager">Gerente de proyecto</label>
-              <select class="form-select" aria-label="Default select example" name="manager" id="edit-manager">
-              </select>
+              <select class="form-select" aria-label="Default select example" name="manager" id="edit-manager"></select>
             </div>
-            <div class="mb-3" id="edit-problem-field">
-            </div>
+            <div class="mb-3" id="edit-problem-field"></div>
             <div class="mb-3">
               <label for="solution" class="form-label">Solución</label>
-              <input type="text" class="form-control" id="edit-solution" name="solution" placeholder="Ingrese la solución del problema" required>
+              <input type="text" class="form-control" id="edit-solution" name="solution" placeholder="Ingrese la solución del problema" required />
             </div>
             <div class="mb-3">
               <label for="amount" class="form-label">Monto</label>
-              <input type="number" class="form-control" id="edit-amount" name="amount" placeholder="Ingrese el monto del proyecto" required>
+              <input type="number" class="form-control" id="edit-amount" name="amount" placeholder="Ingrese el monto del proyecto" required />
             </div>
             <div class="mb-3">
               <label for="observations" class="form-label">Observaciones</label>
-              <input type="text" class="form-control" id="edit-observations" name="observations" placeholder="Ingrese las observaciones del proyecto" required>
+              <input type="text" class="form-control" id="edit-observations" name="observations" placeholder="Ingrese las observaciones del proyecto" required />
             </div>
 
             {# Id del proyecto #}
-            <input type="hidden" name="project-id" value="{{ project.id }}">
+            <input type="hidden" name="project-id" value="{{ project.id }}" />
 
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -129,7 +120,7 @@
           <form method="post" id="delete-project-detail-form" class="d-inline">
             <button type="submit" class="btn btn-danger">Eliminar</button>
             {# Id del proyecto #}
-            <input type="hidden" name="project-id" value="{{ project.id }}">
+            <input type="hidden" name="project-id" value="{{ project.id }}" />
           </form>
         </div>
       </div>
@@ -147,7 +138,7 @@
           </button>
 
           {# Boton de agregar datos del proyecto #}
-          <button type="button" class="btn btn-primary add-project-detail" style="border-radius: 5px;margin-left: 10px;" data-bs-toggle="modal" id=add-detail{{ project.id }}>
+          <button type="button" class="btn btn-primary add-project-detail" style="border-radius: 5px;margin-left: 10px;" data-bs-toggle="modal" id="add-detail{{ project.id }}">
             <img src="{{ url_for('static', filename='img/add.svg') }}" width="40" height="40" fill="white" class="table-button" value="submit" style="border-radius: 5px;" />
           </button>
         </div>
@@ -192,7 +183,6 @@
                 <td>{{ detail.observations }}</td>
                 <td>
                   {# Boton de presupuesto #}
-
                   {# Botón de modificar #}
                   <button id="edit{{ detail.id }}" type="button" class="btn btn-primary my-2 edit-project-detail" data-bs-toggle="modal">
                     <img src="{{ url_for('static', filename='img/edit.svg') }}" width="24" height="24" fill="white" class="table-button" value="submit" style="border-radius: 5px;" title="Modificar dato del proyecto" />
@@ -213,4 +203,3 @@
 
   <script src="{{ url_for('static', filename='js/project_details.js') }}"></script>
 {% endblock %}
-

@@ -166,13 +166,13 @@
                     <button
                       type="button"
                       class="my-2 btn {% if project.active %}
-                        btn-primary 
-                        {% else %}
+                        btn-primary
+                      {% else %}
                         btn-secondary
-                        {% endif %}" 
-                        {% if not project.active %} disabled {% endif %}
+                      {% endif %}"
+                      {% if not project.active %}disabled{% endif %}
                     >
-                      <img src="{{ url_for('static', filename='img/detail.svg') }}" width="24" height="24" fill="white" class="table-button" style="border-radius: 5px;" title="Ver Datos"/>
+                      <img src="{{ url_for('static', filename='img/detail.svg') }}" width="24" height="24" fill="white" class="table-button" style="border-radius: 5px;" title="Ver Datos" />
                     </button>
                   </a>
 
@@ -186,7 +186,7 @@
                       btn-secondary
                     {% endif %} edit-project"
                     data-toggle="modal"
-                    {% if not project.active %} disabled {% endif %}
+                    {% if not project.active %}disabled{% endif %}
                   >
                     <img src="{{ url_for('static', filename='img/edit.svg') }}" width="24" height="24" fill="white" class="table-button" value="submit" style="border-radius: 5px;" title="Modificar proyecto" />
                   </button>
@@ -217,12 +217,7 @@
                     </button>
                   {% endif %}
                   {# Imprimir #}
-                  <button
-                    type="button"
-                    id="print{{ project.id }}"
-                    class="my-2 btn btn-primary"
-                    data-toggle="modal"
-                  >
+                  <button type="button" id="print{{ project.id }}" class="my-2 btn btn-primary" data-toggle="modal">
                     <img src="{{ url_for('static', filename='img/print.svg') }}" width="24" height="24" fill="white" class="table-button" value="submit" style="border-radius: 5px;" title="Imprimir proyecto" />
                   </button>
                 </td>

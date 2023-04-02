@@ -24,7 +24,7 @@ def users_profiles() -> Response:
 
     if request.method == "POST":
         # Obtiene los datos del formulario
-        user = request.form.get("user-filter", '').lower().strip()
+        user = request.form.get("user-filter", "").lower().strip()
         role = request.form.get("role-filter")
 
         if user:
@@ -61,13 +61,13 @@ def users_profiles() -> Response:
 def register() -> Response:
     """Registra un usuario en la base de datos."""
     # Obtiene los datos del formulario
-    id_number = request.form.get("id-number", '')
-    username = request.form.get("username", '')
-    names = request.form.get("names", '')
-    surnames = request.form.get("surnames", '')
-    password = request.form.get("password", '')
-    confirm_password = request.form.get("confirm-password", '')
-    role = request.form.get("role", '')
+    id_number = request.form.get("id-number", "")
+    username = request.form.get("username", "")
+    names = request.form.get("names", "")
+    surnames = request.form.get("surnames", "")
+    password = request.form.get("password", "")
+    confirm_password = request.form.get("confirm-password", "")
+    role = request.form.get("role", "")
 
     try:
         profiles.register_user(
@@ -101,11 +101,11 @@ def delete_user(user_id: int) -> Response:
 def edit_user(user_id: int) -> Response:
     """Modifica los datos de un usuario en la base de datos."""
     # Obtiene los datos del formulario
-    id_number = request.form.get("id-number", '')
-    username = request.form.get("username", '')
-    names = request.form.get("names", '')
-    surnames = request.form.get("surnames", '')
-    role = request.form.get("role", '')
+    id_number = request.form.get("id-number", "")
+    username = request.form.get("username", "")
+    names = request.form.get("names", "")
+    surnames = request.form.get("surnames", "")
+    role = request.form.get("role", "")
 
     try:
         profiles.edit_user(user_id, id_number, username, names, surnames, role)
@@ -128,7 +128,7 @@ def edit_user(user_id: int) -> Response:
 def logger() -> Response:
     if request.method == "POST":
         # Obtiene los datos del formulario
-        event = request.form.get("event-filter", '').lower().strip()
+        event = request.form.get("event-filter", "").lower().strip()
 
         # SELECT * FROM event JOIN user ON event.user_id = user.id
         stmt = db.select(Event).join(User, Event.user_id == User.id)
@@ -179,7 +179,7 @@ def ws_depts() -> Response:
 
     if request.method == "POST":
         # Obtiene los datos del formulario
-        dept = request.form.get("dept-filter", '').lower().strip()
+        dept = request.form.get("dept-filter", "").lower().strip()
 
         if dept:
             # WHERE description LIKE '%dept%'
@@ -198,7 +198,7 @@ def ws_depts() -> Response:
 @requires_roles("Administrador")
 def register_dept() -> Response:
     """Registra un departamento en la base de datos."""
-    description = request.form.get("description", '')
+    description = request.form.get("description", "")
 
     try:
         departments.register_dept(description)
@@ -230,7 +230,7 @@ def delete_dept(dept_id: int) -> Response:
 @requires_roles("Administrador")
 def edit_dept(dept_id: int) -> Response:
     """Modifica un departamento en la base de datos"""
-    description = request.form.get("description", '')
+    description = request.form.get("description", "")
 
     try:
         departments.edit_dept(dept_id, description)

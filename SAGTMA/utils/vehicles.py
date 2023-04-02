@@ -107,6 +107,7 @@ def validate_year(year: str) -> int:
 
     return year
 
+
 # ========== Registro de Vehiculos ==========
 def register_client_vehicle(
     client_id: int,
@@ -152,7 +153,7 @@ def register_client_vehicle(
         raise VehicleError(
             "La descripción del problema no puede tener más de 120 caracteres"
         )
-    
+
     # Verifica si ya existe un vehiculo con la misma placa
     stmt = db.select(Vehicle).where(Vehicle.license_plate == license_plate)
     if db.session.execute(stmt).first():
@@ -163,14 +164,13 @@ def register_client_vehicle(
         license_plate, brand, model, year, body_number, engine_number, color, problem
     )
 
-
     # Seleciona el cliente con el id indicado y verifica que exista
     stmt = db.select(Client).where(Client.id == client_id)
     client_query = db.session.execute(stmt).first()
     if not client_query:
         raise VehicleError("El cliente indicado no existe")
     client = client_query[0]
-    
+
     # Anade el vehiculo a la lista de vehiculos del cliente
     client.vehicles.append(new_vehicle)
 
@@ -279,5 +279,5 @@ def delete_vehicle(vehicle_id: int) -> int:
     # Registra el evento en la base de datos
     events.add_event(
         "Vehículos de los Clientes",
-        f"Eliminar vehiculo '{deleted_vehicle.brand}' del cliente '{deleted_vehicle.owner.id_number}'", 
+        f"Eliminar vehiculo '{deleted_vehicle.brand}' del cliente '{deleted_vehicle.owner.id_number}'",
     )

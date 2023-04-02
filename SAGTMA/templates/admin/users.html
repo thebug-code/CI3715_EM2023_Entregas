@@ -2,12 +2,12 @@
 {% set active_page = "profiles" %}
 {% block title %}Perfiles de Usuarios{% endblock %}
 {% block content %}
-{# Título de la página centrado en una barra #}
+  {# Título de la página centrado en una barra #}
   <div class="d-flex justify-content-center my-4">
     <h1 class="title-container">Perfiles de Usuarios</h1>
   </div>
 
-    {# Modal de registrar usuario #}
+  {# Modal de registrar usuario #}
   <div class="modal fade" id="add-user-modal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
@@ -87,8 +87,7 @@
             </div>
             <div class="mb-3">
               <label for="edit-roles" class="form-label">Rol</label>
-              <select id="edit-roles" class="form-select" name="role">
-              </select>
+              <select id="edit-roles" class="form-select" name="role"></select>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -120,7 +119,7 @@
         </div>
       </div>
     </div>
-  </div> 
+  </div>
 
   <div class="container">
     {# Barra de filtro de usuarios #}
@@ -168,7 +167,7 @@
             </tr>
           </thead>
           <tbody>
-            {% for user in users %} 
+            {% for user in users %}
               {# Filas de la tabla #}
               <tr>
                 <td>{{ user.id }}</td>
@@ -201,7 +200,7 @@
                   </button>
 
                   {# Botón de eliminar #}
-                  <button id="delete{{ user.id }} type="button" class="btn btn-primary delete-user" data-bs-toggle="modal">
+                  <button id="delete{{ user.id }}" type="button" class="btn btn-primary delete-user" data-bs-toggle="modal">
                     <img src="{{ url_for('static', filename='img/delete.svg') }}" width="24" height="24" fill="white" class="table-button" value="submit" style="border-radius: 5px;" title="Eliminar usuario" />
                   </button>
                 </td>

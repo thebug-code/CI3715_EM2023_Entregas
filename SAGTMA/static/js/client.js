@@ -18,10 +18,7 @@ $(document).ready(function () {
         $("#edit-phone-number").val(client.phone_number);
         $("#edit-email").val(client.email);
         $("#edit-address").val(client.address);
-        $("#edit-client-form").attr(
-          "action",
-          "/client-details/edit/" + id + "/"
-        );
+        $("#edit-client-form").attr("action", "/client-details/edit/" + id + "/");
       },
     });
   });
@@ -32,9 +29,6 @@ $(document).ready(function () {
     id = form.attr("id").match(/\d+/)[0];
 
     $("#delete-client-modal").modal("show");
-    $("#delete-client-form").attr(
-      "action",
-      "/client-details/delete/" + id + "/"
-    );
+    $("#delete-client-form").attr("action", "/client-details/delete/" + id + "/");
   });
 });

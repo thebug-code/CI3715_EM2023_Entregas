@@ -152,7 +152,9 @@ def delete_project(project_id: int):
     db.session.delete(deleted_project)
 
     # Registra el evento en la base de datos
-    events.add_event("Portafolio de Proyectos", f"Eliminar '{deleted_project.description}'")
+    events.add_event(
+        "Portafolio de Proyectos", f"Eliminar '{deleted_project.description}'"
+    )
 
 
 # ========== Cambio de estado de Proyectos ==========

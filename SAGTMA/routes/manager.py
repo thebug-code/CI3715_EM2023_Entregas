@@ -11,7 +11,7 @@ from flask import (
 from SAGTMA.utils import projects, events, project_details
 from SAGTMA.utils.decorators import login_required, requires_roles
 
-from SAGTMA.models import Project, Project_Detail, Vehicle, Department, User, db
+from SAGTMA.models import Project, ProjectDetail, Vehicle, Department, User, db
 
 
 # ========== Gerente de Operaciones ==========
@@ -21,8 +21,8 @@ def portfolio() -> Response:
     """Muestra la lista de proyectos anadidos en el sistema"""
     if request.method == "POST":
         # Obtiene los datos del formulario
-        descrip = request.form.get("descrip-filter", '').lower().strip()
-        
+        descrip = request.form.get("descrip-filter", "").lower().strip()
+
         # WHERE description LIKE '%descrip%'
         stmt = db.select(Project).where(Project.description.like(f"%{descrip}%"))
 
@@ -44,9 +44,9 @@ def portfolio() -> Response:
 def create_project() -> Response:
     """Crear y anade un proyecto en la base de datos."""
     # Obtiene los datos del formulario
-    description = request.form.get("description", '')
-    start_date = request.form.get("start-date", '')
-    deadline = request.form.get("deadline", '')
+    description = request.form.get("description", "")
+    start_date = request.form.get("start-date", "")
+    deadline = request.form.get("deadline", "")
 
     try:
         projects.create_project(description, start_date, deadline)
@@ -65,9 +65,9 @@ def create_project() -> Response:
 def edit_project(project_id):
     """Modifica los datos de un proyecto en la base de datos"""
     # Obtiene los datos del formulario
-    description = request.form.get("description", '')
-    start_date = request.form.get("start-date", '')
-    deadline = request.form.get("deadline", '')
+    description = request.form.get("description", "")
+    start_date = request.form.get("start-date", "")
+    deadline = request.form.get("deadline", "")
 
     try:
         projects.edit_project(project_id, description, start_date, deadline)
@@ -127,8 +127,8 @@ def project_data(project_id) -> Response:
     # Selecciona los detalles del proyecto con el id indicado y une las tablas
     # necesarias para mostrar los datos
     stmt = (
-        db.select(Project_Detail)
-        .where(Project_Detail.project_id == project_id)
+        db.select(ProjectDetail)
+        .where(ProjectDetail.project_id == project_id)
         .join(Vehicle)
         .join(User)
         .join(Department)
@@ -136,7 +136,7 @@ def project_data(project_id) -> Response:
 
     if request.method == "POST":
         # Obtiene los datos del formulario
-        detail = request.form.get("data-filter", '').lower().strip()
+        detail = request.form.get("data-filter", "").lower().strip()
 
         if detail:
             # WHERE (license_plate) LIKE '%detail%' OR
@@ -151,24 +151,27 @@ def project_data(project_id) -> Response:
                     Department.description.like(f"%{detail}%"),
                     User.id_number.like(f"%{detail}%"),
                     Vehicle.problem.like(f"%{detail}%"),
-                    Project_Detail.solution.like(f"%{detail}%"),
-                    Project_Detail.observations.like(f"%{detail}%"),
+                    ProjectDetail.solution.like(f"%{detail}%"),
+                    ProjectDetail.observations.like(f"%{detail}%"),
                 )
             )
         # Registra el evento en la base de datos
-        events.add_event("Detalles de Proyecto", f"Buscar '{detail}' del proyecto '{_project.description}'")
-    else:
-       # Selecciona los datos del proyecto con el id indicado
-        stmt = (
-            db.select(Project_Detail)
-            .where(Project_Detail.project_id == project_id)
+        events.add_event(
+            "Detalles de Proyecto",
+            f"Buscar '{detail}' del proyecto '{_project.description}'",
         )
-    
+    else:
+        # Selecciona los datos del proyecto con el id indicado
+        stmt = db.select(ProjectDetail).where(ProjectDetail.project_id == project_id)
+
     result = db.session.execute(stmt).fetchall()
     _project_details = [r for r, in result]
-    
-    return render_template("manager/project_details.html",\
-        project_details=_project_details, project=_project)
+
+    return render_template(
+        "manager/project_details.html",
+        project_details=_project_details,
+        project=_project,
+    )
 
 
 @current_app.route("/project-details/<int:project_id>/register/", methods=["POST"])
@@ -177,22 +180,16 @@ def project_data(project_id) -> Response:
 def register_project_data(project_id) -> Response:
     """Registrar y anade un detalle de proyecto en la base de datos."""
     # Obtiene los datos del formulario
-    vehicle = request.form.get("vehicle", '') 
-    department = request.form.get("department", '')
-    manager = request.form.get("manager", '')
-    solution = request.form.get("solution", '')
-    amount = request.form.get("amount", '')
-    observations = request.form.get("observations", '')
-    
+    vehicle = request.form.get("vehicle", "")
+    department = request.form.get("department", "")
+    manager = request.form.get("manager", "")
+    solution = request.form.get("solution", "")
+    amount = request.form.get("amount", "")
+    observations = request.form.get("observations", "")
+
     try:
         project_details.register_project_detail(
-            project_id, 
-            vehicle,
-            department,
-            manager,
-            solution,
-            amount, 
-            observations
+            project_id, vehicle, department, manager, solution, amount, observations
         )
     except project_details.ProjectDetailError as e:
         flash(f"{e}")
@@ -209,23 +206,17 @@ def register_project_data(project_id) -> Response:
 def edit_project_data(detail_id) -> Response:
     """Registrar y anade un detalle de proyecto en la base de datos."""
     # Obtiene los datos del formulario
-    vehicle = request.form.get("vehicle", '') 
-    department = request.form.get("department", '')
-    manager = request.form.get("manager", '')
-    solution = request.form.get("solution", '')
-    amount = request.form.get("amount", '')
-    observations = request.form.get("observations", '')
+    vehicle = request.form.get("vehicle", "")
+    department = request.form.get("department", "")
+    manager = request.form.get("manager", "")
+    solution = request.form.get("solution", "")
+    amount = request.form.get("amount", "")
+    observations = request.form.get("observations", "")
     project_id = int(request.form.get("project-id"))
-    
+
     try:
         project_details.edit_project_detail(
-            detail_id,
-            vehicle,
-            department,
-            manager,
-            solution,
-            amount, 
-            observations
+            detail_id, vehicle, department, manager, solution, amount, observations
         )
     except project_details.ProjectDetailError as e:
         flash(f"{e}")
