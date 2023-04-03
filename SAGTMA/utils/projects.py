@@ -131,7 +131,7 @@ def edit_project(project_id: int, description: str, start_date: str, deadline: s
     edited_project.end_date = deadline_t
 
     # Registra el evento en la base de datos
-    events.add_event("Portafolio de Proyectos", f"Modificar '{description.strip()}'")
+    events.add_event("Portafolio de Proyectos", f"Modificar proyecto '{description}'")
 
 
 # ========== Eliminación de Proyectos ==========
@@ -153,7 +153,7 @@ def delete_project(project_id: int):
 
     # Registra el evento en la base de datos
     events.add_event(
-        "Portafolio de Proyectos", f"Eliminar '{deleted_project.description}'"
+        "Portafolio de Proyectos", f"Eliminar proyecto '{deleted_project.description}'"
     )
 
 
@@ -180,5 +180,5 @@ def toggle_project_status(project_id: int):
     # Registra el evento en la base de datos
     events.add_event(
         "Portafolio de Proyectos",
-        f"Cambiar estado de '{project.description}' a '{state}'",
+        f"Cambiar estado del proyecto '{project.description}' a {state}"
     )

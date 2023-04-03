@@ -160,9 +160,9 @@
           <thead>
             <tr>
               <th>ID</th>
-              <th>Vehículo (placa)</th>
+              <th>Vehículo</th>
               <th>Departamento</th>
-              <th>Gerente de proyecto (CI)</th>
+              <th>Gerente de proyecto</th>
               <th>Problema</th>
               <th>Solución</th>
               <th>Monto</th>
@@ -183,6 +183,10 @@
                 <td>{{ detail.observations }}</td>
                 <td>
                   {# Boton de presupuesto #}
+                  <button id="budget{{ detail.id }}" type="button" class="btn btn-primary my-2 budget-project-detail" data-bs-toggle="modal">
+                    <img src="{{ url_for('static', filename='img/budget.svg') }}" width="24" height="24" fill="white" class="table-button" value="submit" style="border-radius: 5px;" title="Presupuesto" />
+                  </button>
+
                   {# Botón de modificar #}
                   <button id="edit{{ detail.id }}" type="button" class="btn btn-primary my-2 edit-project-detail" data-bs-toggle="modal">
                     <img src="{{ url_for('static', filename='img/edit.svg') }}" width="24" height="24" fill="white" class="table-button" value="submit" style="border-radius: 5px;" title="Modificar dato del proyecto" />

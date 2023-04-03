@@ -256,7 +256,7 @@ def edit_vehicle(
     # Registra el evento en la base de datos
     events.add_event(
         "Vehículos de los Clientes",
-        f"Modificar vehiculo '{edited_vehicle.brand}' del cliente '{edited_vehicle.owner.id_number}'",
+        f"Editar vehiculo '{edited_vehicle.brand}' del cliente '{edited_vehicle.owner.id_number}'",
     )
 
 

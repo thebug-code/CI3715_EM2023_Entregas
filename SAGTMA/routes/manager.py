@@ -144,7 +144,7 @@ def project_data(project_id) -> Response:
             #       (manager) LIKE '%detail%' OR
             #       (problem) LIKE '%detail%' OR
             #       (solution) LIKE '%detail%' OR
-            #       (solution) LINKE '%observations%'
+            #       (observations) LIKE '%detail%'
             stmt = stmt.where(
                 db.or_(
                     Vehicle.license_plate.like(f"%{detail}%"),

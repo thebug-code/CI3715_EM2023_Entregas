@@ -122,5 +122,5 @@ def edit_dept(dept_id: int, description: str):
     # Registra el evento en la base de datos
     events.add_event(
         "Departamentos del Taller",
-        f"Modificar departamento '{edited_dept.description}'",
+        f"Editar departamento '{edited_dept.description}'",
     )

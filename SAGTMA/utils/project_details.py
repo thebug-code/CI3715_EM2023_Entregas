@@ -134,7 +134,7 @@ def register_project_detail(
     validate_input_text(observations, False)
 
     # Crea el nuevo detalle de proyecto
-    project_detail = ProjectDetail(
+    detail = ProjectDetail(
         project_id,
         vehicle_id,
         department_id,
@@ -145,12 +145,12 @@ def register_project_detail(
     )
 
     # Agrega el detalle de proyecto a la base de datos
-    db.session.add(project_detail)
+    db.session.add(detail)
 
     # Registra el evento en la base de datos
     events.add_event(
         "Datos de proyectos",
-        f"Agregar dato de proyecto para el proyecto {project.description}",
+        f"Agregar detalle {detail.id} al proyecto {detail.project.description}"
     )
 
 
@@ -243,7 +243,8 @@ def edit_project_detail(
 
     # Registra el evento en la base de datos
     events.add_event(
-        "Datos de proyectos", f"Editar dato de proyecto {edited_detail.id}"
+        "Datos de proyectos",
+        f"Editar detalle {edited_detail.id} del proyecto {edited_detail.project.description}"
     )
 
 
@@ -268,5 +269,5 @@ def delete_project_detail(detail_id: int):
     # Registra el evento en la base de datos
     events.add_event(
         "Datos de proyectos",
-        f"Eliminar dato de proyecto {detail.id} del proyecto {detail.project.description}",
+        f"Eliminar detalle {detail.id} del proyecto {detail.project.description}"
     )
