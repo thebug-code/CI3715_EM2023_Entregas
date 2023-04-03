@@ -1,7 +1,7 @@
 import re
 import datetime
 
-from SAGTMA.models import Client, db
+from SAGTMA.models import Client, ProjectDetail, Vehicle, db
 from SAGTMA.utils import events
 from SAGTMA.utils.validations import validate_id, validate_name
 
@@ -226,6 +226,18 @@ def delete_client(client_id: int):
     if not client_query:
         raise ClientError("El cliente indicado no existe")
     client = client_query[0]
+
+    # Verifica que el cliente no tenga un vehículo asociado a un detalle de proyecto
+    stmt = (
+        db.select(ProjectDetail)
+        .join(ProjectDetail.vehicle)
+        .join(Vehicle.owner)
+        .where(Client.id == client_id)
+    )
+    if db.session.execute(stmt).first():
+        raise ClientError(
+            "El cliente no puede ser eliminado porque tiene un vehículo asociado a un detalle de proyecto"
+        )
 
     # Elimina el cliente de la base de datos
     db.session.delete(client)

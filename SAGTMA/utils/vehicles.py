@@ -1,6 +1,6 @@
 from datetime import date
 
-from SAGTMA.models import Vehicle, Client, db
+from SAGTMA.models import Vehicle, Client, ProjectDetail, db
 from SAGTMA.utils import events
 from SAGTMA.utils.validations import validate_name
 
@@ -272,6 +272,13 @@ def delete_vehicle(vehicle_id: int) -> int:
     if not vehicle_query:
         raise VehicleError("El vehículo indicado no existe")
     deleted_vehicle = vehicle_query[0]
+
+    # Verifica que el vehículo no esta asociado a un detalle de proyecto
+    stmt = db.select(ProjectDetail).where(ProjectDetail.vehicle_id == vehicle_id)
+    if db.session.execute(stmt).first():
+        raise VehicleError(
+            "El vehículo no puede ser eliminado porque está asociado a un detalle de proyecto"
+        )
 
     # Elimina el vehiculo de la base de datos
     db.session.delete(deleted_vehicle)
