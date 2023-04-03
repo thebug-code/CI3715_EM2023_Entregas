@@ -31,10 +31,10 @@ def validate_input_text(input_text: str, flag: bool):
     Lanza una excepción si el texto no es válido.
 
     Un texto es válido si:
-        -Tiene al menos 5 caracteres y a lo sumo 100 caracteres
-        -No tiene caracteres especiales distintos de '-_.,;:¡! '
+        -Tiene al menos 3 caracteres y a lo sumo 100 caracteres
+        -No tiene caracteres especiales distintos de '-_.,;:¡!/ '
     """
-    if len(input_text) < 5 or len(input_text) > 100:
+    if len(input_text) < 3 or len(input_text) > 100:
         if flag:
             raise ProjectDetailError("La solucion debe tener entre 5 y 100 caracteres")
         else:
@@ -42,7 +42,7 @@ def validate_input_text(input_text: str, flag: bool):
                 "Las observaciones deben tener entre 5 y 100 caracteres"
             )
 
-    regex = r"^[\w\s\-a-zA-Z0-9_.¡!,;:]*$"
+    regex = r"^[\w\s\-a-zA-Z0-9_.¡!,/;:]*$"
     if not re.match(regex, input_text):
         if flag:
             raise ProjectDetailError(
@@ -77,11 +77,11 @@ def register_project_detail(
         -El gerente no existe
     """
     # Elimina espacios al comienzo y final del input del form
-    vehicle = vehicle.strip()
-    department = department.strip()
-    manager = manager.strip()
-    solution = solution.strip()
-    observations = observations.strip()
+    vehicle = vehicle.strip() if vehicle is not None else None
+    department = department.strip() if department is not None else None
+    manager = manager.strip() if manager is not None else None
+    solution = solution.strip() if solution is not None else None
+    observations = observations.strip() if observations is not None else None
 
     # Verifica que todos los campos estén completos
     if not all([vehicle, department, manager, solution, amount, observations]):
@@ -150,7 +150,7 @@ def register_project_detail(
     # Registra el evento en la base de datos
     events.add_event(
         "Datos de proyectos",
-        f"Agregar detalle {detail.id} al proyecto {detail.project.description}"
+        f"Agregar detalle al proyecto '{project.description}'"
     )
 
 
