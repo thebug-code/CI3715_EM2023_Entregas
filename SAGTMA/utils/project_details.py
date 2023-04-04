@@ -9,7 +9,7 @@ class ProjectDetailError(ValueError):
 
 
 # ========== Validaciones ==========
-def validate_cost(cost: str) -> int:
+def validate_cost(cost: str) -> float:
     """
     Lanza una excepción si el monto no es válida.
 
@@ -18,7 +18,7 @@ def validate_cost(cost: str) -> int:
     """
     if not cost.isdigit():
         raise ProjectDetailError("El monto debe ser un número entero positivo")
-    cost = int(cost)
+    cost = float(cost)
 
     if cost < 0:
         raise ProjectDetailError("El monto debe ser un número entero positivo")
@@ -36,10 +36,10 @@ def validate_input_text(input_text: str, flag: bool):
     """
     if len(input_text) < 3 or len(input_text) > 100:
         if flag:
-            raise ProjectDetailError("La solucion debe tener entre 5 y 100 caracteres")
+            raise ProjectDetailError("La solucion debe tener entre 3 y 100 caracteres")
         else:
             raise ProjectDetailError(
-                "Las observaciones deben tener entre 5 y 100 caracteres"
+                "Las observaciones deben tener entre 3 y 100 caracteres"
             )
 
     regex = r"^[\w\s\-a-zA-Z0-9_.¡!,/;:]*$"
