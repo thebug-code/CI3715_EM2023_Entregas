@@ -65,7 +65,11 @@ class TestProjectDetails(BaseTestClass):
         dept = Department("Mecánica")
         dept.id = 0
 
-        db.session.add_all([manager_user, project, client, dept])
+        # Añade un detalle de proyecto
+        detail = ProjectDetail(0, 0, 0, 1, "Prueba", 0.1, "N/A")
+        detail.id = 0
+
+        db.session.add_all([manager_user, project, client, dept, detail])
         db.session.commit()
 
     def _login_manager(self):
@@ -108,7 +112,7 @@ class TestProjectDetails(BaseTestClass):
         )
 
         stmt = db.select(ProjectDetail)
-        self.assertIsNone(db.session.execute(stmt).first())
+        self.assertEqual(len(db.session.execute(stmt).fetchall()), 1)
 
         # Hace la request con solo solución
         self.client.post(
@@ -120,7 +124,7 @@ class TestProjectDetails(BaseTestClass):
         )
 
         stmt = db.select(ProjectDetail).where(ProjectDetail.solution == "Arreglarlo p")
-        self.assertIsNone(db.session.execute(stmt).first())
+        self.assertEqual(len(db.session.execute(stmt).fetchall()), 0)
 
     def test_validate_amount_invalid(self):
         "Testea la validacion de montos válidos"
@@ -150,7 +154,7 @@ class TestProjectDetails(BaseTestClass):
         _test_validate_amount_valid("1")
         _test_validate_amount_valid("1.1")
         _test_validate_amount_valid("100")
-    
+
     def test_validate_text_input_invalid(self):
         "Testea la validacion de inputs de texto inválidos"
 
@@ -183,23 +187,9 @@ class TestProjectDetails(BaseTestClass):
         """Testea la edición de datos proyecto válidos."""
         self._login_manager()
 
-        # Agrega primero un proyecto
+        # Edita el proyecto agregado en el setup
         self.client.post(
-            "/project-details/0/register/",
-            data={
-                "vehicle": "0",
-                "department": "0",
-                "manager": "1",
-                "solution": "Arreglarlo p",
-                "amount": "150",
-                "observations": "Ninguna por ahora",
-            },
-            follow_redirects=True,
-        )
-
-        # Edita el proyecto
-        self.client.post(
-            "/project-details/1/edit/",
+            "/project-details/0/edit/",
             data={
                 "vehicle": "0",
                 "department": "0",
@@ -212,7 +202,7 @@ class TestProjectDetails(BaseTestClass):
             follow_redirects=True,
         )
 
-        stmt = db.select(ProjectDetail).where(ProjectDetail.solution == "Arreglarlo p")
+        stmt = db.select(ProjectDetail).where(ProjectDetail.solution == "Prueba")
         self.assertIsNone(db.session.execute(stmt).first())
 
         stmt = db.select(ProjectDetail).where(ProjectDetail.solution == "Dejarlo asi")
@@ -222,23 +212,9 @@ class TestProjectDetails(BaseTestClass):
         """Testea la edición de datos proyecto válidos."""
         self._login_manager()
 
-        # Agrega primero un proyecto
-        self.client.post(
-            "/project-details/0/register/",
-            data={
-                "vehicle": "0",
-                "department": "0",
-                "manager": "1",
-                "solution": "Arreglarlo p",
-                "amount": "150",
-                "observations": "Ninguna por ahora",
-            },
-            follow_redirects=True,
-        )
-
         # Edita el proyecto con un dato inválido
         self.client.post(
-            "/project-details/1/edit/",
+            "/project-details/0/edit/",
             data={
                 "vehicle": "0",
                 "department": "0",
@@ -251,41 +227,25 @@ class TestProjectDetails(BaseTestClass):
             follow_redirects=True,
         )
 
-        stmt = db.select(ProjectDetail).where(ProjectDetail.solution == "Arreglarlo p")
+        stmt = db.select(ProjectDetail).where(ProjectDetail.solution == "Prueba")
         self.assertIsNotNone(db.session.execute(stmt).first())
 
         stmt = db.select(ProjectDetail).where(ProjectDetail.solution == "Dejarlo asi")
         self.assertIsNone(db.session.execute(stmt).first())
 
-    # def test_delete_project(self):
-    #     """Testea la eliminación de proyectos."""
-    #     self._login_manager()
+    def test_delete_project_data(self):
+        """Testea la eliminación de datos proyecto válidos."""
+        self._login_manager()
 
-    #     # Elimina un proyecto existente
-    #     self.client.post(f"/project-portfolio/0/delete/", follow_redirects=True)
+        # Elimina un proyecto existente
+        self.client.post(
+            f"/project-details/0/delete/",
+            data={
+                "project-id": "0",
+            },
+            follow_redirects=True,
+        )
 
-    #     # Verifica que se eliminó el proyecto
-    #     stmt = db.select(Project).where(Project.description == "Proyecto Automotriz 1")
-    #     self.assertIsNone(db.session.execute(stmt).first())
-
-    # def test_edit_project_valid(self):
-    #     """Testea la edición de un proyecto válido."""
-    #     self._login_manager()
-
-    #     self.client.post(
-    #         "/project-portfolio/0/edit/",
-    #         data={
-    #             "description": "Proyecto Editado",
-    #             "start-date": "2023-03-26",
-    #             "deadline": "2023-06-30",
-    #         },
-    #         follow_redirects=True,
-    #     )
-
-    #     # Verifica que el proyecto anterior no existe
-    #     stmt = db.select(Project).where(Project.description == "Proyecto Automotriz 1")
-    #     self.assertIsNone(db.session.execute(stmt).first())
-
-    #     # Verifica que el proyecto editado existe
-    #     stmt = db.select(Project).where(Project.description == "Proyecto Editado")
-    #     self.assertIsNotNone(db.session.execute(stmt).first())
+        # Verifica que se eliminó el proyecto
+        stmt = db.select(ProjectDetail).where(ProjectDetail.solution == "Prueba")
+        self.assertIsNone(db.session.execute(stmt).first())

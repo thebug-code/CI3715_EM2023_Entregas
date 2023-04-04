@@ -15,7 +15,7 @@ def validate_descrip_dept(description: str) -> bool:
 
     Una descripción de un departamento es válida si:
       -Tiene al menos 6 caracteres a lo sumo 100 caracteres
-      -No tiene caracteres especiales distintos de ' -_?¿¡!:'
+      -No tiene caracteres especiales distintos de ' -_?¿¡!:.'
     """
     if len(description) < 6 or len(description) > 100:
         raise DepartmentError(
