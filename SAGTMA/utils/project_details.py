@@ -16,9 +16,10 @@ def validate_amount(amount: str) -> int:
     Un monto es válida si:
       -Es un número real positivo
     """
-    if not amount.isdigit():
+    try:
+        amount = float(amount)
+    except ValueError:
         raise ProjectDetailError("El monto debe ser un número entero positivo")
-    amount = float(amount)
 
     if amount < 0:
         raise ProjectDetailError("El monto debe ser un número entero positivo")
@@ -26,7 +27,7 @@ def validate_amount(amount: str) -> int:
     return amount
 
 
-def validate_input_text(input_text: str, flag: bool):
+def validate_input_text(input_text: str, flag: bool = False):
     """
     Lanza una excepción si el texto no es válido.
 
