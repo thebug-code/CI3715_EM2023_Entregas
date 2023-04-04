@@ -2,8 +2,9 @@ from random import randint, choice
 from datetime import date
 
 from flask import current_app
+from sqlalchemy import func
 
-from SAGTMA.models import Project, Role, User, Client, Vehicle, Department, db
+from SAGTMA.models import Project, Role, User, Client, Vehicle, Department, ProjectDetail, db
 from SAGTMA.utils.auth import hash_password
 
 
@@ -82,16 +83,8 @@ def populate_db():
 
         db.session.add(project)
 
-    # Itera sobre los usuarios y los proyectos para asignarles proyectos
-    stmt = db.select(User)
-    for (user,) in db.session.execute(stmt):
-        # Toma una cantidad aleatoria de proyectos al azar y los asigna al usuario
-        stmt = db.select(Project).order_by(db.func.random()).limit(randint(0, 5))
-        for (project,) in db.session.execute(stmt):
-            user.projects.append(project)
-
-    # Añade un cliente dummy con dos vehículos
-    client = Client(
+    # Añade dos clientes dummy con dos vehículos
+    client0 = Client(
         "V-82482795",
         "Carlos",
         "Marx",
@@ -99,6 +92,16 @@ def populate_db():
         "+584254635142",
         "carlmarx@usb.ve",
         "La Castellana, Caracas, Al lado del portón rojo",
+    )
+
+    client1 = Client(
+        "V-82482799",
+        "Fidel",
+        "Castro",
+        date(1970, 4, 16),
+        "+584249745787",
+        "fidelcastro@usb.ve",
+        "La california, Caracas, Al lado del kiosko verde",
     )
 
     car1 = Vehicle(
@@ -111,6 +114,7 @@ def populate_db():
         "Rojo",
         "El carro no arranca",
     )
+
     car2 = Vehicle(
         "BAR-12Y",
         "Toyota",
@@ -122,15 +126,15 @@ def populate_db():
         "El carro vuela",
     )
 
-    client.vehicles.append(car1)
-    client.vehicles.append(car2)
+    client0.vehicles.append(car1)
+    client1.vehicles.append(car2)
 
-    db.session.add(client)
+    db.session.add_all([client0, client1])
 
     # Anade departamentos
     dept_names = [
         "Mecánica",
-        "Esctructura",
+        "Estructura",
         "Revestimiento",
         "Electricidad",
         "Electrónica",
@@ -138,5 +142,45 @@ def populate_db():
 
     depts = [Department(dept) for dept in dept_names]
     db.session.add_all(depts)
+
+    # Anade dos datos de proyectos
+
+
+    # Selecciona dos proyectos aleatorios y le asignas un dato de proyecto
+    projects = Project.query.order_by(func.random()).limit(2).all()
+    projects[0].active = True
+    projects[1].active = True
+
+    # Selecciona el departamento de Estructura y le asigna un dato de proyecto
+    smt = db.select(Department).where(Department.description == "Estructura")
+    dept1 = db.session.execute(smt).first()[0]
+
+    # Selecciona el departamento de Mecánica y le asigna un dato de proyecto
+    smt = db.select(Department).where(Department.description == "Mecánica")
+    dept2 = db.session.execute(smt).first()[0]
+    
+    # Selecciona dos usuarios aleatorios y les asigna un dato de proyecto
+    users = User.query.order_by(func.random()).limit(2).all()
+
+    detail0 = ProjectDetail(
+        projects[0].id,
+        car1.id,
+        depts[0].id,
+        users[0].id,
+        "Cambiar el aceite",
+        150,
+        "Aceite sintético",
+    )
+    
+    detail1 = ProjectDetail(
+        projects[1].id,
+        car2.id,
+        depts[1].id,
+        users[1].id,
+        "Quitarle las alas",
+        200,
+        "Ninguna",
+    )
+    db.session.add_all([detail0, detail1])
 
     db.session.commit()

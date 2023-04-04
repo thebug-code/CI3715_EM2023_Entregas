@@ -179,16 +179,20 @@
                 {# Dropdown itera y muestra los proyectos del usuario #}
                 <td>
                   {# Si el usuario no tiene proyectos #}
-                  {% if user.projects|length == 0 %}
+                  {% if user.project_details|length == 0 %}
                     <select class="form-select">
                       <option selected>No tiene proyectos</option>
                     </select>
                   {% else %}
                     <select class="form-select" aria-label="Default select example">
-                      {% for project in user.projects %}
-                        <option value="{{ project.id }}">
-                          {{ project.description }}
-                        </option>
+                      {% set project_descrip = [] %}
+                      {% for project_detail in user.project_details %}
+                        {% if project_detail.project.description not in project_descrip %}
+                          <option value="{{ project_detail.project.id }}">
+                            {{ project_detail.project.description }}
+                          </option>
+                          {% set _ = project_descrip.append(project_detail.project.description) %}
+                        {% endif %}
                       {% endfor %}
                     </select>
                   {% endif %}

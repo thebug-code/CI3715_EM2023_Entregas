@@ -179,12 +179,12 @@ def register_project_data(project_id) -> Response:
     department = request.form.get("department", "")
     manager = request.form.get("manager", "")
     solution = request.form.get("solution", "")
-    amount = request.form.get("amount", "")
+    cost = request.form.get("cost", "")
     observations = request.form.get("observations", "")
 
     try:
         project_details.register_project_detail(
-            project_id, vehicle, department, manager, solution, amount, observations
+            project_id, vehicle, department, manager, solution, cost, observations
         )
     except project_details.ProjectDetailError as e:
         flash(f"{e}")
@@ -204,13 +204,13 @@ def edit_project_data(detail_id) -> Response:
     department = request.form.get("department", "")
     manager = request.form.get("manager", "")
     solution = request.form.get("solution", "")
-    amount = request.form.get("amount", "")
+    cost = request.form.get("cost", "")
     observations = request.form.get("observations", "")
     project_id = int(request.form.get("project-id"))
 
     try:
         project_details.edit_project_detail(
-            detail_id, vehicle, department, manager, solution, amount, observations
+            detail_id, vehicle, department, manager, solution, cost, observations
         )
     except project_details.ProjectDetailError as e:
         flash(f"{e}")
