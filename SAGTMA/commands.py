@@ -4,7 +4,16 @@ from datetime import date
 from flask import current_app
 from sqlalchemy import func
 
-from SAGTMA.models import Project, Role, User, Client, Vehicle, Department, ProjectDetail, db
+from SAGTMA.models import (
+    Project,
+    Role,
+    User,
+    Client,
+    Vehicle,
+    Department,
+    ProjectDetail,
+    db,
+)
 from SAGTMA.utils.auth import hash_password
 
 
@@ -145,7 +154,6 @@ def populate_db():
 
     # Anade dos datos de proyectos
 
-
     # Selecciona dos proyectos aleatorios y le asignas un dato de proyecto
     projects = Project.query.order_by(func.random()).limit(2).all()
     projects[0].active = True
@@ -158,7 +166,7 @@ def populate_db():
     # Selecciona el departamento de Mecánica y le asigna un dato de proyecto
     smt = db.select(Department).where(Department.description == "Mecánica")
     dept2 = db.session.execute(smt).first()[0]
-    
+
     # Selecciona dos usuarios aleatorios y les asigna un dato de proyecto
     users = User.query.order_by(func.random()).limit(2).all()
 
@@ -171,7 +179,7 @@ def populate_db():
         150,
         "Aceite sintético",
     )
-    
+
     detail1 = ProjectDetail(
         projects[1].id,
         car2.id,

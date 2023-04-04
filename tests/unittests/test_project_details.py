@@ -91,7 +91,7 @@ class TestProjectDetails(BaseTestClass):
                 "department": "0",
                 "manager": "1",
                 "solution": "Arreglarlo p",
-                "amount": "150",
+                "cost": "150",
                 "observations": "Ninguna por ahora",
             },
             follow_redirects=True,
@@ -126,34 +126,34 @@ class TestProjectDetails(BaseTestClass):
         stmt = db.select(ProjectDetail).where(ProjectDetail.solution == "Arreglarlo p")
         self.assertEqual(len(db.session.execute(stmt).fetchall()), 0)
 
-    def test_validate_amount_invalid(self):
+    def test_validate_cost_invalid(self):
         "Testea la validacion de montos válidos"
 
-        def _test_validate_amount_invalid(amount: str):
+        def _test_validate_cost_invalid(cost: str):
             with self.assertRaises(pd.ProjectDetailError):
-                pd.validate_amount(amount)
+                pd.validate_cost(cost)
 
         # Monto negativo
-        _test_validate_amount_invalid("-.1")
-        _test_validate_amount_invalid("-100")
+        _test_validate_cost_invalid("-.1")
+        _test_validate_cost_invalid("-100")
 
         # Monto no numérico
-        _test_validate_amount_invalid("abc")
-        _test_validate_amount_invalid("1.1.1")
-        _test_validate_amount_invalid("1,1")
-        _test_validate_amount_invalid("--1")
+        _test_validate_cost_invalid("abc")
+        _test_validate_cost_invalid("1.1.1")
+        _test_validate_cost_invalid("1,1")
+        _test_validate_cost_invalid("--1")
 
-    def test_validate_amount_valid(self):
+    def test_validate_cost_valid(self):
         "Testea la validacion de montos inválidos"
 
-        def _test_validate_amount_valid(amount: str):
-            self.assertEqual(pd.validate_amount(amount), float(amount))
+        def _test_validate_cost_valid(cost: str):
+            self.assertEqual(pd.validate_cost(cost), float(cost))
 
         # Montos válidos
-        _test_validate_amount_valid("0")
-        _test_validate_amount_valid("1")
-        _test_validate_amount_valid("1.1")
-        _test_validate_amount_valid("100")
+        _test_validate_cost_valid("0")
+        _test_validate_cost_valid("1")
+        _test_validate_cost_valid("1.1")
+        _test_validate_cost_valid("100")
 
     def test_validate_text_input_invalid(self):
         "Testea la validacion de inputs de texto inválidos"
@@ -195,7 +195,7 @@ class TestProjectDetails(BaseTestClass):
                 "department": "0",
                 "manager": "1",
                 "solution": "Dejarlo asi",
-                "amount": "150",
+                "cost": "150",
                 "observations": "Ninguna por ahora",
                 "project-id": "0",
             },
@@ -220,7 +220,7 @@ class TestProjectDetails(BaseTestClass):
                 "department": "0",
                 "manager": "1",
                 "solution": "Dejarlo asi",
-                "amount": "-150",
+                "cost": "-150",
                 "observations": "Ninguna por ahora",
                 "project-id": "0",
             },

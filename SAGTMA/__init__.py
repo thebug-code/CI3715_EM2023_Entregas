@@ -43,7 +43,7 @@ def flask_app(test_config=None):
             api,
             analyst,
         )
-        
+
         # Registra los comandos
         from SAGTMA import commands
 

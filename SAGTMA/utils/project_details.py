@@ -145,7 +145,7 @@ def register_project_detail(
         cost,
         observations,
     )
-    
+
     # Agrega el detalle de proyecto a la base de datos
     db.session.add(detail)
 

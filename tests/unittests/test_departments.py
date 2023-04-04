@@ -13,7 +13,7 @@ class TestProfiles(BaseTestClass):
 
         db.session.add(dept)
         db.session.commit()
-    
+
     def _login_admin(self):
         """Inicia sesión con un usuario Analista de Operaciones."""
 
@@ -69,7 +69,7 @@ class TestProfiles(BaseTestClass):
         self.client.post(
             "/workshop-departments/register/",
             data={
-                "description" : "Mecánica",
+                "description": "Mecánica",
             },
             follow_redirects=True,
         )
@@ -85,7 +85,7 @@ class TestProfiles(BaseTestClass):
         self.client.post(
             "/workshop-departments/register/",
             data={
-                "description" : "Mec",
+                "description": "Mec",
             },
             follow_redirects=True,
         )
@@ -137,7 +137,7 @@ class TestProfiles(BaseTestClass):
         stmt = db.select(Department).where(Department.description == "M")
         self.assertIsNone(db.session.execute(stmt).first())
 
-        self.client.post("/project-details/0/edit/",follow_redirects=True)
+        self.client.post("/project-details/0/edit/", follow_redirects=True)
 
         stmt = db.select(Department).where(Department.description == "Eléctrica")
         self.assertIsNotNone(db.session.execute(stmt).first())
@@ -147,7 +147,7 @@ class TestProfiles(BaseTestClass):
         self._login_admin()
 
         # Elimina un departamento existente
-        self.client.post(f"/workshop-departments/0/delete/",follow_redirects=True)
+        self.client.post(f"/workshop-departments/0/delete/", follow_redirects=True)
 
         # Verifica que se eliminó el proyecto
         stmt = db.select(Department)
