@@ -224,7 +224,7 @@ def api_project_details():
             "department_id": pd.department.id,
             "vehicle_id": pd.vehicle.id,
             "solution": pd.solution,
-            "amount": pd.amount,
+            "cost": pd.cost,
             "observations": pd.observations,
         }
         for pd, in result

@@ -146,7 +146,7 @@ $(document).ready(function () {
         });
 
         $("#edit-solution").val(projectDetail.solution);
-        $("#edit-amount").val(projectDetail.amount);
+        $("#edit-cost").val(projectDetail.cost);
         $("#edit-observations").val(projectDetail.observations);
 
         $("#edit-project-detail-form").attr("action", "/project-details/" + id + "/edit/");

@@ -9,21 +9,21 @@ class ProjectDetailError(ValueError):
 
 
 # ========== Validaciones ==========
-def validate_amount(amount: str) -> int:
+def validate_cost(cost: str) -> int:
     """
     Lanza una excepción si el monto no es válida.
 
     Un monto es válida si:
       -Es un número entero positivo
     """
-    if not amount.isdigit():
+    if not cost.isdigit():
         raise ProjectDetailError("El monto debe ser un número entero positivo")
-    amount = int(amount)
+    cost = int(cost)
 
-    if amount < 0:
+    if cost < 0:
         raise ProjectDetailError("El monto debe ser un número entero positivo")
 
-    return amount
+    return cost
 
 
 def validate_input_text(input_text: str, flag: bool):
@@ -61,7 +61,7 @@ def register_project_detail(
     department: str,
     manager: str,
     solution: str,
-    amount: str,
+    cost: str,
     observations: str,
 ):
     """
@@ -77,14 +77,14 @@ def register_project_detail(
         -El gerente no existe
     """
     # Elimina espacios al comienzo y final del input del form
-    vehicle = vehicle.strip() if vehicle is not None else None
-    department = department.strip() if department is not None else None
-    manager = manager.strip() if manager is not None else None
-    solution = solution.strip() if solution is not None else None
-    observations = observations.strip() if observations is not None else None
+    vehicle = vehicle.strip()
+    department = department.strip()
+    manager = manager.strip()
+    solution = solution.strip()
+    observations = observations.strip()
 
     # Verifica que todos los campos estén completos
-    if not all([vehicle, department, manager, solution, amount, observations]):
+    if not all([vehicle, department, manager, solution, cost, observations]):
         raise ProjectDetailError("Todos los campos son obligatorios")
 
     # Verifica que el proyecto exista
@@ -129,7 +129,7 @@ def register_project_detail(
         raise ProjectDetailError("El gerente no existe")
 
     # Chequea si los campos de texto son válidos
-    amount = validate_amount(amount)
+    cost = validate_cost(cost)
     validate_input_text(solution, True)
     validate_input_text(observations, False)
 
@@ -140,10 +140,10 @@ def register_project_detail(
         department_id,
         manager_id,
         solution,
-        amount,
+        cost,
         observations,
     )
-
+    
     # Agrega el detalle de proyecto a la base de datos
     db.session.add(detail)
 
@@ -161,7 +161,7 @@ def edit_project_detail(
     department: str,
     manager: str,
     solution: str,
-    amount: str,
+    cost: str,
     observations: str,
 ):
     """
@@ -184,7 +184,7 @@ def edit_project_detail(
     observations = observations.strip()
 
     # Verifica que todos los campos estén completos
-    if not all([vehicle, department, manager, solution, amount, observations]):
+    if not all([vehicle, department, manager, solution, cost, observations]):
         raise ProjectDetailError("Todos los campos son obligatorios")
 
     # Verifica que el detalle de proyecto exista
@@ -229,7 +229,7 @@ def edit_project_detail(
         raise ProjectDetailError("El gerente no existe")
 
     # Chequea si los campos de texto son válidos
-    amount = validate_amount(amount)
+    cost = validate_cost(cost)
     validate_input_text(solution, True)
     validate_input_text(observations, False)
 
@@ -238,7 +238,7 @@ def edit_project_detail(
     edited_detail.department_id = department_id
     edited_detail.manager_id = manager_id
     edited_detail.solution = solution
-    edited_detail.amount = amount
+    edited_detail.cost = cost
     edited_detail.observations = observations
 
     # Registra el evento en la base de datos

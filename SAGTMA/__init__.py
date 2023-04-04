@@ -6,7 +6,6 @@ def flask_app(test_config=None):
     """Crea y configura una aplicación de flask"""
     # Crea la app
     app = Flask(__name__, instance_relative_config=True)
-
     # Configura la app
     app.config.from_mapping(
         # Genera bits aleatorios para la clave secreta
@@ -44,7 +43,7 @@ def flask_app(test_config=None):
             api,
             analyst,
         )
-
+        
         # Registra los comandos
         from SAGTMA import commands
 

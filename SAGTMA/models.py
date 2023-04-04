@@ -18,15 +18,6 @@ class Role(db.Model):
         return f"Role<{self.name}>"
 
 
-user_project = db.Table(
-    "user_project",
-    db.Column("id", db.Integer, primary_key=True, autoincrement=True),
-    db.Column("user_id", db.Integer, db.ForeignKey("user.id"), nullable=False),
-    db.Column("project_id", db.Integer, db.ForeignKey("project.id"), nullable=False),
-    db.UniqueConstraint("user_id", "project_id"),
-)
-
-
 class User(db.Model):
     """Modelo de usuario."""
 
@@ -37,11 +28,6 @@ class User(db.Model):
     names = db.Column(db.String(50), nullable=False)
     surnames = db.Column(db.String(50), nullable=False)
     password = db.Column(db.String(80), nullable=False)
-
-    # Relación n:n entre usuarios y proyectos
-    projects = db.relationship(
-        "Project", secondary=user_project, backref=db.backref("assigned_to")
-    )
 
     # Relación 1:n entre usuarios y eventos
     events = db.relationship("Event", backref="user", cascade="all, delete-orphan")
@@ -106,17 +92,17 @@ class ProjectDetail(db.Model):
     )
     project_manager_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     solution = db.Column(db.String(100), nullable=False)
-    amount = db.Column(db.Float, nullable=False)
+    cost = db.Column(db.Float, nullable=False)
     observations = db.Column(db.String(100), nullable=False)
 
     def __init__(
         self,
-        project_id,
-        vehicle_id,
-        department_id,
-        project_manager_id,
+        project_id: int,
+        vehicle_id: int,
+        department_id: int,
+        project_manager_id: int,
         solution,
-        amount,
+        cost,
         observations,
     ):
         self.project_id = project_id
@@ -124,11 +110,11 @@ class ProjectDetail(db.Model):
         self.department_id = department_id
         self.project_manager_id = project_manager_id
         self.solution = solution
-        self.amount = amount
+        self.cost = cost
         self.observations = observations
 
     def __repr__(self) -> str:
-        return f"ProjectDetail<{self.project_id}: {self.vehicle_id} - {self.department_id}, {self.project_manager_id}, {self.solution}, {self.amount}, {self.observations}>"
+        return f"ProjectDetail<{self.solution}: {self.cost} - {self.observations}>"
 
 
 class Event(db.Model):

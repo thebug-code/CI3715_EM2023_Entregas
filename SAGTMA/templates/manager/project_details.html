@@ -34,8 +34,8 @@
               <input type="text" class="form-control" id="add-solution" name="solution" placeholder="Ingrese la solución del problema" required />
             </div>
             <div class="mb-3">
-              <label for="amount" class="form-label">Monto</label>
-              <input type="number" class="form-control" id="add-amount" name="amount" placeholder="Ingrese el monto del proyecto" required />
+              <label for="cost" class="form-label">Monto</label>
+              <input type="number" class="form-control" id="add-cost" name="cost" placeholder="Ingrese el monto del proyecto" required />
             </div>
             <div class="mb-3">
               <label for="observations" class="form-label">Observaciones</label>
@@ -83,8 +83,8 @@
               <input type="text" class="form-control" id="edit-solution" name="solution" placeholder="Ingrese la solución del problema" required />
             </div>
             <div class="mb-3">
-              <label for="amount" class="form-label">Monto</label>
-              <input type="number" class="form-control" id="edit-amount" name="amount" placeholder="Ingrese el monto del proyecto" required />
+              <label for="cost" class="form-label">Monto</label>
+              <input type="number" class="form-control" id="edit-cost" name="cost" placeholder="Ingrese el monto del proyecto" required />
             </div>
             <div class="mb-3">
               <label for="observations" class="form-label">Observaciones</label>
@@ -179,7 +179,7 @@
                 <td>{{ detail.manager.id_number }}</td>
                 <td>{{ detail.vehicle.problem }}</td>
                 <td>{{ detail.solution }}</td>
-                <td>{{ detail.amount }}</td>
+                <td>{{ detail.cost }}</td>
                 <td>{{ detail.observations }}</td>
                 <td>
                   {# Boton de presupuesto #}

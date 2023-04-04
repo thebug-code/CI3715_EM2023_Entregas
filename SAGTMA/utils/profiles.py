@@ -168,7 +168,7 @@ def edit_user(
     role_query = db.session.execute(stmt).first()
     if not role_query:
         raise ProfileError("El rol indicado no existe")
-    new_role = rol_query[0]
+    new_role = role_query[0]
 
     # Verifica si existe un usuario distinto con el mismo nombre de usuario
     stmt = db.select(User).where(User.username == username).where(User.id != user_id)
