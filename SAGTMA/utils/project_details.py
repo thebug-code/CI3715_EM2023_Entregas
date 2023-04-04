@@ -14,11 +14,11 @@ def validate_amount(amount: str) -> int:
     Lanza una excepción si el monto no es válida.
 
     Un monto es válida si:
-      -Es un número entero positivo
+      -Es un número real positivo
     """
     if not amount.isdigit():
         raise ProjectDetailError("El monto debe ser un número entero positivo")
-    amount = int(amount)
+    amount = float(amount)
 
     if amount < 0:
         raise ProjectDetailError("El monto debe ser un número entero positivo")
@@ -76,12 +76,13 @@ def register_project_detail(
         -El departamento no existe
         -El gerente no existe
     """
+
     # Elimina espacios al comienzo y final del input del form
-    vehicle = vehicle.strip() if vehicle is not None else None
-    department = department.strip() if department is not None else None
-    manager = manager.strip() if manager is not None else None
-    solution = solution.strip() if solution is not None else None
-    observations = observations.strip() if observations is not None else None
+    vehicle = vehicle.strip()
+    department = department.strip()
+    manager = manager.strip()
+    solution = solution.strip()
+    observations = observations.strip()
 
     # Verifica que todos los campos estén completos
     if not all([vehicle, department, manager, solution, amount, observations]):
@@ -149,8 +150,7 @@ def register_project_detail(
 
     # Registra el evento en la base de datos
     events.add_event(
-        "Datos de proyectos",
-        f"Agregar detalle al proyecto '{project.description}'"
+        "Datos de proyectos", f"Agregar detalle al proyecto '{project.description}'"
     )
 
 
@@ -244,7 +244,7 @@ def edit_project_detail(
     # Registra el evento en la base de datos
     events.add_event(
         "Datos de proyectos",
-        f"Editar detalle {edited_detail.id} del proyecto {edited_detail.project.description}"
+        f"Editar detalle {edited_detail.id} del proyecto {edited_detail.project.description}",
     )
 
 
@@ -269,5 +269,5 @@ def delete_project_detail(detail_id: int):
     # Registra el evento en la base de datos
     events.add_event(
         "Datos de proyectos",
-        f"Eliminar detalle {detail.id} del proyecto {detail.project.description}"
+        f"Eliminar detalle {detail.id} del proyecto {detail.project.description}",
     )

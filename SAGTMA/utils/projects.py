@@ -180,5 +180,5 @@ def toggle_project_status(project_id: int):
     # Registra el evento en la base de datos
     events.add_event(
         "Portafolio de Proyectos",
-        f"Cambiar estado del proyecto '{project.description}' a {state}"
+        f"Cambiar estado del proyecto '{project.description}' a {state}",
     )

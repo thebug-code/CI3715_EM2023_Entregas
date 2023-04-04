@@ -82,7 +82,6 @@ def register_client() -> Response:
 
 
 @current_app.route("/client-details/edit/<int:client_id>/", methods=["POST"])
-@login_required
 @requires_roles("Analista de Operaciones")
 def edit_client(client_id):
     """Modifica los datos de un cliente en la base de datos"""
@@ -116,7 +115,6 @@ def edit_client(client_id):
 
 
 @current_app.route("/client-details/delete/<int:client_id>/", methods=["POST"])
-@login_required
 @requires_roles("Analista de Operaciones")
 def delete_client(client_id) -> Response:
     """Elimina un cliente de la base de datos"""
@@ -236,7 +234,6 @@ def register_client_vehicle(client_id: int) -> Response:
 
 
 @current_app.route("/client-details/<int:vehicle_id>/edit/", methods=["POST"])
-@login_required
 @requires_roles("Analista de Operaciones")
 def edit_client_vehicle(vehicle_id) -> Response:
     """Modifica los datos de un vehiculo de un cliente de la base de datos"""
@@ -273,7 +270,6 @@ def edit_client_vehicle(vehicle_id) -> Response:
 
 
 @current_app.route("/client-details/<int:vehicle_id>/delete/", methods=["POST"])
-@login_required
 @requires_roles("Analista de Operaciones")
 def delete_client_vehicle(vehicle_id) -> Response:
     """Elimina un vehiculo de un cliente de la base de datos"""

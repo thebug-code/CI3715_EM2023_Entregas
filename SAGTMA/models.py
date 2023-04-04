@@ -111,13 +111,13 @@ class ProjectDetail(db.Model):
 
     def __init__(
         self,
-        project_id,
-        vehicle_id,
-        department_id,
-        project_manager_id,
-        solution,
-        amount,
-        observations,
+        project_id: int,
+        vehicle_id: int,
+        department_id: int,
+        project_manager_id: int,
+        solution: str,
+        amount: float,
+        observations: str,
     ):
         self.project_id = project_id
         self.vehicle_id = vehicle_id

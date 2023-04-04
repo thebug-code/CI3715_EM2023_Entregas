@@ -39,7 +39,6 @@ def portfolio() -> Response:
 
 
 @current_app.route("/project-portfolio/add/", methods=["POST"])
-@login_required
 @requires_roles("Gerente de Operaciones")
 def create_project() -> Response:
     """Crear y anade un proyecto en la base de datos."""
@@ -60,7 +59,6 @@ def create_project() -> Response:
 
 
 @current_app.route("/project-portfolio/<int:project_id>/edit/", methods=["POST"])
-@login_required
 @requires_roles("Gerente de Operaciones")
 def edit_project(project_id):
     """Modifica los datos de un proyecto en la base de datos"""
@@ -79,7 +77,6 @@ def edit_project(project_id):
 
 
 @current_app.route("/project-portfolio/<int:project_id>/delete/", methods=["POST"])
-@login_required
 @requires_roles("Gerente de Operaciones")
 def delete_project(project_id) -> Response:
     """Elimina un proyecto de la base de datos"""
@@ -95,7 +92,6 @@ def delete_project(project_id) -> Response:
 
 
 @current_app.route("/project-portfolio/edit/<int:project_id>/status/", methods=["POST"])
-@login_required
 @requires_roles("Gerente de Operaciones")
 def change_project_status(project_id):
     """Activa o desactiva un proyecto de la base de datos"""
@@ -175,7 +171,6 @@ def project_data(project_id) -> Response:
 
 
 @current_app.route("/project-details/<int:project_id>/register/", methods=["POST"])
-@login_required
 @requires_roles("Gerente de Operaciones")
 def register_project_data(project_id) -> Response:
     """Registrar y anade un detalle de proyecto en la base de datos."""
@@ -201,7 +196,6 @@ def register_project_data(project_id) -> Response:
 
 
 @current_app.route("/project-details/<int:detail_id>/edit/", methods=["POST"])
-@login_required
 @requires_roles("Gerente de Operaciones")
 def edit_project_data(detail_id) -> Response:
     """Registrar y anade un detalle de proyecto en la base de datos."""
@@ -228,7 +222,6 @@ def edit_project_data(detail_id) -> Response:
 
 
 @current_app.route("/project-details/<int:detail_id>/delete/", methods=["POST"])
-@login_required
 @requires_roles("Gerente de Operaciones")
 def delete_project_data(detail_id) -> Response:
     """Elimina un detalle de proyecto de la base de datos"""

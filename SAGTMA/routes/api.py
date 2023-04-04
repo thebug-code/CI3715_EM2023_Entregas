@@ -15,7 +15,6 @@ from SAGTMA.models import (
 
 
 @current_app.route("/api/v1/users")
-@login_required
 @requires_roles("Administrador")
 def api_users():
     # SELECT * FROM user
@@ -50,7 +49,6 @@ def api_users():
 
 
 @current_app.route("/api/v1/projects")
-@login_required
 @requires_roles("Gerente de Operaciones")
 def api_projects():
     stmt = db.select(Project)
@@ -77,7 +75,6 @@ def api_projects():
 
 
 @current_app.route("/api/v1/clients")
-@login_required
 @requires_roles("Analista de Operaciones")
 def api_clients():
     stmt = db.select(Client)
@@ -108,7 +105,6 @@ def api_clients():
 
 
 @current_app.route("/api/v1/vehicles")
-@login_required
 @requires_roles("Analista de Operaciones")
 def api_vehicles():
     stmt = db.select(Vehicle)
@@ -139,7 +135,6 @@ def api_vehicles():
 
 
 @current_app.route("/api/v1/departments")
-@login_required
 @requires_roles("Administrador")
 def api_departments():
     stmt = db.select(Department)
@@ -164,7 +159,6 @@ def api_departments():
 
 
 @current_app.route("/api/v1/project-details-dropdown-data", methods=["GET"])
-@login_required
 @requires_roles("Gerente de Operaciones")
 def get_project_details_dropdown_data():
     # SELECT * FROM user
@@ -202,7 +196,6 @@ def get_project_details_dropdown_data():
 
 
 @current_app.route("/api/v1/project-details", methods=["GET"])
-@login_required
 @requires_roles("Gerente de Operaciones")
 def api_project_details():
     # SELECT * FROM project_detail

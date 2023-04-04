@@ -161,21 +161,7 @@
                   <input type="date" style="background-color:transparent;border-radius: 5px;" value="{{ project.end_date }}" disabled />
                 </td>
                 <td>
-                  {# Botón de ir a detalles #}
-                  <a href="{{ url_for('project_data', project_id=project.id) }}">
-                    <button
-                      type="button"
-                      class="my-2 btn {% if project.active %}
-                        btn-primary
-                      {% else %}
-                        btn-secondary
-                      {% endif %}"
-                      {% if not project.active %}disabled{% endif %}
-                    >
-                      <img src="{{ url_for('static', filename='img/detail.svg') }}" width="24" height="24" fill="white" class="table-button" style="border-radius: 5px;" title="Ver Datos" />
-                    </button>
-                  </a>
-
+                  
                   {# Modificar #}
                   <button
                     type="button"
@@ -188,9 +174,9 @@
                     data-toggle="modal"
                     {% if not project.active %}disabled{% endif %}
                   >
-                    <img src="{{ url_for('static', filename='img/edit.svg') }}" width="24" height="24" fill="white" class="table-button" value="submit" style="border-radius: 5px;" title="Modificar proyecto" />
-                  </button>
-
+                  <img src="{{ url_for('static', filename='img/edit.svg') }}" width="24" height="24" fill="white" class="table-button" value="submit" style="border-radius: 5px;" title="Modificar proyecto" />
+                </button>
+                
                   {# Eliminar #}
                   <button
                     type="button"
@@ -206,14 +192,21 @@
                     <img src="{{ url_for('static', filename='img/delete.svg') }}" width="24" height="24" fill="white" class="table-button" value="submit" style="border-radius: 5px;" title="Eliminar proyecto" />
                   </button>
 
+                  {# Botón de ir a detalles #}
+                  <a href="{{ url_for('project_data', project_id=project.id) }}">
+                    <button type="button" class="my-2 btn btn-primary">
+                      <img src="{{ url_for('static', filename='img/detail.svg') }}" width="24" height="24" fill="white" class="table-button" style="border-radius: 5px;" title="Ver Datos" />
+                    </button>
+                  </a>
+
                   {# Habilitar/Cerrar #}
                   {% if project.active %}
                     <button type="button" id="disable{{ project.id }}" class="my-2 btn btn-primary change-project-status" name="disable-project">
                       <img src="{{ url_for('static', filename='img/stop.svg') }}" width="24" height="24" fill="white" class="table-button" value="submit" style="border-radius: 5px;" title="Cerrar proyecto" />
                     </button>
                   {% else %}
-                    <button type="submit" id="enable{{ project.id }}" name="enable-project" class="btn btn-primary change-project-status">
-                      <img src="{{ url_for('static', filename='img/play.svg') }}" width="24" height="24" fill="white" class="table-button" value="submit" style="border-radius: 5px;" title="Habilitar proyecto" />
+                  <button type="submit" id="enable{{ project.id }}" name="enable-project" class="btn btn-primary change-project-status">
+                    <img src="{{ url_for('static', filename='img/play.svg') }}" width="24" height="24" fill="white" class="table-button" value="submit" style="border-radius: 5px;" title="Habilitar proyecto" />
                     </button>
                   {% endif %}
                   {# Imprimir #}
