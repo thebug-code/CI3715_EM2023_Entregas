@@ -439,25 +439,10 @@ class TestVehicles(BaseTestClass):
 
     def test_delete_vehicle(self):
         """Testea la eliminación de vehículos."""
+        print("HOLA2")
 
         self._login_analyst()
 
-        self._register_vehicle(
-            "NRR-16D",
-            "Chevrolet",
-            "Aveo",
-            "1978",
-            "ABCDEFG01234567",
-            "1234567ABCDEFG",
-            "Se le dañó la caja!",
-        )
-
-    def test_delete_vehicle(self):
-        """Testea la eliminación de vehículos."""
-
-        self._login_analyst()
-
-        self
         self.driver.find_element(By.CSS_SELECTOR, "#delete0 > .table-button").click()
 
         WebDriverWait(self.driver, 1).until(
