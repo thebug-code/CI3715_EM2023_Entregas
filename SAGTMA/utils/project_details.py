@@ -11,17 +11,18 @@ class ProjectDetailError(ValueError):
 # ========== Validaciones ==========
 def validate_cost(cost: str) -> float:
     """
-    Lanza una excepción si el monto no es válida.
+    Lanza una excepción si el monto no es válido.
 
     Un monto es válida si:
       -Es un número entero positivo
     """
-    if not cost.isdigit():
-        raise ProjectDetailError("El monto debe ser un número entero positivo")
-    cost = float(cost)
+    try:
+        cost = float(cost)
+    except ValueError:
+        raise ProjectDetailError("El monto debe ser un número")
 
     if cost < 0:
-        raise ProjectDetailError("El monto debe ser un número entero positivo")
+        raise ProjectDetailError("El monto debe ser un número positivo")
 
     return cost
 
