@@ -1,0 +1,148 @@
+{% extends 'base/base.html' %}
+{% set active_page = "measurement-units" %}
+{% block title %}Unidades de Medidas{% endblock %}
+{% block content %}
+  {# Título de la página centrado en una barra #}
+  <div class="d-flex justify-content-center my-4">
+    <h1 class="title-container">Unidades de Medidas</h1>
+  </div>
+
+  {# Modal de registrar unidad de medida #}
+  <div class="modal fade" id="add-measure-unit-modal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addModalLabel">Agregar unidad de medida</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="{{ url_for('register_measure_unit') }}" method="post">
+            <div class="mb-3">
+              <label for="dimension" class="form-label">Dimensión</label>
+              <input type="number" class="form-control" id="add-dimension" name="dimension" placeholder="Ingrese la dimensión de la medida" required autofocus />
+            </div>
+            <div class="mb-3">
+              <label for="unit" class="form-label">Unidad</label>
+              <input type="text" class="form-control" id="add-unit" name="unit" placeholder="Ingrese la unidad de la medida" required />
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+              <button type="submit" class="btn btn-primary">Agregar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {# Modal confirmar eliminar unidad de medida #}
+  <div class="modal fade" id="delete-measure-unit-modal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">Eliminar unidad de medida</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>¿Está seguro que desea eliminar esta unidad de medida?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <form method="post" class="d-inline" id="delete-measure-unit-form">
+            <button type="submit" class="btn btn-danger">Eliminar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {# Modal de modificar unidad de medida #}
+  <div class="modal fade" id="edit-measure-unit-modal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editModalLabel">Modificar unidad de medida</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="post" id="edit-measure-unit-form">
+            <div class="mb-3">
+              <label for="dimension" class="form-label">Dimensión</label>
+              <input type="number" class="form-control" id="edit-dimension" name="dimension" placeholder="Ingrese la dimensión de la medida" required autofocus />
+            </div>
+            <div class="mb-3">
+              <label for="unit" class="form-label">Unidad</label>
+              <input type="text" class="form-control" id="edit-unit" name="unit" placeholder="Ingrese la unidad de la medida" required />
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+              <button type="submit" class="btn btn-primary">Modificar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    {# Barra de filtro de unidades de medida #}
+    <form class="row search-filter" action="{{ url_for('measurement_units') }}" method="post">
+      <div class="col-6 mx-3 my-4">
+        <div class="input-group">
+          <input name="uom-filter" type="text" class="form-control" placeholder="Buscar unidad de medida" aria-label="Buscar unidad de medida" aria-describedby="button-addon2" />
+          <button type="submit" class="btn btn-primary">
+            <img src="{{ url_for('static', filename='img/search.svg') }}" width="34" height="34" style="border-radius: 1rem;" title="Buscar unidad de medida" />
+          </button>
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-measure-unit-modal">
+            <img src="{{ url_for('static', filename='img/add.svg') }}" width="34" height="34" style="border-radius: 1rem;" title="Agregar unidad de medida" />
+          </button>
+        </div>
+      </div>
+      {# Botón de agregar #}
+    </form>
+
+    {# Si no hay unidades de medidas o no se encontraron en la busqueda #}
+    {% if measurement_units|length == 0 %}
+      <div class="d-flex justify-content-center my-4">
+        <div class="alert alert-danger" role="alert">No se encontraron departamentos</div>
+      </div>
+    {% else %}
+      {# Tabla de Unidades de Medida #}
+      <div class="container table-container">
+        <table class="table table-striped table-hover align-middle">
+          {# Header de la tabla #}
+          <thead>
+            <tr>
+              <th>Id</th>
+              <th>Dimensión</th>
+              <th>Unidad</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for measure_unit in measurement_units %}
+              {# Filas de la tabla #}
+              <tr>
+                <td>{{ measure_unit.id }}</td>
+                <td>{{ measure_unit.dimension }}</td>
+                <td>{{ measure_unit.unit }}</td>
+                <td>
+                  {# Botón de modificar #}
+                  <button type="button" id="edit{{ measure_unit.id }}" class="btn btn-primary my-2 edit-measure-unit" data-bs-toggle="modal">
+                    <img src="{{ url_for('static', filename='img/edit.svg') }}" width="24" height="24" fill="white" class="table-button" value="submit" style="border-radius: 5px;" title="Modificar unidad de medida" />
+                  </button>
+
+                  {# Botón de eliminar #}
+                  <button id="delete{{ measure_unit.id }}" type="button" class="btn btn-primary my-2 delete-measure-unit" data-bs-toggle="modal">
+                    <img src="{{ url_for('static', filename='img/delete.svg') }}" width="24" height="24" fill="white" class="table-button" value="submit" style="border-radius: 5px;" title="Eliminar unidad de medida" />
+                  </button>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% endif %}
+  </div>
+
+  <script src="{{ url_for('static', filename='js/measurement_units.js') }}"></script>
+{% endblock %}
