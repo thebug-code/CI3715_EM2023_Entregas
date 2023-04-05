@@ -284,3 +284,18 @@ def register_measure_unit() -> Response:
     # Se permanece en la página
     flash("Unidad de medida añadida exitosamente")
     return redirect(url_for("measure_units"))
+
+
+@current_app.route("/measurement-units/<int:unit_id>/delete/", methods=["POST"])
+@requires_roles("Administrador")
+def delete_measure_unit(unit_id: int) -> Response:
+    """Elimina una unidad de medida de la base de datos."""
+    try:
+        measurement_units.delete_measure_unit(unit_id)
+    except measurement_units.MeasureUnitError as e:
+        flash(f"{e}")
+        return redirect(url_for("measure_units"))
+
+    # Se permanece en la página
+    flash("Unidad de medida eliminada exitosamente")
+    return redirect(url_for("measure_units"))

@@ -77,3 +77,28 @@ def register_measure_unit(dimension: str, unit: str):
     events.add_event(
         "Unidades de medida", f"Agregar unidad de medida '{new_measure_unit.dimension} {new_measure_unit.unit}'"
     )
+
+
+# ========== Eliminación ==========
+def delete_measure_unit(measure_unit_id: int):
+    """
+    Elimina una unidad de medida de la base de datos.
+
+    Lanza una excepción MeasureUnitError si:
+        -No existe una unidad de medida con el id especificado.
+    """
+
+    # Selecciona la unidad de medida con el id especificado y verifica que exista
+    smt = db.select(MeasureUnit).where(MeasureUnit.id == measure_unit_id)
+    measure_unit_query = db.session.execute(smt).first()
+    if not measure_unit_query:
+        raise ValueError("No existe una unidad de medida con el id especificado")
+    measure_unit = measure_unit_query[0]
+
+    # Elimina la unidad de medida de la base de datos
+    db.session.delete(measure_unit)
+
+    # Registra el evento en la base de datos
+    events.add_event(
+        "Unidades de medida", f"Eliminar unidad de medida '{measure_unit.dimension} {measure_unit.unit}'"
+    )
