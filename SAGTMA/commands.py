@@ -92,7 +92,7 @@ def populate_db():
 
         db.session.add(project)
 
-    # Añade dos clientes dummy con dos vehículos
+    # Añade tres clientes dummy con dos vehículos
     client0 = Client(
         "V-82482795",
         "Carlos",
@@ -111,6 +111,16 @@ def populate_db():
         "+584249745787",
         "fidelcastro@usb.ve",
         "La california, Caracas, Al lado del kiosko verde",
+    )
+
+    client2 = Client(
+        "V-23644543",
+        "Elon",
+        "Musk",
+        date(1960, 12, 7),
+        "+584248547687",
+        "elonmusk@usb.ve",
+        "La california, Caracas, Detrás del kiosko verde",
     )
 
     car1 = Vehicle(
@@ -135,10 +145,22 @@ def populate_db():
         "El carro vuela",
     )
 
+    car3 = Vehicle(
+        "ARD-123",
+        "Toyota",
+        "4Runner Trd Pro",
+        2022,
+        "pp5rm4h4yz2n4k73c",
+        "9gamm6101ab0151",
+        "Negro",
+        "El carro no arranca",
+    )
+
     client0.vehicles.append(car1)
     client1.vehicles.append(car2)
+    client2.vehicles.append(car3)
 
-    db.session.add_all([client0, client1])
+    db.session.add_all([client0, client1, client2])
 
     # Anade departamentos
     dept_names = [
