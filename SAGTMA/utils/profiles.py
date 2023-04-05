@@ -229,9 +229,10 @@ def delete_user(user_id: int):
     if deleted_user.role.name == "Administrador":
         raise ProfileError("No se puede eliminar un administrador")
 
-
     # Verifica que el usuario no esta asociado a un detalle de proyecto
-    stmt = db.select(ProjectDetail).where(ProjectDetail.project_manager_id == deleted_user.id)
+    stmt = db.select(ProjectDetail).where(
+        ProjectDetail.project_manager_id == deleted_user.id
+    )
     if db.session.execute(stmt).first():
         raise ProfileError(
             "El usuario no puede ser eliminado porque está asociado a un detalle de proyecto"

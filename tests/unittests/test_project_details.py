@@ -19,10 +19,23 @@ class TestProjectDetails(BaseTestClass):
     def populate_db(self):
         super().populate_db()
 
+        # Añade un usuario Analista
+        stmt = db.select(Role).where(Role.name == "Analista de Operaciones")
+        (analyst,) = db.session.execute(stmt).fetchone()
+
+        analyst_user = User(
+            "V-1001000",
+            "analyst",
+            "Bad3",
+            "Bunny3",
+            hash_password("Analyst123."),
+            analyst,
+        )
+
+        # Añade un usuario Gerente de Operaciones
         stmt = db.select(Role).where(Role.name == "Gerente de Operaciones")
         (manager,) = db.session.execute(stmt).fetchone()
 
-        # Añade un usuario Gerente de Operaciones
         manager_user = User(
             "V-1000000",
             "manager",
@@ -69,11 +82,19 @@ class TestProjectDetails(BaseTestClass):
         detail = ProjectDetail(0, 0, 0, 1, "Prueba", 0.1, "N/A")
         detail.id = 0
 
-        db.session.add_all([manager_user, project, client, dept, detail])
+        db.session.add_all(
+            [analyst_user, manager_user, project, client, dept, detail]
+        )
         db.session.commit()
 
     def _login_manager(self):
         return self.login_user("manager", "Manager123.")
+
+    def _login_analyst(self):
+        return self.login_user("analyst", "Analyst123.")
+
+    def _login_admin(self):
+        return self.login_user("admin", "Admin123.")
 
     def test_add_project_data_valid(self):
         """Testea la adición de datos proyecto válidos."""
@@ -245,3 +266,48 @@ class TestProjectDetails(BaseTestClass):
         # Verifica que se eliminó el proyecto
         stmt = db.select(ProjectDetail).where(ProjectDetail.solution == "Prueba")
         self.assertIsNone(db.session.execute(stmt).first())
+
+    def test_delete_client_project_associated(self):
+        """Testea que no se pueda eliminar un cliente con proyectos asociados."""
+        self._login_analyst()
+
+        # Elimina un cliente con proyectos asociados
+        self.client.post("/client-details/delete/0/", follow_redirects=True)
+
+        # Verifica que no se eliminó el cliente
+        stmt = db.select(Client).where(Client.names == "Cliente")
+        self.assertIsNotNone(db.session.execute(stmt).first())
+
+    def test_delete_vehicle_project_associated(self):
+        """Testea que no se pueda eliminar un vehículo con proyectos asociados."""
+        self._login_analyst()
+
+        # Elimina un vehículo con proyectos asociados
+        self.client.post(
+            "/client-details/0/delete/",
+            data={"client-id": "0"},
+            follow_redirects=True,
+        )
+
+        # Verifica que no se eliminó el vehículo
+        stmt = db.select(Vehicle).where(Vehicle.license_plate == "ABC-123")
+        self.assertIsNotNone(db.session.execute(stmt).first())
+
+    def test_delete_manager_project_associated(self):
+        """Testea que no se pueda eliminar un usuario con proyectos asociados."""
+        self._login_admin()
+
+        # Añade un detalle de proyecto asociado a un gerente que no es admin
+        detail = ProjectDetail(0, 0, 0, 2, "Prueba", 0.1, "N/A")
+        detail.id = 1
+        db.session.add(detail)
+        db.session.commit()
+
+        # Elimina un usuario con proyectos asociados
+        self.client.post("/user-profiles/2/delete/")
+
+        db.session.execute(db.select(User)).fetchall()
+        
+        # Verifica que no se eliminó el usuario
+        stmt = db.select(User).where(User.username == "analyst")
+        self.assertIsNotNone(db.session.execute(stmt).first())

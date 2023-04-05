@@ -78,8 +78,8 @@ def delete_dept(dept_id: int):
     # Verifica que el departamento no esta asociado a un detalle de proyecto
     stmt = db.select(ProjectDetail).where(ProjectDetail.department_id == dept.id)
     if db.session.execute(stmt).first():
-        raise Department(
-            "El departamento no puede ser eliminado porque está asociado a un detalle de proyecto"
+        raise DepartmentError(
+            "El departamento no puede ser eliminado porque existen proyectos en ese departamento."
         )
 
     # Elimina el departamento de la base de datos

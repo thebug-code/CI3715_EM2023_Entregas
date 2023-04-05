@@ -462,7 +462,6 @@ class TestVehicles(BaseTestClass):
 
         self.driver.find_element(By.CSS_SELECTOR, ".btn-danger").click()
 
-        # Assert that the client was deleted
         WebDriverWait(self.driver, 1).until(
             expected_conditions.visibility_of_element_located(
                 (By.CSS_SELECTOR, ".toast-body")
@@ -474,7 +473,6 @@ class TestVehicles(BaseTestClass):
             "Vehículo eliminado exitosamente",
         )
 
-        # Assert that the client is not in the table
         self.assertEqual(
             "No se encontraron vehículos",
             self.driver.find_element(By.CSS_SELECTOR, ".alert").text,

@@ -439,7 +439,6 @@ class TestClients(BaseTestClass):
 
         self.driver.find_element(By.CSS_SELECTOR, ".btn-danger").click()
 
-        # Assert that the client was deleted
         WebDriverWait(self.driver, 1).until(
             expected_conditions.visibility_of_element_located(
                 (By.CSS_SELECTOR, ".toast-body")
@@ -451,7 +450,6 @@ class TestClients(BaseTestClass):
             "Cliente eliminado exitosamente",
         )
 
-        # Assert that the client is not in the table
         self.assertEqual(
             "No se encontraron clientes",
             self.driver.find_element(By.CSS_SELECTOR, ".alert").text,
