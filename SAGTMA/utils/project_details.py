@@ -11,7 +11,7 @@ class ProjectDetailError(ValueError):
 # ========== Validaciones ==========
 def validate_cost(cost: str) -> float:
     """
-    Lanza una excepción si el monto no es válida.
+    Lanza una excepción si el monto no es válido.
 
     Un monto es válida si:
       -Es un número real positivo
