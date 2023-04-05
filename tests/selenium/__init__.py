@@ -1,6 +1,7 @@
 import unittest
 from os import environ
 
+from selenium.webdriver.common.by import By
 from selenium import webdriver
 import SAGTMA
 from SAGTMA.models import Role, User, db
@@ -47,6 +48,15 @@ class BaseTestClass(unittest.TestCase):
             options.add_argument("-headless")
         self.driver = getattr(webdriver, webdriver_name)(options=options)
         self.base_url = "http://localhost:5001"
+
+    def login_user(self, username: str, password: str):
+        self.driver.get(f"{self.base_url}/login/")
+
+        self.driver.find_element(By.ID, "username").click()
+        self.driver.find_element(By.ID, "username").send_keys(username)
+        self.driver.find_element(By.ID, "password").click()
+        self.driver.find_element(By.ID, "password").send_keys(password)
+        self.driver.find_element(By.CSS_SELECTOR, ".btn-primary").click()
 
     def populate_db(self):
         # Crea los roles

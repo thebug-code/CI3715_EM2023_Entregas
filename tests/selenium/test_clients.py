@@ -54,14 +54,7 @@ class TestClients(BaseTestClass):
         db.session.commit()
 
     def _login_analyst(self):
-        self.driver.get(f"{self.base_url}/login/")
-
-        self.driver.find_element(By.ID, "username").click()
-        self.driver.find_element(By.ID, "username").send_keys("analyst")
-        self.driver.find_element(By.ID, "password").click()
-        self.driver.find_element(By.ID, "password").click()
-        self.driver.find_element(By.ID, "password").send_keys("Analyst123.")
-        self.driver.find_element(By.CSS_SELECTOR, ".btn-primary").click()
+        self.login_user("analyst", "Analyst123.")
 
     def _register_client(
         self,

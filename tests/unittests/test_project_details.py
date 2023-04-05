@@ -73,11 +73,7 @@ class TestProjectDetails(BaseTestClass):
         db.session.commit()
 
     def _login_manager(self):
-        return self.client.post(
-            "/login/",
-            data={"username": "manager", "password": "Manager123."},
-            follow_redirects=True,
-        )
+        return self.login_user("manager", "Manager123.")
 
     def test_add_project_data_valid(self):
         """Testea la adición de datos proyecto válidos."""

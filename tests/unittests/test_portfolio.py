@@ -32,11 +32,7 @@ class TestPortfolio(BaseTestClass):
         db.session.commit()
 
     def _login_manager(self):
-        return self.client.post(
-            "/login/",
-            data={"username": "manager", "password": "Manager123."},
-            follow_redirects=True,
-        )
+        return self.login_user("manager", "Manager123.")
 
     def test_register_project_valid(self):
         """Testea la creación de proyecto válidos."""

@@ -55,14 +55,7 @@ class TestVehicles(BaseTestClass):
         db.session.commit()
 
     def _login_analyst(self):
-        self.driver.get(f"{self.base_url}/login/")
-
-        self.driver.find_element(By.ID, "username").click()
-        self.driver.find_element(By.ID, "username").send_keys("analyst")
-        self.driver.find_element(By.ID, "password").click()
-        self.driver.find_element(By.ID, "password").click()
-        self.driver.find_element(By.ID, "password").send_keys("Analyst123.")
-        self.driver.find_element(By.CSS_SELECTOR, ".btn-primary").click()
+        self.login_user("analyst", "Analyst123.")
         self.driver.get(f"{self.base_url}/client-details/1/")
 
     def _register_vehicle(
@@ -439,8 +432,6 @@ class TestVehicles(BaseTestClass):
 
     def test_delete_vehicle(self):
         """Testea la eliminación de vehículos."""
-        print("HOLA2")
-
         self._login_analyst()
 
         self.driver.find_element(By.CSS_SELECTOR, "#delete0 > .table-button").click()

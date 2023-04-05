@@ -1,4 +1,4 @@
-from SAGTMA.models import Role, User, db
+from SAGTMA.models import Role, User, ProjectDetail, db
 from SAGTMA.utils import events
 from SAGTMA.utils.auth import hash_password
 from SAGTMA.utils.validations import validate_id, validate_name
@@ -228,6 +228,14 @@ def delete_user(user_id: int):
     # No se puede eliminar un administrador
     if deleted_user.role.name == "Administrador":
         raise ProfileError("No se puede eliminar un administrador")
+
+
+    # Verifica que el usuario no esta asociado a un detalle de proyecto
+    stmt = db.select(ProjectDetail).where(ProjectDetail.project_manager_id == deleted_user.id)
+    if db.session.execute(stmt).first():
+        raise ProfileError(
+            "El usuario no puede ser eliminado porque está asociado a un detalle de proyecto"
+        )
 
     # Elimina el usuario de la base de datos
     db.session.delete(deleted_user)

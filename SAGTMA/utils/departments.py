@@ -1,6 +1,6 @@
 import re
 
-from SAGTMA.models import Department, db
+from SAGTMA.models import Department, ProjectDetail, db
 from SAGTMA.utils import events
 
 
@@ -74,6 +74,13 @@ def delete_dept(dept_id: int):
     if not dept_query:
         raise DepartmentError("El departamento indicado no existe")
     dept = dept_query[0]
+
+    # Verifica que el departamento no esta asociado a un detalle de proyecto
+    stmt = db.select(ProjectDetail).where(ProjectDetail.department_id == dept.id)
+    if db.session.execute(stmt).first():
+        raise Department(
+            "El departamento no puede ser eliminado porque está asociado a un detalle de proyecto"
+        )
 
     # Elimina el departamento de la base de datos
     db.session.delete(dept)

@@ -15,13 +15,8 @@ class TestProfiles(BaseTestClass):
         db.session.commit()
 
     def _login_admin(self):
-        """Inicia sesión con un usuario Analista de Operaciones."""
-
-        return self.client.post(
-            "/login/",
-            data={"username": "admin", "password": "Admin123."},
-            follow_redirects=True,
-        )
+        """Inicia sesión con un usuario Administrador."""
+        return self.login_user("admin", "Admin123.")
 
     def test_validate_dept_invalid(self):
         """Testea la validación de nombres de departamentos inválidos."""

@@ -9,14 +9,7 @@ from tests.selenium import BaseTestClass
 
 class TestProfiles(BaseTestClass):
     def _login_admin(self):
-        self.driver.get(f"{self.base_url}/login/")
-
-        self.driver.find_element(By.ID, "username").click()
-        self.driver.find_element(By.ID, "username").send_keys("admin")
-        self.driver.find_element(By.ID, "password").click()
-        self.driver.find_element(By.ID, "password").click()
-        self.driver.find_element(By.ID, "password").send_keys("Admin123.")
-        self.driver.find_element(By.CSS_SELECTOR, ".btn-primary").click()
+        self.login_user("admin", "Admin123.")
 
     def _register_user(
         self,

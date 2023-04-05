@@ -55,6 +55,14 @@ class BaseTestClass(unittest.TestCase):
 
         db.session.commit()
 
+    def login_user(self, username: str, password: str):
+        """Inicia sesión con un usuario"""
+        return self.client.post(
+            "/login/",
+            data={"username": username, "password": password},
+            follow_redirects=True,
+        )
+
     def tearDown(self):
         # Sale el contexto de la aplicación
         self.ctx.pop()

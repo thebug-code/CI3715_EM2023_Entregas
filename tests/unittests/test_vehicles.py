@@ -52,12 +52,7 @@ class TestVehicles(BaseTestClass):
 
     def _login_analyst(self):
         """Inicia sesión con un usuario Analista de Operaciones."""
-
-        return self.client.post(
-            "/login/",
-            data={"username": "analyst", "password": "Analyst123."},
-            follow_redirects=True,
-        )
+        return self.login_user("analyst", "Analyst123.")
 
     def test_register_vehicle_valid(self):
         """Testea la creación de vehículos válidos."""

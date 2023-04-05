@@ -19,10 +19,10 @@ def validate_cost(cost: str) -> float:
     try:
         cost = float(cost)
     except ValueError:
-        raise ProjectDetailError("El monto debe ser un número entero positivo")
+        raise ProjectDetailError("El costo debe ser mayor o igual a 0")
 
     if cost < 0:
-        raise ProjectDetailError("El monto debe ser un número entero positivo")
+        raise ProjectDetailError("El costo debe ser mayor o igual a 0")
 
     return cost
 
@@ -37,7 +37,7 @@ def validate_input_text(input_text: str, flag: bool = False):
     """
     if len(input_text) < 3 or len(input_text) > 100:
         if flag:
-            raise ProjectDetailError("La solucion debe tener entre 3 y 100 caracteres")
+            raise ProjectDetailError("La solución debe tener entre 3 y 100 caracteres")
         else:
             raise ProjectDetailError(
                 "Las observaciones deben tener entre 3 y 100 caracteres"
@@ -47,7 +47,7 @@ def validate_input_text(input_text: str, flag: bool = False):
     if not re.match(regex, input_text):
         if flag:
             raise ProjectDetailError(
-                "La solucion solo puede contener caracteres alfanuméricos, guiones y espacios"
+                "La solución solo puede contener caracteres alfanuméricos, guiones y espacios"
             )
         else:
             raise ProjectDetailError(

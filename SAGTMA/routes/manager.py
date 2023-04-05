@@ -217,7 +217,7 @@ def edit_project_data(detail_id) -> Response:
         return redirect(url_for("project_data", project_id=project_id))
 
     # Se permanece en la página
-    flash("Detalle de proyecto registrado exitosamente")
+    flash("Detalle de proyecto editado exitosamente")
     return redirect(url_for("project_data", project_id=project_id))
 
 
