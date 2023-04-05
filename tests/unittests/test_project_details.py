@@ -82,9 +82,7 @@ class TestProjectDetails(BaseTestClass):
         detail = ProjectDetail(0, 0, 0, 1, "Prueba", 0.1, "N/A")
         detail.id = 0
 
-        db.session.add_all(
-            [analyst_user, manager_user, project, client, dept, detail]
-        )
+        db.session.add_all([analyst_user, manager_user, project, client, dept, detail])
         db.session.commit()
 
     def _login_manager(self):
@@ -307,7 +305,18 @@ class TestProjectDetails(BaseTestClass):
         self.client.post("/user-profiles/2/delete/")
 
         db.session.execute(db.select(User)).fetchall()
-        
+
         # Verifica que no se eliminó el usuario
         stmt = db.select(User).where(User.username == "analyst")
+        self.assertIsNotNone(db.session.execute(stmt).first())
+
+    def test_delete_dept_project_associated(self):
+        """Testea que no se pueda eliminar un departamento con proyectos asociados."""
+        self._login_admin()
+
+        # Elimina un departamento con proyectos asociados
+        self.client.post("/workshop-departments/0/delete/", follow_redirects=True)
+
+        # Verifica que no se eliminó el departamento
+        stmt = db.select(Department).where(Department.description == "Mecánica")
         self.assertIsNotNone(db.session.execute(stmt).first())

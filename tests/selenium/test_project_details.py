@@ -84,9 +84,7 @@ class TestProjectDetails(BaseTestClass):
         detail = ProjectDetail(0, 0, 0, 1, "Prueba", 0.1, "N/A")
         detail.id = 0
 
-        db.session.add_all(
-            [analyst_user, manager_user, project, client, dept, detail]
-        )
+        db.session.add_all([analyst_user, manager_user, project, client, dept, detail])
         db.session.commit()
 
     def _login_manager(self):
@@ -442,7 +440,7 @@ class TestProjectDetails(BaseTestClass):
 
         self.assertEqual(
             self.driver.find_element(By.CSS_SELECTOR, ".toast-body").text,
-            "El departamento no puede ser eliminado porque existen proyectos en ese departamento."
+            "El departamento no puede ser eliminado porque existen proyectos en ese departamento.",
         )
 
         self.assertIn(
