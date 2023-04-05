@@ -299,3 +299,21 @@ def delete_measure_unit(unit_id: int) -> Response:
     # Se permanece en la página
     flash("Unidad de medida eliminada exitosamente")
     return redirect(url_for("measure_units"))
+
+
+@current_app.route("/measurement-units/<int:unit_id>/edit/", methods=["POST"])
+@requires_roles("Administrador")
+def edit_measure_unit(unit_id: int) -> Response:
+    """Modifica una unidad de medida en la base de datos"""
+    dimension = request.form.get("dimension", "")
+    unit = request.form.get("unit", "")
+
+    try:
+        measurement_units.edit_measure_unit(unit_id, dimension, unit)
+    except measurement_units.MeasureUnitError as e:
+        flash(f"{e}")
+        return redirect(url_for("measure_units"))
+
+    # Se permanece en la página
+    flash("Unidad de medida modificada exitosamente")
+    return redirect(url_for("measure_units"))

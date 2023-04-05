@@ -10,12 +10,12 @@ from SAGTMA.models import (
     Department,
     Role,
     ProjectDetail,
+    MeasureUnit,
     db,
 )
 
 
 @current_app.route("/api/v1/users")
-@login_required
 @requires_roles("Administrador")
 def api_users():
     # SELECT * FROM user
@@ -50,7 +50,6 @@ def api_users():
 
 
 @current_app.route("/api/v1/projects")
-@login_required
 @requires_roles("Gerente de Operaciones")
 def api_projects():
     stmt = db.select(Project)
@@ -77,7 +76,6 @@ def api_projects():
 
 
 @current_app.route("/api/v1/clients")
-@login_required
 @requires_roles("Analista de Operaciones")
 def api_clients():
     stmt = db.select(Client)
@@ -108,7 +106,6 @@ def api_clients():
 
 
 @current_app.route("/api/v1/vehicles")
-@login_required
 @requires_roles("Analista de Operaciones")
 def api_vehicles():
     stmt = db.select(Vehicle)
@@ -139,7 +136,6 @@ def api_vehicles():
 
 
 @current_app.route("/api/v1/departments")
-@login_required
 @requires_roles("Administrador")
 def api_departments():
     stmt = db.select(Department)
@@ -163,8 +159,7 @@ def api_departments():
     return depts
 
 
-@current_app.route("/api/v1/project-details-dropdown-data", methods=["GET"])
-@login_required
+@current_app.route("/api/v1/project-details-dropdown-data")
 @requires_roles("Gerente de Operaciones")
 def get_project_details_dropdown_data():
     # SELECT * FROM user
@@ -201,8 +196,7 @@ def get_project_details_dropdown_data():
     return data
 
 
-@current_app.route("/api/v1/project-details", methods=["GET"])
-@login_required
+@current_app.route("/api/v1/project-details")
 @requires_roles("Gerente de Operaciones")
 def api_project_details():
     # SELECT * FROM project_detail
@@ -234,3 +228,28 @@ def api_project_details():
     data = get_project_details_dropdown_data()
 
     return {"project_details": project_details, "dropdown_data": data}
+
+
+@current_app.route("/api/v1/measurement-units/")
+@requires_roles("Administrador")
+def api_measure_units():
+    stmt = db.select(MeasureUnit)
+
+    # Obtiene los parámetros de la request para filtrar por id
+    # y filtra de ser necesario
+    measure_unit_id = request.args.get("id")
+    if measure_unit_id:
+        stmt = stmt.where(MeasureUnit.id == measure_unit_id)
+
+    # Consulta las unidades de medida requeridas
+    result = db.session.execute(stmt).fetchall()
+    measure_units = [
+        {
+            "id": uom.id,
+            "dimension": uom.dimension,
+            "unit": uom.unit,
+        }
+        for uom, in result
+    ]
+
+    return measure_units

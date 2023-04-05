@@ -93,12 +93,62 @@ def delete_measure_unit(measure_unit_id: int):
     measure_unit_query = db.session.execute(smt).first()
     if not measure_unit_query:
         raise ValueError("No existe una unidad de medida con el id especificado")
-    measure_unit = measure_unit_query[0]
+    deleted_measure_unit = measure_unit_query[0]
 
     # Elimina la unidad de medida de la base de datos
-    db.session.delete(measure_unit)
+    db.session.delete(deleted_measure_unit)
 
     # Registra el evento en la base de datos
     events.add_event(
-        "Unidades de medida", f"Eliminar unidad de medida '{measure_unit.dimension} {measure_unit.unit}'"
+        "Unidades de medida", f"Eliminar unidad de medida '{deleted_measure_unit.dimension} {deleted_measure_unit.unit}'"
+    )
+
+
+# ========== Modificación ==========
+def edit_measure_unit(measure_unit_id: int, dimension: str, unit: str):
+    """
+    Modifica una unidad de medida en la base de datos.
+
+    Lanza una excepción MeasureUnitError si:
+        -No existe una unidad de medida con el id especificado.
+        -La dimensión o la unidad no son válidas.
+        -Ya existe una unidad de medida con la misma dimensión y unidad.
+    """
+    
+    # Elimina espacios al comienzo y final del input del form
+    dimension = dimension.strip()
+    unit = unit.strip()
+    
+    if not all([dimension, unit]):
+        raise ValueError("Todos los campos son obligatorios")
+    
+    # Chequea si la dimensión es válida
+    dimension = validate_dimension(dimension)
+    
+    # Chequea si la unidad es válida
+    validate_unit(unit)
+    
+    # Selecciona la unidad de medida con el id especificado y verifica que exista
+    smt = db.select(MeasureUnit).where(MeasureUnit.id == measure_unit_id)
+    measure_unit_query = db.session.execute(smt).first()
+    if not measure_unit_query:
+        raise ValueError("No existe una unidad de medida con el id especificado")
+    edited_measure_unit = measure_unit_query[0]
+    
+    # Verifica si ya existe una unidad de medida con la misma dimensión y unidad
+    smt = (
+        db.select(MeasureUnit)
+        .where(MeasureUnit.dimension == dimension and MeasureUnit.unit == unit)
+        .where(MeasureUnit.id != measure_unit_id)
+    )
+    if db.session.execute(smt).first():
+        raise ValueError("Ya existe una unidad de medida con la misma dimensión y unidad")
+    
+    # Modifica la unidad de medida en la base de datos
+    edited_measure_unit.dimension = dimension
+    edited_measure_unit.unit = unit
+    
+    # Registra el evento en la base de datos
+    events.add_event(
+        "Unidades de medida", f"Modificar unidad de medida '{edited_measure_unit.dimension} {edited_measure_unit.unit}'"
     )
