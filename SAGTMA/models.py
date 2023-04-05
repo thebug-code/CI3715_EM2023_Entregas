@@ -234,3 +234,10 @@ class Department(db.Model):
 
     def __repr__(self) -> str:
         return f"Department<{self.description}>"
+
+
+class UnitsMeasurement(db.Model):
+    """ Modelo de unidades de medidas. """
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    dimension = db.Column(db.Float, nullable=False)
+    unit = db.Column(db.String(20), nullable=False)
