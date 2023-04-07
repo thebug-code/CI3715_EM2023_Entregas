@@ -50,9 +50,8 @@ class TestDepartments(BaseTestClass):
             )
         )
 
-        self.driver.find_element(
-            By.CSS_SELECTOR, "#edit-dept-form #description"
-        ).send_keys(dept)
+        self.driver.find_element(By.ID, "edit-description").clear()
+        self.driver.find_element(By.ID, "edit-description").send_keys(dept)
 
         self.driver.find_element(
             By.CSS_SELECTOR, "#edit-dept-modal .btn-primary"
