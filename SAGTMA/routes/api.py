@@ -10,6 +10,7 @@ from SAGTMA.models import (
     Department,
     Role,
     ProjectDetail,
+    MeasureUnit,
     db,
 )
 
@@ -158,7 +159,7 @@ def api_departments():
     return depts
 
 
-@current_app.route("/api/v1/project-details-dropdown-data", methods=["GET"])
+@current_app.route("/api/v1/project-details-dropdown-data")
 @requires_roles("Gerente de Operaciones")
 def get_project_details_dropdown_data():
     # SELECT * FROM user
@@ -195,7 +196,7 @@ def get_project_details_dropdown_data():
     return data
 
 
-@current_app.route("/api/v1/project-details", methods=["GET"])
+@current_app.route("/api/v1/project-details")
 @requires_roles("Gerente de Operaciones")
 def api_project_details():
     # SELECT * FROM project_detail
@@ -227,3 +228,28 @@ def api_project_details():
     data = get_project_details_dropdown_data()
 
     return {"project_details": project_details, "dropdown_data": data}
+
+
+@current_app.route("/api/v1/measurement-units/")
+@requires_roles("Administrador")
+def api_measure_units():
+    stmt = db.select(MeasureUnit)
+
+    # Obtiene los parámetros de la request para filtrar por id
+    # y filtra de ser necesario
+    measure_unit_id = request.args.get("id")
+    if measure_unit_id:
+        stmt = stmt.where(MeasureUnit.id == measure_unit_id)
+
+    # Consulta las unidades de medida requeridas
+    result = db.session.execute(stmt).fetchall()
+    measure_units = [
+        {
+            "id": uom.id,
+            "dimension": uom.dimension,
+            "unit": uom.unit,
+        }
+        for uom, in result
+    ]
+
+    return measure_units

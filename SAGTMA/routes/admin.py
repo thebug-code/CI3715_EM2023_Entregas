@@ -9,8 +9,8 @@ from flask import (
     session,
 )
 
-from SAGTMA.models import Event, Role, User, Department, db
-from SAGTMA.utils import events, profiles, departments
+from SAGTMA.models import Event, Role, User, Department, MeasureUnit, db
+from SAGTMA.utils import events, profiles, departments, measurement_units
 from SAGTMA.utils.decorators import requires_roles
 
 
@@ -241,3 +241,79 @@ def edit_dept(dept_id: int) -> Response:
     # Se permanece en la página
     flash("Departamento modificado exitosamente")
     return redirect(url_for("ws_depts"))
+
+
+# ========== Unidades de medida ==========
+@current_app.route("/measurement-units/", methods=["GET", "POST"])
+@requires_roles("Administrador")
+def measure_units() -> Response:
+    """Muestra la lista de unidades de medida anadidas en el sistema."""
+    # SELECT * FROM unit
+    stmt = db.select(MeasureUnit)
+
+    if request.method == "POST":
+        # Obtiene los datos del formulario
+        uom = request.form.get("uom-filter", "").lower().strip()
+
+        if uom:
+            # WHERE unit LIKE '%uom%'
+            stmt = stmt.where(MeasureUnit.unit.like(f"%{uom}%"))
+
+        # Añade el evento de búsqueda
+        events.add_event("Unidades de Medida", f"Buscar '{uom}'")
+
+    result = db.session.execute(stmt).fetchall()
+    _uoms = [r for r, in result]
+
+    return render_template("admin/measurement_units.html", measurement_units=_uoms)
+
+
+@current_app.route("/measurement-units/register/", methods=["POST"])
+@requires_roles("Administrador")
+def register_measure_unit() -> Response:
+    """Registra una unidad de medida en la base de datos."""
+    dimension = request.form.get("dimension", "")
+    unit = request.form.get("unit", "")
+
+    try:
+        measurement_units.register_measure_unit(dimension, unit)
+    except measurement_units.MeasureUnitError as e:
+        flash(f"{e}")
+        return redirect(url_for("measure_units"))
+
+    # Se permanece en la página
+    flash("Unidad de medida añadida exitosamente")
+    return redirect(url_for("measure_units"))
+
+
+@current_app.route("/measurement-units/<int:unit_id>/delete/", methods=["POST"])
+@requires_roles("Administrador")
+def delete_measure_unit(unit_id: int) -> Response:
+    """Elimina una unidad de medida de la base de datos."""
+    try:
+        measurement_units.delete_measure_unit(unit_id)
+    except measurement_units.MeasureUnitError as e:
+        flash(f"{e}")
+        return redirect(url_for("measure_units"))
+
+    # Se permanece en la página
+    flash("Unidad de medida eliminada exitosamente")
+    return redirect(url_for("measure_units"))
+
+
+@current_app.route("/measurement-units/<int:unit_id>/edit/", methods=["POST"])
+@requires_roles("Administrador")
+def edit_measure_unit(unit_id: int) -> Response:
+    """Modifica una unidad de medida en la base de datos"""
+    dimension = request.form.get("dimension", "")
+    unit = request.form.get("unit", "")
+
+    try:
+        measurement_units.edit_measure_unit(unit_id, dimension, unit)
+    except measurement_units.MeasureUnitError as e:
+        flash(f"{e}")
+        return redirect(url_for("measure_units"))
+
+    # Se permanece en la página
+    flash("Unidad de medida modificada exitosamente")
+    return redirect(url_for("measure_units"))

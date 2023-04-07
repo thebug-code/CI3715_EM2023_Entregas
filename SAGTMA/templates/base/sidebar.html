@@ -70,6 +70,16 @@
           </li>
           <li>
             <a
+              href="{{ url_for('measure_units') }}"
+              class="nav-link link {% if active_page == 'measurement-units' %}
+                active fw-bold
+              {% endif %}"
+            >
+              Unidades de Medidas
+            </a>
+          </li>
+          <li>
+            <a
               href="{{ url_for('logger') }}"
               class="nav-link link {% if active_page == 'logger' %}
                 active fw-bold
