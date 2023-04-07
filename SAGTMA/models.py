@@ -38,6 +38,11 @@ class User(db.Model):
         "ProjectDetail", backref="manager", cascade="all, delete-orphan"
     )
 
+    # Relación 1:N entre usuarios y actividades (mosca con el cascade)
+    activities = db.relationship(
+        "Activity", backref="charge_person", cascade="all, delete-orphan"
+    )
+
     def __init__(
         self,
         id_number: str,
@@ -248,3 +253,46 @@ class MeasureUnit(db.Model):
 
     def __repr__(self) -> str:
         return f"MeasureUnit<{self.dimension} {self.unit}>"
+
+
+class Activity(db.Model):
+    """Modelo de actividad."""
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    action_plan_id = db.Column(db.Integer, db.ForeignKey("action_plan.id"), nullable=False)
+    charge_person_id = db.column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    description = db.Column(db.String(100), nullable=False)
+    start_date = db.Column(db.Date, nullable=False)
+    deadline = db.Column(db.Date, nullable=False)
+    work_hours = db.Column(db.Integer, nullable=False)
+    cost = db.Column(db.Float, nullable=False)
+
+    def __init__(
+            self,
+            description: str,
+            start_date,
+            deadline,
+            work_hours: int,
+            cost: float
+    ):
+        self.description = description
+        self.start_date = start_date
+        self.deadline = deadline
+        self.hours_number = hours_number
+        self.cost = cost
+
+    def __repr__(self) -> str:
+        return f"Activity<{self.description}: {self.start_date} - {self.deadline}>"
+
+
+class ActionPlan(db.Model):
+    """Modelo de plan de acción."""
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    action = db.Column(db.String(100), nullable=False)
+ 
+    # Relacion 1:N entre plan de acción y actividades
+    activities = db.relationship(
+        "Activity", backref="action_plan", cascade="all, delete-orphan"
+    )
+
+    def __init__(self, action: str):
+        self.action = action
