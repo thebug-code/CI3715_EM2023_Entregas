@@ -100,6 +100,11 @@ class ProjectDetail(db.Model):
     cost = db.Column(db.Float, nullable=False)
     observations = db.Column(db.String(100), nullable=False)
 
+    # Relación 1:N entre detalles de proyectos y actividades
+    action_plans = db.relationship(
+        "ActionPlan", backref="project_detail", cascade="all, delete-orphan"
+    )
+
     def __init__(
         self,
         project_id: int,
@@ -259,7 +264,7 @@ class Activity(db.Model):
     """Modelo de actividad."""
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     action_plan_id = db.Column(db.Integer, db.ForeignKey("action_plan.id"), nullable=False)
-    charge_person_id = db.column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    charge_person_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     description = db.Column(db.String(100), nullable=False)
     start_date = db.Column(db.Date, nullable=False)
     deadline = db.Column(db.Date, nullable=False)
@@ -268,16 +273,20 @@ class Activity(db.Model):
 
     def __init__(
             self,
+            action_plan_id: int,
+            charge_person_id: int,
             description: str,
             start_date,
             deadline,
             work_hours: int,
             cost: float
     ):
+        self.action_plan_id = action_plan_id
+        self.charge_person_id = charge_person_id
         self.description = description
         self.start_date = start_date
         self.deadline = deadline
-        self.hours_number = hours_number
+        self.work_hours = work_hours
         self.cost = cost
 
     def __repr__(self) -> str:
@@ -287,6 +296,7 @@ class Activity(db.Model):
 class ActionPlan(db.Model):
     """Modelo de plan de acción."""
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    project_detail_id = db.Column(db.Integer, db.ForeignKey("project_detail.id"), nullable=False)
     action = db.Column(db.String(100), nullable=False)
  
     # Relacion 1:N entre plan de acción y actividades
@@ -294,5 +304,6 @@ class ActionPlan(db.Model):
         "Activity", backref="action_plan", cascade="all, delete-orphan"
     )
 
-    def __init__(self, action: str):
+    def __init__(self, action: str, project_detail_id: int):
+        self.project_detail_id = project_detail_id
         self.action = action
