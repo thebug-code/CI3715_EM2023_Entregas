@@ -97,6 +97,54 @@ $(document).ready(function() {
     $("#delete-action-plan-modal").modal("show");
     $("#delete-action-plan-form").attr("action", "/action-plans/" + id + "/delete/");
   });
+
+  // Editar un plan de acción
+  $(document).on('click', '.edit-action-plan', function() {
+    const actionId = event.target.dataset.actionId;
+    const activityId = event.target.dataset.activityId;
+
+    $.getJSON({
+      url: "/api/v1/action-plans",
+      data: { action_id: actionId, activity_id: activityId },
+      success: function(data) {
+        $("#edit-action-plan-modal").modal("show");
+        const actionPlan = data.actionPlans[actionId];
+        const activity = actionPlan.activities[0];
+        const users = data.users;
+
+        // Obtener el select de usuarios y vaciar su contenido
+        const editPlanChargePersonSelect = $("#edit-charge-person");
+        editPlanChargePersonSelect.empty();
+
+        // Agregar una opción por cada usuario
+        users.forEach(function(user) {
+          const option = $("<option>").attr("value", user.id).text(user.names + " " + user.surnames);
+          
+          // Si el usuario es el responsable del plan de acción, seleccionarlo
+          // por defecto
+          if (user.id === actionPlan.charge_person_id) {
+            option.attr("selected", "selected");
+          }
+
+          // Agregar la opción al select
+          editPlanChargePersonSelect.append(option);
+        });
+
+        $("#edit-action").val(actionPlan.action);
+        $("#edit-activity").val(activity.description);
+        $("#edit-start-date").val(activity.start_date);
+        $("#edit-deadline").val(activity.deadline);
+        $("#edit-work-hours").val(activity.work_hours);
+        $("#edit-cost").val(activity.cost);
+
+        // Establecer los valores de los inputs
+        $('#activity-id').val(activityId);
+        $('#action-id').val(actionId);
+
+        $("#edit-action-plan-form").attr("action", "/action-plans/" + actionId + "/edit/");
+      },
+    });
+  });
 });
 
       

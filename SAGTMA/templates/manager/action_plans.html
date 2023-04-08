@@ -96,6 +96,60 @@
     </div>
   </div> 
 
+  <!-- Modal para editar un plan de acción -->
+  <div class="modal fade" id="edit-action-plan-modal" tabindex="-1" role="dialog" aria-labelledby="EditModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="EditModalLabel">Modificar acción y actividad</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="post" id="edit-action-plan-form">
+            <div class="mb-3">
+              <label class="form-label" for="action">Nueva acción</label>
+              <input type="text" class="form-control" id="edit-action" name="action" placeholder="Ingrese la nueva acción" required />
+            </div>
+            <!-- Detalles de la actividad -->
+            <div class="mb-3">
+              <label class="form-label" for="activity">Actividad</label>
+              <input class="form-control" type="text" name="activity" id="edit-activity" placeholder="Ingrese la actividad" required />
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="charge-person">Persona a cargo</label>
+              <select class="form-select" name="charge-person" id="edit-charge-person"></select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="start-date">Fecha de inicio</label>
+              <input type="date" class="form-control" id="edit-start-date" name="start-date" required />
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="deadline">Fecha de cierre</label>
+              <input type="date" class="form-control" id="edit-deadline" name="deadline" required />
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="work-hours">Cantidad de horas</label>
+              <input type="number" class="form-control" id="edit-work-hours" name="work-hours" placeholder="Ingrese la cantidad de horas" required />
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="cost">Monto</label>
+              <input type="number" step="any" class="form-control" id="edit-cost" name="cost" placeholder="Ingrese el monto" required />
+            </div>
+
+              <input type="hidden" name="activity-id" id="activity-id">
+              <input type="hidden" name="project-detail-id" value="{{ project_detail.id }}" />
+              <input type="hidden" name="action-id" id="action-id">
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+              <button type="submit" class="btn btn-primary">Modificar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
   {# Barra de filtro de plan de acción #}
   <div class="container">
     <form class="row search-filter" action="{{ url_for('action_plans', project_detail_id=project_detail.id) }}" method="post">
@@ -153,7 +207,7 @@
                 <td>{{ activity.cost }}</td>
                 <td>
                   {# Botón de modificar #}
-                  <button id="edit{{ action_plan.id }}" type="button" class="btn btn-primary my-2 edit-action-plan" data-bs-toggle="modal">
+                  <button id="edit{{ action_plan.id }}" data-action-id="{{ action_plan.id }}" data-activity-id="{{ activity.id }}" type="button" class="btn btn-primary my-2 edit-action-plan" data-bs-toggle="modal">
                     <img src="{{ url_for('static', filename='img/edit.svg') }}" width="24" height="24" fill="white" class="table-button" value="submit" style="border-radius: 5px;" title="Modificar plan de acción" />
                   </button>
 

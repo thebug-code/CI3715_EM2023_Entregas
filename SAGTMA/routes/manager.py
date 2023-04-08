@@ -365,3 +365,43 @@ def delete_action_plan(plan_id) -> Response:
     # Se permanece en la pagina
     flash("Plan de accion eliminado exitosamente")
     return redirect(url_for("action_plans", project_detail_id=project_detail_id))
+
+
+@current_app.route("/action-plans/<int:plan_id>/edit/", methods=["POST"])
+@requires_roles("Gerente de Operaciones")
+def edit_action_plan(plan_id) -> Response:
+    """Edita un plan de accion de la base de datos"""
+    # Obtiene los datos del formulario
+    action = request.form.get("action", "")
+    activity = request.form.get("activity", "")
+    start_date = request.form.get("start-date", "")
+    deadline = request.form.get("deadline", "")
+    work_hours = request.form.get("work-hours", "")
+    charge_person_id = request.form.get("charge-person", "")
+    cost = request.form.get("cost", "")
+
+    # Obtiene el id de la actividad
+    activity_id = int(request.form.get("activity-id"))
+    # Obtiene el id del detalle de proyecto
+    project_detail_id = int(request.form.get("project-detail-id"))
+    
+    try:
+        project_plans.edit_action_plan(
+            plan_id,
+            activity_id,
+            action,
+            activity,
+            start_date,
+            deadline,
+            work_hours,
+            charge_person_id,
+            cost
+        )
+    except project_plans.ActionPlanError as e:
+        flash(f"{e}")
+        return redirect(url_for("action_plans", project_detail_id=project_detail_id))
+
+    # Se permanece en la pagina
+    flash("Plan de accion editado exitosamente")
+    return redirect(url_for("action_plans", project_detail_id=project_detail_id))
+
