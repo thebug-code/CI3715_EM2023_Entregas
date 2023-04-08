@@ -2,6 +2,7 @@ from datetime import date
 
 from SAGTMA.models import Project, db
 from SAGTMA.utils import events
+from SAGTMA.utils.validations import validate_date
 
 
 class ProjectError(ValueError):
@@ -27,17 +28,6 @@ def validate_descrip_project(description: str) -> bool:
             raise ProjectError(
                 "La descripción de un proyecto no puede contener caracteres especiales."
             )
-
-
-def validate_date(start_date: date, deadline: date) -> bool:
-    """
-    Lanza una excepción si la fecha de inicio de un proyecto es despues que su fecha de cierre
-    """
-
-    if start_date > deadline:
-        raise ProjectError(
-            "La fecha de inicio no puede ser mayor que la fecha de cierre."
-        )
 
 
 # ========== Registro de Proyectos ==========
@@ -70,7 +60,7 @@ def create_project(description: str, start_date: str, deadline: str):
 
     # Chequea si los campos ingresados son válidos
     validate_descrip_project(description)
-    validate_date(start_date_t, deadline_t)
+    validate_date(start_date_t, deadline_t, ProjectError)
 
     # Crea el proyecto en la base de datos
     new_project = Project(description, start_date_t, deadline_t)
@@ -123,7 +113,7 @@ def edit_project(project_id: int, description: str, start_date: str, deadline: s
 
     # Chequea si los campos ingresados son válidos
     validate_descrip_project(description)
-    validate_date(start_date_t, deadline_t)
+    validate_date(start_date_t, deadline_t, ProjectError)
 
     # Actualiza los datos del proyecto
     edited_project.description = description

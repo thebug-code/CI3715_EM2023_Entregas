@@ -2,6 +2,7 @@ import re
 
 from SAGTMA.models import Project, ProjectDetail, Vehicle, Department, User, db
 from SAGTMA.utils import events
+from SAGTMA.utils.validations import validate_input_text
 
 
 class ProjectDetailError(ValueError):
@@ -25,34 +26,6 @@ def validate_cost(cost: str) -> float:
         raise ProjectDetailError("El costo debe ser mayor o igual a 0")
 
     return cost
-
-
-def validate_input_text(input_text: str, flag: bool = False):
-    """
-    Lanza una excepción si el texto no es válido.
-
-    Un texto es válido si:
-        -Tiene al menos 3 caracteres y a lo sumo 100 caracteres
-        -No tiene caracteres especiales distintos de '-_.,;:¡!/ '
-    """
-    if len(input_text) < 3 or len(input_text) > 100:
-        if flag:
-            raise ProjectDetailError("La solución debe tener entre 3 y 100 caracteres")
-        else:
-            raise ProjectDetailError(
-                "Las observaciones deben tener entre 3 y 100 caracteres"
-            )
-
-    regex = r"^[\w\s\-a-zA-Z0-9_.¡!,/;:]*$"
-    if not re.match(regex, input_text):
-        if flag:
-            raise ProjectDetailError(
-                "La solución solo puede contener caracteres alfanuméricos, guiones y espacios"
-            )
-        else:
-            raise ProjectDetailError(
-                "Las observaciones solo pueden contener caracteres alfanuméricos, guiones y espacios"
-            )
 
 
 # ========== Registro de detalle de proyecto ==========
@@ -132,8 +105,8 @@ def register_project_detail(
 
     # Chequea si los campos de texto son válidos
     cost = validate_cost(cost)
-    validate_input_text(solution, True)
-    validate_input_text(observations, False)
+    validate_input_text(solution, "Solución", ProjectDetailError)
+    validate_input_text(observations, "Observaciones", ProjectDetailError)
 
     # Crea el nuevo detalle de proyecto
     detail = ProjectDetail(
@@ -231,8 +204,8 @@ def edit_project_detail(
 
     # Chequea si los campos de texto son válidos
     cost = validate_cost(cost)
-    validate_input_text(solution, True)
-    validate_input_text(observations, False)
+    validate_input_text(solution, "Solución", ProjectDetailError)
+    validate_input_text(observations, "Observaciones", ProjectDetailError)
 
     # Edita el detalle de proyecto
     edited_detail.vehicle_id = vehicle_id
