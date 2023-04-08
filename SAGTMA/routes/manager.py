@@ -348,3 +348,20 @@ def register_action_plan(project_detail_id) -> Response:
     flash("Plan de accion registrado exitosamente")
     return redirect(url_for("action_plans", project_detail_id=project_detail_id))
 
+
+@current_app.route("/action-plans/<int:plan_id>/delete/", methods=["POST"])
+@requires_roles("Gerente de Operaciones")
+def delete_action_plan(plan_id) -> Response:
+    """Elimina un plan de accion de la base de datos"""
+    # Obtiene el id del detalle de proyecto
+    project_detail_id = int(request.form.get("project-detail-id"))
+
+    try:
+        project_plans.delete_action_plan(plan_id)
+    except project_plans.ActionPlanError as e:
+        flash(f"{e}")
+        return redirect(url_for("action_plans", project_detail_id=project_detail_id))
+
+    # Se permanece en la pagina
+    flash("Plan de accion eliminado exitosamente")
+    return redirect(url_for("action_plans", project_detail_id=project_detail_id))

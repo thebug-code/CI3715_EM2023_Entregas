@@ -151,7 +151,25 @@ def register_action_plan(
         )
     
 
+# ========== Eliminar planes de acción ===============
+def delete_action_plan(action_plan_id: int):
+    """
+    Elimina un plan de acción de la base de datos.
 
+    Lanza una excepción si:
+        - El plan de acción no existe
+    """
+    # Selecciona el plan de acción y verifica que exista
+    smt = db.select(ActionPlan).where(ActionPlan.id == action_plan_id)
+    action_plan_query = db.session.execute(smt).first()
+    if not action_plan_query:
+        raise ActionPlanError("El plan de acción no existe.")
+    action_plan = action_plan_query[0]
 
+    # Elimina el plan de acción
+    db.session.delete(action_plan)
 
-
+    # Registra el evento en la base de datos
+    events.add_event(
+        "Planes de acción", f"Eliminar plan de acción '{action_plan.action}'"
+    )

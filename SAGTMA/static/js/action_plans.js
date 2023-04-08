@@ -84,9 +84,18 @@ $(document).ready(function() {
           }
         });
 
-        $("#add-action-plan-form").attr("action", "/action-plans/" + id + "/register");
+        $("#add-action-plan-form").attr("action", "/action-plans/" + id + "/register/");
       },
     });
+  });
+
+  // Eliminar un plan de acción
+  $(document).on('click', '.delete-action-plan', function() {
+    var form = $(this);
+    id = form.attr("id").match(/\d+/)[0];
+
+    $("#delete-action-plan-modal").modal("show");
+    $("#delete-action-plan-form").attr("action", "/action-plans/" + id + "/delete/");
   });
 });
 

@@ -25,7 +25,7 @@ $(document).ready(function () {
   });
 
   // Eliminar vehiculo
-  $(document).on("click", ".delete-vehicle", function () {
+  $(document).on("click", ".delete-vehicle", function () ({
     var form = $(this);
     id = form.attr("id").match(/\d+/)[0];
 
