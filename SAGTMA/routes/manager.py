@@ -8,10 +8,19 @@ from flask import (
     url_for,
 )
 
-from SAGTMA.utils import projects, events, project_details
+from SAGTMA.utils import projects, events, project_details, project_plans
 from SAGTMA.utils.decorators import login_required, requires_roles
 
-from SAGTMA.models import Project, ProjectDetail, Vehicle, Department, User, db
+from SAGTMA.models import (
+    Project,
+    ProjectDetail,
+    Vehicle,
+    Department,
+    User,
+    ActionPlan,
+    Activity,
+    db
+)
 
 
 # ========== Gerente de Operaciones ==========
@@ -41,7 +50,7 @@ def portfolio() -> Response:
 @current_app.route("/project-portfolio/add/", methods=["POST"])
 @requires_roles("Gerente de Operaciones")
 def create_project() -> Response:
-    """Crear y anade un proyecto en la base de datos."""
+    """Crea y anade un proyecto en la base de datos."""
     # Obtiene los datos del formulario
     description = request.form.get("description", "")
     start_date = request.form.get("start-date", "")
@@ -237,3 +246,105 @@ def delete_project_data(detail_id) -> Response:
     # Se permanece en la pagina
     flash("Detalle de proyecto eliminado exitosamente")
     return redirect(url_for("project_data", project_id=project_id))
+
+
+# ========== Planes de Accion ==========
+@current_app.route("/action-plans/<int:project_detail_id>/", methods=["GET", "POST"])
+@requires_roles("Gerente de Operaciones")
+def action_plans(project_detail_id) -> Response:
+    """Muestra la lista de planes de accion asociados a un detalle de proyecto"""
+    # Selecciona el detalle de proyecto con el id indicado y verifica que exista
+    stmt = db.select(ProjectDetail).where(ProjectDetail.id == project_detail_id)
+    project_detail_query = db.session.execute(stmt).first()
+    if not project_detail_query:
+        return render_template("errors/404.html")
+
+    # Obtiene el detalle de proyecto
+    _project_detail = project_detail_query[0]
+
+    # Selecciona los planes de accion del detalles de proyecto con el id indicado
+    # y une las tablas necesarias para mostrar los datos
+    stmt = (
+        db.select(ActionPlan)
+        .where(ActionPlan.project_detail_id == project_detail_id)
+        .join(Activity)
+        .join(User)
+    )
+
+    if request.method == "POST":
+        # Obtiene los datos del formulario
+        plan = request.form.get("action-filter", "").lower().strip()
+
+        if plan:
+            # WHERE (action) LIKE '%plan%' OR
+            #       (activity) LIKE '%plan%' OR
+            #       (charge_person) LIKE '%plan%'
+            stmt = stmt.where(
+                db.or_(
+                    ActionPlan.action.like(f"%{plan}%"),
+                    Activity.description.like(f"%{plan}%"),
+                    db.func.lower(User.names + " " + User.surnames).like(f"%{plan}%"),
+                )
+            )
+        # Registra el evento en la base de datos
+        events.add_event(
+            "Planes de Accion",
+            f"Buscar '{plan}' del detalle de proyecto con id {project_detail_id}"
+        )
+    else:
+        # Selecciona los planes de accion del proyecto con el id indicado y
+        # une las tablas necesesarias para mostrar los datos
+        stmt = (
+            db.select(ActionPlan)
+            .where(ActionPlan.project_detail_id == project_detail_id)
+            .join(Activity)
+        )
+
+    result = db.session.execute(stmt).fetchall()
+    _action_plans = [r for r, in result]
+
+    return render_template(
+        "manager/action_plans.html",
+        action_plans=_action_plans,
+        project_detail=_project_detail,
+    )
+
+
+@current_app.route("/action-plans/<int:project_detail_id>/register/", methods=["POST"])
+@requires_roles("Gerente de Operaciones")
+def register_action_plan(project_detail_id) -> Response:
+    """Crea y anade un plan de accion en la base de datos."""
+    # Obtiene los datos del formulario
+    activity = request.form.get("activity", "")
+    start_date = request.form.get("start-date", "")
+    deadline = request.form.get("deadline", "")
+    work_hours = request.form.get("work-hours", "")
+    charge_person_id = request.form.get("charge-person", "")
+    cost = request.form.get("cost", "")
+
+    # Verifica si el plan de accion es nuevo o existente
+    action_type = request.form.get("action-type-hidden", "")
+    if action_type == "existing":
+        action = request.form.get("existing-action", "") # Es un id
+    else:
+        action = request.form.get("new-action", "") # Es un string
+
+    try:
+        project_plans.register_action_plan(
+            project_detail_id,
+            action,
+            activity,
+            start_date,
+            deadline,
+            work_hours,
+            charge_person_id,
+            cost
+        )
+    except project_plans.ActionPlanError as e:
+        flash(f"{e}")
+        return redirect(url_for("action_plans", project_detail_id=project_detail_id))
+
+    # Se permanece en la página
+    flash("Plan de accion registrado exitosamente")
+    return redirect(url_for("action_plans", project_detail_id=project_detail_id))
+

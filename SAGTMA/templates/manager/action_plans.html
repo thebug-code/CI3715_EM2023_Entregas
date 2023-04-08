@@ -1,0 +1,150 @@
+{% extends 'base/base.html' %}
+{% set active_page = "portfolio" %}
+{% block title %}Plan de Acción{% endblock %}
+{% block content %}
+  <div class="d-flex justify-content-center my-4">
+    <h1 class="title-container">Plan de Acción</h1>
+  </div>
+
+  <div class="modal fade" id="add-action-plan-modal" tabindex="-1" role="dialog" aria-labelledby="AddModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="AddModalLabel">Agregar acción y actividad</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="post" id="add-action-plan-form">
+            <!-- Campo para seleccionar o ingresar la acción -->
+            <div class="mb-3">
+              <label class="form-label" for="action-type">Tipo de acción</label>
+              <select class="form-select" id="action-type" name="action-type">
+                <option value="existing">Acción existente</option>
+                <option value="new">Nueva acción</option>
+              </select>
+            </div>
+            <!-- Campo para seleccionar una acción existente -->
+            <div class="mb-3" id="existing-action-fields" style="display:none;">
+              <label class="form-label" for="existing-action">Acción existente</label>
+              <select class="form-select" id="existing-action" name="existing-action" required>
+              </select>
+            </div>
+            <!-- Campo para ingresar una nueva acción -->
+            <div class="mb-3" id="new-action-fields" style="display:none;">
+              <label class="form-label" for="new-action">Nueva acción</label>
+              <input type="text" class="form-control" id="new-action" name="new-action" placeholder="Ingrese la nueva acción" required />
+            </div>
+             <!-- Campo oculto para almacenar el valor de la opción seleccionada en "Tipo de acción" -->
+            <input type="hidden" id="action-type-hidden" name="action-type-hidden" value="">
+            <!-- Detalles de la actividad -->
+            <div class="mb-3">
+              <label class="form-label" for="activity">Actividad</label>
+              <input class="form-control" type="text" name="activity" id="add-activity" placeholder="Ingrese la actividad" required />
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="charge-person">Persona a cargo</label>
+              <select class="form-select" name="charge-person" id="add-charge-person"></select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="start-date">Fecha de inicio</label>
+              <input type="date" class="form-control" id="add-start-date" name="start-date" required />
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="deadline">Fecha de cierre</label>
+              <input type="date" class="form-control" id="add-deadline" name="deadline" required />
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="work-hours">Cantidad de horas</label>
+              <input type="number" class="form-control" id="add-work-hours" name="work-hours" placeholder="Ingrese la cantidad de horas" required />
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="cost">Monto</label>
+              <input type="number" step="any" class="form-control" id="add-cost" name="cost" placeholder="Ingrese el monto" required />
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+              <button type="submit" class="btn btn-primary">Agregar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {# Barra de filtro de plan de acción #}
+  <div class="container">
+    <form class="row search-filter" action="{{ url_for('action_plans', project_detail_id=project_detail.id) }}" method="post">
+      <div class="col-sm-12">
+        <div class="input-group">
+          <input name="action-filter" id="action-filter" type="text" class="form-control" placeholder="Buscar planes de acción" aria-label="Buscar planes de acción" aria-describedby="basic-addon2" />
+          <button type="submit" class="btn btn-primary" style="border-radius: 5px;margin-left: 10px;" data-bs-toggle="modal">
+            <img src="{{ url_for('static', filename='img/search.svg') }}" width="40" height="40" fill="white" class="table-button" value="submit" style="border-radius: 5px;" title="Buscar planes de acción" />
+          </button>
+
+          {# Boton de agregar planes de acción #}
+          <button type="button" class="btn btn-primary add-action-plan" style="border-radius: 5px;margin-left: 10px;" data-bs-toggle="modal" id="add-action{{ project_detail.id }}">
+            <img src="{{ url_for('static', filename='img/add.svg') }}" width="40" height="40" fill="white" class="table-button" value="submit" style="border-radius: 5px;" />
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  {# Si no hay planes de accion del proyecto o no se encontraron en la busqueda #}
+  {% if action_plans|length == 0 %}
+    <div class="d-flex justify-content-center my-4">
+      <div class="alert alert-danger" role="alert">No se encontraron planes de acción para el proyecto</div>
+    </div>
+  {% else %}
+    {# Tabla de planes de acción #}
+    <div class="container">
+      <div class="container table-container">
+        <table class="table table-striped table-hover">
+          {# Header de la tabla #}
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Acción</th>
+              <th>Actividad</th>
+              <th>Fecha de inicio</th>
+              <th>Fecha de cierre</th>
+              <th>Cantidad de horas</th>
+              <th>Responsable</th>
+              <th>Monto</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for action_plan in action_plans %}
+              {% for activity in action_plan.activities %}
+              <tr>
+                <td>{{ action_plan.id }}</td>
+                <td>{{ action_plan.action }}</td>
+                <td>{{ activity.description }}</td>
+                <td>{{ activity.start_date }}</td>
+                <td>{{ activity.deadline }}</td>
+                <td>{{ activity.work_hours }}</td>
+                <td>{{ activity.charge_person.names }} {{ activity.charge_person.surnames }}</td>
+                <td>{{ activity.cost }}</td>
+                <td>
+                  {# Botón de modificar #}
+                  <button id="edit{{ action_plan.id }}" type="button" class="btn btn-primary my-2 edit-action-plan" data-bs-toggle="modal">
+                    <img src="{{ url_for('static', filename='img/edit.svg') }}" width="24" height="24" fill="white" class="table-button" value="submit" style="border-radius: 5px;" title="Modificar plan de acción" />
+                  </button>
+
+                  {# Botón de eliminar #}
+                  <button id="delete{{ action_plan.id }}" type="button" class="btn btn-primary delete-action-plan" data-bs-toggle="modal">
+                    <img src="{{ url_for('static', filename='img/delete.svg') }}" width="24" height="24" fill="white" class="table-button" value="submit" style="border-radius: 5px;" title="Eliminar plan de acción" />
+                  </button>
+                </td>
+              </tr>
+            {% endfor %}
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  {% endif %}
+
+  <script src="{{ url_for('static', filename='js/action_plans.js') }}"></script>
+{% endblock %}

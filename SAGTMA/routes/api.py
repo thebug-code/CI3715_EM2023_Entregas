@@ -11,6 +11,8 @@ from SAGTMA.models import (
     Role,
     ProjectDetail,
     MeasureUnit,
+    ActionPlan,
+    Activity,
     db,
 )
 
@@ -166,14 +168,25 @@ def get_project_details_dropdown_data():
     stmt = db.select(User)
     result = db.session.execute(stmt).fetchall()
     users = [
-        {"id": u.id, "names": u.names, "surnames": u.surnames, "id_number": u.id_number}
+        {
+            "id": u.id,
+            "names": u.names,
+            "surnames": u.surnames,
+            "id_number": u.id_number
+        }
         for u, in result
     ]
 
     # SELECT * FROM department
     stmt = db.select(Department)
     result = db.session.execute(stmt).fetchall()
-    departments = [{"id": d.id, "description": d.description} for d, in result]
+    departments = [
+        {
+            "id": d.id,
+            "description": d.description
+        } 
+        for d, in result
+    ]
 
     # SELECT * FROM vehicle
     stmt = db.select(Vehicle)
@@ -253,3 +266,33 @@ def api_measure_units():
     ]
 
     return measure_units
+
+
+@current_app.route("/api/v1/action-plans-dropdown-data")
+@requires_roles("Gerente de Operaciones")
+def get_action_plans_dropdown_data():
+    # SELECT * FROM USER
+    stmt = db.select(User)
+    result = db.session.execute(stmt).fetchall()
+
+    users = [
+        {
+            "id": u.id,
+            "names": u.names,
+            "surnames": u.surnames
+        } 
+        for u, in result
+    ]
+
+    # SELECT * FROM ActionPlan
+    stmt = db.select(ActionPlan)
+    result = db.session.execute(stmt).fetchall()
+    actions = [
+        {
+            "id": a.id,
+            "description": a.action
+        }
+        for a, in result
+    ]
+
+    return {"users": users, "actions": actions}
