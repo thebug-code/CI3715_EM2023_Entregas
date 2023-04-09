@@ -99,9 +99,9 @@ $(document).ready(function() {
   });
 
   // Editar un plan de acción
-  $(document).on('click', '.edit-action-plan', function() {
-    const actionId = event.target.dataset.actionId;
-    const activityId = event.target.dataset.activityId;
+  $(document).on('click', '.edit-action-plan', function(event) {
+    const actionId = $(event.currentTarget).attr('data-action-id');
+    const activityId = $(event.currentTarget).attr('data-activity-id');
 
     $.getJSON({
       url: "/api/v1/action-plans",
