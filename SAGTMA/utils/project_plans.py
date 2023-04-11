@@ -290,6 +290,10 @@ def register_action_plan(
         amount_ms,
         total_ms,
     )
+
+    # Agrega los registros a la base de datos
+    db.session.add(human_labor)
+    db.session.add(materials_supplies)
    
     # Registra los eventos en la base de datos
     events.add_event(
