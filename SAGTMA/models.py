@@ -248,9 +248,15 @@ class Department(db.Model):
 
 class MeasureUnit(db.Model):
     """ Modelo de unidades de medidas. """
+
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     dimension = db.Column(db.Float, nullable=False)
     unit = db.Column(db.String(20), nullable=False)
+
+    # Relacion 1:N entre unidades de medida y materiales
+    materials = db.relationship(
+        "MaterialSupply", backref="measure_unit", cascade="all, delete-orphan"
+    )
 
     def __init__(self, dimension: float, unit: str):
         self.dimension = dimension
@@ -262,6 +268,7 @@ class MeasureUnit(db.Model):
 
 class Activity(db.Model):
     """Modelo de actividad."""
+
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     action_plan_id = db.Column(db.Integer, db.ForeignKey("action_plan.id"), nullable=False)
     charge_person_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
@@ -270,6 +277,16 @@ class Activity(db.Model):
     deadline = db.Column(db.Date, nullable=False)
     work_hours = db.Column(db.Integer, nullable=False)
     cost = db.Column(db.Float, nullable=False)
+
+    # Relación 1:n entre actividades y talentos humanos
+    human_talents = db.relationship(
+        "HumanTalent", backref="activity", cascade="all, delete-orphan"
+    )
+
+    # Relación 1:n entre actividades y materiales
+    materials = db.relationship(
+        "MaterialSupply", backref="activity", cascade="all, delete-orphan"
+    )
 
     def __init__(
             self,
@@ -307,3 +324,58 @@ class ActionPlan(db.Model):
     def __init__(self, action: str, project_detail_id: int):
         self.project_detail_id = project_detail_id
         self.action = action
+
+
+class HumanTalent(db.Model):
+    """Modelo de Talento Humano"""
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    activity_id = db.Column(db.Integer, db.ForeignKey("activity.id"), nullable=False)
+    time = db.Column(db.Integer, nullable=False)
+    amount = db.Column(db.Integer, nullable=False)
+    cost = db.Column(db.Float, nullable=False)
+
+    def __init__(
+        self,
+        activity_id: int,
+        time: int,
+        amount: int,
+        cost: float
+    ):
+    
+        self.activity_id = activity_id
+        self.time = time
+        self.amount = amount
+        self.cost = cost
+
+    def __repr__(self) -> str:
+        return f"HumanTalent<{self.charge_person_id}: {self.time} - {self.amount}>"
+
+
+class MaterialSupply(db.Model):
+    """Modelo de Suministro de Materiales"""
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    activity_id = db.Column(db.Integer, db.ForeignKey("activity.id"), nullable=False)
+    measure_unit_id = db.Column(db.Integer, db.ForeignKey("measure_unit.id"), nullable=False)
+    category = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.String(100), nullable=False)
+    amount = db.Column(db.Integer, nullable=False)
+    cost = db.Column(db.Float, nullable=False)
+
+    def __init__(
+        self,
+        activity_id: int,
+        measure_unit_id: int,
+        category: str,
+        description: str,
+        amount: int,
+        cost: float,
+    ):
+        self.activity_id = activity_id
+        self.measure_unit_id = measure_unit_id
+        self.category = category
+        self.description = description
+        self.amount = amount
+        self.cost = cost
+
+    def __repr__(self) -> str:
+        return f"MaterialSupply<{self.description}: {self.amount} - {self.cost}>"
