@@ -19,6 +19,9 @@ from SAGTMA.models import (
     User,
     ActionPlan,
     Activity,
+    HumanTalent,
+    MaterialSupply,
+    MeasureUnit,
     db
 )
 
@@ -416,4 +419,89 @@ def edit_action_plan(plan_id) -> Response:
     # Se permanece en la pagina
     flash("Plan de accion editado exitosamente")
     return redirect(url_for("action_plans", project_detail_id=project_detail_id))
+
+
+
+# ========== Talento Humano ==========
+@current_app.route("/human-talents/", methods=["GET", "POST"])
+@requires_roles("Gerente de Operaciones")
+def human_talents() -> Response:
+    """Muestra la lista de talentos humanos registrados en el sistema."""
+    # Selecciona los talentos humanos y une las tablas necesarias para
+    # mostrar los datos
+    stmt = (
+        db.select(HumanTalent)
+        .join(Activity)
+        .join(ActionPlan)
+        .join(User)
+    )
+
+    if request.method == "POST":
+        # Obtiene los datos del formulario
+        human_talent = request.form.get("human-talent-filter", "")
+
+        # WHERE (action) LIKE '%human_talen%' OR
+        #       (activity) LIKE '%human_talen%' OR
+        #       (charge_person) LIKE '%human_talen%'
+        stmt = stmt.where(
+            db.or_(
+                ActionPlan.action.like(f"%{human_talent}%"),
+                Activity.description.like(f"%{human_talent}%"),
+                db.func.lower(User.names + " " + User.surnames).like(f"%{human_talent}%"),
+            )
+        )
+
+        # Añade el evento de búsqueda
+        events.add_event("Talentos Humanos", f"Buscar '{human_talent}'")
+    else:
+        pass
+
+    result = db.session.execute(stmt).fetchall()
+    _human_talents = [r for r, in result]
+
+    return render_template("manager/human_talent.html", human_talents=_human_talents)
+
+
+# ========== Materiales e insumos =============
+@current_app.route("/materials-supplies/", methods=["GET", "POST"])
+@requires_roles("Gerente de Operaciones")
+def materials_supplies() -> Response:
+    """Muestra la lista de materiales e insumos registrados en el sistema."""
+    # Selecciona los materiales e insumos y une las tablas necesarias para
+    # mostrar los datos
+    stmt = (
+        db.select(MaterialSupply)
+        .join(MeasureUnit)
+        .join(Activity)
+        .join(ActionPlan)
+        .join(User)
+    )
+    print(stmt)
+
+    if request.method == "POST":
+        # Obtiene los datos del formulario
+        material_supp = request.form.get("material-supp-filter", "")
+
+        # WHERE (action) LIKE '%material_supp%' OR
+        #       (activity) LIKE '%material_supp%' OR
+        #       (charge_person) LIKE '%material_supp%' OR
+        #       (measure_unit) LIKE '%material_supp%'
+        stmt = stmt.where(
+            db.or_(
+                ActionPlan.action.like(f"%{material_supp}%"),
+                Activity.description.like(f"%{material_supp}%"),
+                db.func.lower(User.names + " " + User.surnames).like(f"%{material_supp}%"),
+                MeasureUnit.unit.like(f"%{material_supp}%"),
+            )
+        )
+
+        # Añade el evento de búsqueda
+        events.add_event("Materiales y Suministros", f"Buscar '{material_supp}'")
+    else:
+        pass
+
+    result = db.session.execute(stmt).fetchall()
+    _materials_supplies = [r for r, in result]
+
+    return render_template("manager/materials_supplies.html", materials_supplies=_materials_supplies)
 

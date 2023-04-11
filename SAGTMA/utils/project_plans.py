@@ -222,13 +222,14 @@ def register_action_plan(
             total
         )
         db.session.add(activity)
-        activity_id = activity.id
 
         # Registra el evento en la base de datos
         events.add_event(
             "Planes de Acción",
             f"Agregar actividad '{activity.description}' al plan de acción '{action_plan.action}'"
         )
+
+        activity_id = activity.id
         
     else:
         # Verifica que la acción sea válida
@@ -260,7 +261,6 @@ def register_action_plan(
             total
         )
         db.session.add(activity)
-        activity_id = activity.id
         
         # Registra el evento en la base de datos
         events.add_event(
@@ -268,10 +268,13 @@ def register_action_plan(
             f"Agregar actividad '{activity.description}' al plan de acción '{action_plan.action}'"
         )
  
+        activity_id = activity.id
+
         # Registra los eventos en la base de datos
         events.add_event(
             "Planes de Acción", f"Agregar plan de acción '{action}'"
         )
+
 
     # Crea un registro de talento humano
     human_labor = HumanTalent(
