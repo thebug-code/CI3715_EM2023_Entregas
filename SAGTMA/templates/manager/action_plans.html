@@ -11,10 +11,11 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="AddModalLabel">Agregar acción y actividad</h5>
+          <h5 class="modal-title" id="AddModalLabel">Agregar Acción</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body" style="padding-top: 0px;">
+          <div class="mb-2 mt-4 fs-5 text-muted">Acciones y Actividades</div>
           <form method="post" id="add-action-plan-form">
             <!-- Campo para seleccionar o ingresar la acción -->
             <div class="mb-3">
@@ -59,10 +60,53 @@
               <label class="form-label" for="work-hours">Cantidad de horas</label>
               <input type="number" class="form-control" id="add-work-hours" name="work-hours" placeholder="Ingrese la cantidad de horas" required />
             </div>
+
             <div class="mb-3">
               <label class="form-label" for="cost">Monto</label>
-              <input type="number" step="any" class="form-control" id="add-cost" name="cost" placeholder="Ingrese el monto" required />
+              <input type="number" step="any" class="form-control" id="add-cost" name="cost" placeholder="Monto" disabled>
+              <small class="form-text text-lg my-0 text-muted" style="font-size: 0.8em;">Calculado automáticamente.</small>
             </div>
+
+            <!-- Talento Humano -->
+            <div class="mb-2 mt-4 fs-5 text-muted">Talento Humano</div>
+            <div class="mb-3">
+              <label class="form-label" for="add-amount-person-hl">Cantidad de personas</label>
+              <input class="form-control" name="amount-person-hl" id="add-amount-person-hl" type="number" placeholder="Ingrese la cantidad de personas" required />
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="add-cost-hl">Costo</label>
+              <input class="form-control" type="number" step="any" name="cost-hl" id="add-cost-hl" placeholder="Ingrese el costo" required />
+            </div>
+
+            <!-- Materiales e insumos -->
+            <div class="mb-2 mt-4 fs-5 text-muted">Materiales e insumos</div>
+            <div class="mb-3">
+              <label class="form-label" for="add-category-ms">Categoría</label>
+              <select class="form-select" name="category-ms" id="add-category-ms" required>
+                <option value="" selected disabled>Seleccione una categoría</option>
+                <option value="Ninguno">Ninguno</option>
+                <option value="Materiales">Materiales</option>
+                <option value="Insumos">Insumos</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="add-description-ms">Descripción</label>
+              <input class="form-control" type="text" name="description-ms" id="add-description-ms" placeholder="Ingrese la descripción" required />
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="add-amount-ms">Cantidad</label>
+              <input class="form-control" type="number" name="amount-ms" id="add-amount-ms" placeholder="Ingrese la cantidad" required />
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="add-measure-untit-ms">Medida</label>
+              <select class="form-select" name="measure-unit-ms" id="measure-unit-ms" required>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="add-cost-ms">Costo</label>
+              <input class="form-control" type="number" step="any" name="cost-ms" id="add-cost-ms" placeholder="Ingrese el costo" required />
+            </div>
+
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
               <button type="submit" class="btn btn-primary">Agregar</button>

@@ -244,7 +244,7 @@ def api_project_details():
 
 
 @current_app.route("/api/v1/measurement-units/")
-@requires_roles("Administrador")
+@requires_roles("Gerente de Operaciones", "Administrador")
 def api_measure_units():
     stmt = db.select(MeasureUnit)
 
@@ -295,7 +295,10 @@ def get_action_plans_dropdown_data():
         for a, in result
     ]
 
-    return {"users": users, "actions": actions}
+    # Obtiene las unidades de medida
+    measure_units = api_measure_units()
+
+    return {"users": users, "actions": actions, "measureUnits": measure_units}
 
 
 @current_app.route("/api/v1/action-plans")

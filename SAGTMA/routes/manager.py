@@ -320,7 +320,13 @@ def register_action_plan(project_detail_id) -> Response:
     deadline = request.form.get("deadline", "")
     work_hours = request.form.get("work-hours", "")
     charge_person_id = request.form.get("charge-person", "")
-    cost = request.form.get("cost", "")
+    amount_person_hl = request.form.get("amount-person-hl", "")
+    cost_hl = request.form.get("cost-hl", "")
+    category_ms = request.form.get("category-ms", "")
+    description_ms = request.form.get("description-ms", "")
+    amount_ms = request.form.get("amount-ms", "")
+    measure_unit_ms_id = request.form.get("measure-unit-ms", "")
+    cost_ms = request.form.get("cost-ms", "")
 
     # Verifica si el plan de accion es nuevo o existente
     action_type = request.form.get("action-type-hidden", "")
@@ -338,7 +344,13 @@ def register_action_plan(project_detail_id) -> Response:
             deadline,
             work_hours,
             charge_person_id,
-            cost
+            amount_person_hl,
+            cost_hl,
+            category_ms,
+            description_ms,
+            amount_ms,
+            measure_unit_ms_id,
+            cost_ms
         )
     except project_plans.ActionPlanError as e:
         flash(f"{e}")

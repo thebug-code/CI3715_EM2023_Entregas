@@ -10,6 +10,7 @@ $(document).ready(function() {
         $("#add-action-plan-modal").modal("show");
         var users = data.users;
         var actions = data.actions;
+        var units = data.measureUnits;
 
         // Obtener el select de usuarios y vaciar su contenido
         const addPlanChargePersonSelect = $("#add-charge-person");
@@ -82,6 +83,26 @@ $(document).ready(function() {
             existingActionFields.hide();
             newActionFields.hide();
           }
+        });
+
+        // Obtener el select de unidades de medida y vaciar su contenido
+        const measureUnitSelect = $("#measure-unit-ms");
+        measureUnitSelect.empty();
+
+        // Agregar opción "Seleccione una opción"
+        const defaultOption = $("<option>")
+          .attr("value", "")
+          .attr("disabled", true)
+          .attr("selected", true)
+          .text("Seleccione una unidad de medida");
+        measureUnitSelect.append(defaultOption);
+
+        // Agregar una opción por cada unidad de medida
+        units.forEach(function(unit) {
+          const option = $("<option>").attr("value", unit.id).text(unit.dimension).text(unit.unit);
+          
+          // Agregar la opción al select
+          measureUnitSelect.append(option);
         });
 
         $("#add-action-plan-form").attr("action", "/action-plans/" + id + "/register/");

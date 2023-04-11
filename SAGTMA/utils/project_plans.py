@@ -1,7 +1,16 @@
 import re
 from datetime import date
 
-from SAGTMA.models import ActionPlan, Activity, ProjectDetail, User, db
+from SAGTMA.models import (
+    ActionPlan,
+    Activity,
+    ProjectDetail,
+    User,
+    MeasureUnit,
+    MaterialSupply,
+    HumanTalent,
+    db
+)
 from SAGTMA.utils import events
 from SAGTMA.utils.validations import validate_date, validate_input_text
 
@@ -31,8 +40,15 @@ def register_action_plan(
     start_date: str,
     deadline: str,
     work_hours: str,
-    charge_person_id: int,
-    cost: str
+    charge_person_id: str,
+    amount_person_hl: str,
+    cost_hl: str,
+    category_ms: str,
+    description_ms: str,
+    amount_ms: str,
+    measure_unit_ms_id: int,
+    cost_ms: str,
+
 ):
     """
     Registra un plan de acción en la base de datos.
@@ -46,6 +62,13 @@ def register_action_plan(
         - La persona encargada no existe
         - El costo no es valido
         - El tipo de acción no es valido
+        - La cantidad de personas en talento humano no es valida
+        - El costo de talento humano no es valido
+        - La categoría de materiales y suministros no es valida
+        - La descripción de materiales y suministros no es valida
+        - La cantidad de materiales y suministros no es valida
+        - La unidad de medida de materiales y suministros no es valida
+        - El costo de materiales y suministros no es valido
     """
     # Elimina espacios al comienzo y final del input del form
     action = action.strip()
@@ -53,11 +76,30 @@ def register_action_plan(
     start_date = start_date.strip()
     deadline = deadline.strip()
     work_hours = work_hours.strip()
-    cost = cost.strip()
+    charge_person_id = charge_person_id.strip()
+    amount_person_hl = amount_person_hl.strip()
+    cost_hl = cost_hl.strip()
+    category_ms = category_ms.strip()
+    description_ms = description_ms.strip()
+    amount_ms = amount_ms.strip()
+    cost_ms = cost_ms.strip()
 
     # Verifica que todos los campos estén completos
     if not all(
-        [action, activity, start_date, deadline, work_hours, charge_person_id, cost]
+        [
+            action,
+            activity,
+            start_date,
+            deadline,
+            work_hours,
+            charge_person_id,
+            amount_person_hl,
+            cost_hl,
+            category_ms,
+            description_ms,
+            amount_ms,
+            cost_ms,
+        ]
     ):
         raise ActionPlanError("Todos los campos son obligatorios.")
     
@@ -76,6 +118,52 @@ def register_action_plan(
     # Verifica que la actividad sea válida
     validate_input_text(activity, "Actividad", ActionPlanError)
 
+    # Verifica que la cantidad de personas en talento humano sea válida
+    if not amount_person_hl.isdigit():
+        raise ActionPlanError("La cantidad de personas en talento humano debe ser un número entero positivo.")
+    if int(amount_person_hl) < 1:
+        raise ActionPlanError("La cantidad de personas en talento humano debe ser mayor o igual a 1.")
+    amount_person_hl = int(amount_person_hl)
+
+    # Verifica que el costo de talento humano sea válido
+    try:
+        cost_hl = float(cost_hl) 
+    except ValueError:
+        raise ActionPlanError("El costo de talento humano debe ser mayor o igual a 0.")
+    if cost_hl < 0:
+        raise ActionPlanError("El costo de talento humano debe ser mayor o igual a 0.")
+
+    # Verifica que la categoría de materiales y suministros sea válida
+    validate_input_text(category_ms, "Categoría de Materiales y Suministros", ActionPlanError)
+
+    # Verifica que la descripción de materiales y suministro
+    validate_input_text(description_ms, "Descripción de Materiales y Suministros", ActionPlanError)
+
+    # Verifica que la cantidad de materiales y suministros sea válida
+    if not amount_ms.isdigit():
+        raise ActionPlanError("La cantidad de materiales y suministros debe ser un número entero positivo.")
+    if int(amount_ms) < 1:
+        raise ActionPlanError("La cantidad de materiales y suministros debe ser mayor o igual a 1.")
+    amount_ms = int(amount_ms)
+
+    # Verifica que la unidad de medida de materiales y suministros sea válida
+    if not measure_unit_ms_id.isdigit():
+        raise ActionPlanError("La unidad de medida de materiales y suministros no es válida.")
+    measure_unit_ms_id = int(measure_unit_ms_id)
+
+    # Verifica que la unidad de medida de materiales y suministros exista
+    smt = db.select(MeasureUnit).where(MeasureUnit.id == measure_unit_ms_id)
+    if not db.session.execute(smt).first():
+        raise ActionPlanError("La unidad de medida de materiales y suministros no existe.")
+
+    # Verifica que el costo de materiales y suministros sea válido
+    try:
+        cost_ms = float(cost_ms)
+    except ValueError:
+        raise ActionPlanError("El costo de materiales y suministros debe ser mayor o igual a 0.")
+    if cost_ms < 0:
+        raise ActionPlanError("El costo de materiales y suministros debe ser mayor o igual a 0.")
+
     # Convert start_date a tipo Date usando la libreria datetime
     y, m, d = start_date.split("-")
     y, m, d = int(y), int(m), int(d)
@@ -92,12 +180,20 @@ def register_action_plan(
     # Verifica que la cantidad de horas de trabajo sea válida
     work_hours = validate_works_hours(work_hours)
 
-    # Calcula el costo total (falta)
+    # Calcula el monto total de talento humano
+    total_hl = amount_person_hl * work_hours * cost_hl
+
+    # Calcula el monto total de materiales y suministros
+    total_ms = amount_ms * cost_ms
+
+    # Calcula el monto total del plan de acción
+    total = total_hl + total_ms
     
     # Verifica el tipo de acción
     action_id = int(action) if action.isdigit() else None
 
     # Crea o selecciona un plan de acción de acuerdo al tipo de acción
+    activity_id = None
     if action_id:
         # Seleciona el plan de acción con el id indicado y verifica que exista
         smt = db.select(ActionPlan).where(ActionPlan.id == action_id)
@@ -105,6 +201,15 @@ def register_action_plan(
         if not action_plan_query:
             raise ActionPlanError("El plan de acción no existe.")
         action_plan = action_plan_query[0]
+        
+        # Verifica que no haya una actividad con la misma descripción
+        smt = (
+            db.select(Activity)
+            .where(Activity.action_id == action_id)
+            .where(Activity.description == activity)
+        )
+        if db.session.execute(smt).first():
+            raise ActionPlanError("Ya existe una actividad con la misma descripción.")
 
         # Crea una actividad
         activity = Activity(
@@ -114,23 +219,35 @@ def register_action_plan(
             start_date_t,
             deadline_t,
             work_hours,
-            float(cost) # Después se calcula el costo total
+            total
         )
         db.session.add(activity)
+        activity_id = activity.id
 
         # Registra el evento en la base de datos
         events.add_event(
-            "Planes de acción",
+            "Planes de Acción",
             f"Agregar actividad '{activity.description}' al plan de acción '{action_plan.action}'"
         )
         
     else:
+        # Verifica que la acción sea válida
+        validate_input_text(action, "Acción", ActionPlanError)
+
+        # Verifica que no haya un plan de acción con la misma descripción
+        smt = (
+            db.select(ActionPlan)
+            .where(ActionPlan.project_detail_id == project_detail_id)
+            .where(ActionPlan.action == action)
+        )
 
         # Crea un plan de acción
         action_plan = ActionPlan(action, project_detail_id)
 
         db.session.add(action_plan)
         db.session.commit()
+
+        action_id = action_plan.id
 
         # Crea una actividad
         activity = Activity(
@@ -140,16 +257,51 @@ def register_action_plan(
             start_date_t,
             deadline_t,
             work_hours,
-            float(cost) # Después se calcula el costo total
+            total
         )
-
         db.session.add(activity)
-
+        activity_id = activity.id
+        
         # Registra el evento en la base de datos
         events.add_event(
-            "Planes de acción", f"Agregar plan de acción '{action}'"
+            "Planes de Acción",
+            f"Agregar actividad '{activity.description}' al plan de acción '{action_plan.action}'"
         )
-    
+ 
+        # Registra los eventos en la base de datos
+        events.add_event(
+            "Planes de Acción", f"Agregar plan de acción '{action}'"
+        )
+
+    # Crea un registro de talento humano
+    human_labor = HumanTalent(
+        activity_id,
+        work_hours,
+        amount_person_hl,
+        total_hl,
+    )
+
+    # Crear un registro de materiales y suministros
+    materials_supplies = MaterialSupply(
+        activity_id,
+        measure_unit_ms_id,
+        category_ms,
+        description_ms,
+        amount_ms,
+        total_ms,
+    )
+   
+    # Registra los eventos en la base de datos
+    events.add_event(
+        "Talentos Humanos",
+        f"Agregar talento humano a la actividad '{activity.description}'"
+    )
+
+    events.add_event(
+        "Materiales y Suministros", 
+        f"Agregar material y suministro '{materials_supplies.description}' a la actividad '{activity.description}'"
+    )
+
 
 # ========== Eliminar planes de acción ===============
 def delete_action_plan(action_plan_id: int):
