@@ -16,6 +16,15 @@ $(document).ready(function() {
         const addPlanChargePersonSelect = $("#add-charge-person");
         addPlanChargePersonSelect.empty();
 
+        // Agregar opción "Seleccione una opción"
+        const defaultOption = $("<option>")
+          .attr("value", "")
+          .attr("disabled", true)
+          .attr("selected", true)
+          .text("Seleccione un usuario"); 
+        addPlanChargePersonSelect.append(defaultOption);
+
+
         // Agregar una opción por cada usuario
         users.forEach(function(user) {
           const option = $("<option>").attr("value", user.id).text(user.names + " " + user.surnames);
@@ -123,15 +132,20 @@ $(document).ready(function() {
   $(document).on('click', '.edit-action-plan', function(event) {
     const actionId = $(event.currentTarget).attr('data-action-id');
     const activityId = $(event.currentTarget).attr('data-activity-id');
+    const materialSupplyId = $(event.currentTarget).attr('data-material-supply-id');
+    const humanTalentId = $(event.currentTarget).attr('data-human-talent-id');
 
     $.getJSON({
       url: "/api/v1/action-plans",
-      data: { action_id: actionId, activity_id: activityId },
+      data: { action_id: actionId, activity_id: activityId, material_supply_id: materialSupplyId, human_talent_id: humanTalentId },
       success: function(data) {
         $("#edit-action-plan-modal").modal("show");
         const actionPlan = data.actionPlans[actionId];
         const activity = actionPlan.activities[0];
         const users = data.users;
+        const units = data.measureUnits;
+        const humanTalent = activity.human_talents[0];
+        const materialSupply = activity.material_supplies[0];
 
         // Obtener el select de usuarios y vaciar su contenido
         const editPlanChargePersonSelect = $("#edit-charge-person");
@@ -151,16 +165,41 @@ $(document).ready(function() {
           editPlanChargePersonSelect.append(option);
         });
 
+        // Obtener el select de unidades de medida y vaciar su contenido
+        const editMeasureUnitSelect = $("#edit-measure-unit-ms");
+        editMeasureUnitSelect.empty();
+
+        // Agregar una opción por cada unidad de medida
+        units.forEach(function(unit) {
+          const option = $("<option>").attr("value", unit.id).text(unit.unit);
+
+          // Si la unidad de medida es la misma que la del plan de acción, seleccionarla
+          // por defecto
+          if (unit.id === materialSupply.measure_unit_id) {
+            option.attr("selected", "selected");
+          }
+
+          // Agregar la opción al select
+          editMeasureUnitSelect.append(option);
+        });
+
         $("#edit-action").val(actionPlan.action);
         $("#edit-activity").val(activity.description);
         $("#edit-start-date").val(activity.start_date);
         $("#edit-deadline").val(activity.deadline);
         $("#edit-work-hours").val(activity.work_hours);
-        $("#edit-cost").val(activity.cost);
+        $("#edit-amount-person-hl").val(humanTalent.amount_persons);
+        $("#edit-cost-hl").val(humanTalent.cost_hl);
+        $("#edit-category-ms").val(materialSupply.category);
+        $("#edit-description-ms").val(materialSupply.description);
+        $("#edit-amount-ms").val(materialSupply.amount);
+        $("#edit-cost-ms").val(materialSupply.cost);
 
-        // Establecer los valores de los inputs
+        // Establece los valores de los inputs
         $('#activity-id').val(activityId);
         $('#action-id').val(actionId);
+        $('#human-talent-id').val(humanTalentId);
+        $('#material-supply-id').val(materialSupplyId);
 
         $("#edit-action-plan-form").attr("action", "/action-plans/" + actionId + "/edit/");
       },

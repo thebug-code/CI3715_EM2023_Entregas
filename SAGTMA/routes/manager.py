@@ -26,6 +26,14 @@ from SAGTMA.models import (
 )
 
 
+# Funcion personalizada para zippear listas
+@current_app.context_processor
+def utility_processor():
+    def zip_lists(a, b):
+        return zip(a, b)
+    return dict(zip_lists=zip_lists)
+
+
 # ========== Gerente de Operaciones ==========
 @current_app.route("/project-portfolio/", methods=["GET", "POST"])
 @requires_roles("Gerente de Operaciones")
@@ -301,6 +309,8 @@ def action_plans(project_detail_id) -> Response:
             db.select(ActionPlan)
             .where(ActionPlan.project_detail_id == project_detail_id)
             .join(Activity)
+            .join(HumanTalent)
+            .join(MaterialSupply)
         )
 
     result = db.session.execute(stmt).fetchall()
@@ -393,24 +403,42 @@ def edit_action_plan(plan_id) -> Response:
     deadline = request.form.get("deadline", "")
     work_hours = request.form.get("work-hours", "")
     charge_person_id = request.form.get("charge-person", "")
-    cost = request.form.get("cost", "")
+    amount_person_hl = request.form.get("amount-person-hl", "")
+    cost_hl = request.form.get("cost-hl", "")
+    category_ms = request.form.get("category-ms", "")
+    description_ms = request.form.get("description-ms", "")
+    amount_ms = request.form.get("amount-ms", "")
+    measure_unit_ms_id = request.form.get("measure-unit-ms", "")
+    cost_ms = request.form.get("cost-ms", "")
 
     # Obtiene el id de la actividad
     activity_id = int(request.form.get("activity-id"))
     # Obtiene el id del detalle de proyecto
     project_detail_id = int(request.form.get("project-detail-id"))
-    
+    # Obtiene el id del talento humano
+    human_talent_id = int(request.form.get("human-talent-id"))
+    # Obtiene el id material e insumo
+    material_id = int(request.form.get("material-supply-id"))
+
     try:
         project_plans.edit_action_plan(
             plan_id,
             activity_id,
+            material_id,
+            human_talent_id,
             action,
             activity,
             start_date,
             deadline,
             work_hours,
             charge_person_id,
-            cost
+            amount_person_hl,
+            cost_hl,
+            category_ms,
+            description_ms,
+            amount_ms,
+            measure_unit_ms_id,
+            cost_ms
         )
     except project_plans.ActionPlanError as e:
         flash(f"{e}")
@@ -419,7 +447,6 @@ def edit_action_plan(plan_id) -> Response:
     # Se permanece en la pagina
     flash("Plan de accion editado exitosamente")
     return redirect(url_for("action_plans", project_detail_id=project_detail_id))
-
 
 
 # ========== Talento Humano ==========

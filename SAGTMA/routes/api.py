@@ -13,6 +13,8 @@ from SAGTMA.models import (
     MeasureUnit,
     ActionPlan,
     Activity,
+    MaterialSupply,
+    HumanTalent,
     db,
 )
 
@@ -314,6 +316,9 @@ def api_action_plans():
     # y filtra de ser necesario
     action_plan_id = request.args.get("action_id")
     activity_id = request.args.get("activity_id")
+    material_id = request.args.get("material_supply_id")
+    human_talent_id = request.args.get("human_talent_id")
+
     filters = []
 
     if action_plan_id:
@@ -322,16 +327,30 @@ def api_action_plans():
     if activity_id:
         filters.append(Activity.id == activity_id)
 
+    if material_id:
+        filters.append(MaterialSupply.id == material_id)
+
+    if human_talent_id:
+        filters.append(HumanTalent.id == human_talent_id)
+
     # Agrega las condiciones de filtrado a stmt
     if filters:
-        stmt = stmt.where(*filters)
+        stmt = (
+            db.session.query(ActionPlan, Activity, HumanTalent, MaterialSupply)
+            .join(Activity, ActionPlan.id == Activity.action_plan_id)
+            .join(HumanTalent, Activity.id == HumanTalent.activity_id)
+            .join(MaterialSupply, Activity.id == MaterialSupply.activity_id)
+            .filter(*filters)
+        )
 
     # Consulta los planes de acción y actividades requeridas
     results = db.session.execute(stmt).fetchall()
 
     # Construye la lista de diccionarios con los resultados
     action_plans = {}
-    for ap, act in results:
+    for r in results:
+        ap = r[0]
+        act = r[1]
         if ap.id not in action_plans:
             # Si es la primera vez que se encuentra este ActionPlan,
             # se crea un nuevo diccionario para almacenar sus datos
@@ -348,9 +367,28 @@ def api_action_plans():
             "deadline": act.deadline.strftime("%Y-%m-%d"),
             "work_hours": act.work_hours,
             "cost": act.cost,
+            "human_talents": [
+                {
+                    "id": ht.id,
+                    "amount_persons": ht.amount,
+                    "cost_hl": ht.cost / act.work_hours,
+                }
+                for ht in act.human_talents
+            ],
+            "material_supplies": [
+                {
+                    "id": ms.id,
+                    "category": ms.category,
+                    "description": ms.description,
+                    "amount": ms.amount,
+                    "unit": ms.measure_unit_id,
+                    "cost": ms.cost / ms.amount,
+                }
+                for ms in act.materials
+            ]       
         })
     
     # Obtiene los datos del dropdown para hallar los nombres de los usuarios
     data = get_action_plans_dropdown_data()
 
-    return {"actionPlans": action_plans, "users": data["users"]}
+    return {"actionPlans": action_plans, "users": data["users"], "measureUnits": data["measureUnits"]}

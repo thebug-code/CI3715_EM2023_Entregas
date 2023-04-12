@@ -181,7 +181,7 @@ def register_action_plan(
     work_hours = validate_works_hours(work_hours)
 
     # Calcula el monto total de talento humano
-    total_hl = amount_person_hl * work_hours * cost_hl
+    total_hl = work_hours * cost_hl
 
     # Calcula el monto total de materiales y suministros
     total_ms = amount_ms * cost_ms
@@ -277,7 +277,7 @@ def register_action_plan(
 
 
     # Crea un registro de talento humano
-    human_labor = HumanTalent(
+    human_talent = HumanTalent(
         activity_id,
         work_hours,
         amount_person_hl,
@@ -295,7 +295,7 @@ def register_action_plan(
     )
 
     # Agrega los registros a la base de datos
-    db.session.add(human_labor)
+    db.session.add(human_talent)
     db.session.add(materials_supplies)
    
     # Registra los eventos en la base de datos
@@ -338,13 +338,21 @@ def delete_action_plan(action_plan_id: int):
 def edit_action_plan(
     action_plan_id: int,
     activity_id: int,
+    material_supply_id: int,
+    human_talent_id: int,
     action: str,
     activity: str,
     start_date: str,
     deadline: str,
     work_hours: str,
     charge_person_id: int,
-    cost: str
+    amount_person_hl: str,
+    cost_hl: str,
+    category_ms: str,
+    description_ms: str,
+    amount_ms: str,
+    measure_unit_ms_id: int,
+    cost_ms: str
 ):
     """
     Edita un plan de acción en la base de datos.
@@ -357,6 +365,13 @@ def edit_action_plan(
         - La cantidad de horas de trabajo no es valida
         - La persona encargada no existe
         - El costo no es valido
+        - La cantidad de personas de talento humano no es valida
+        - El costo de talento humano no es valido
+        - La categoría de materiales y suministros no es valida
+        - La descripción de materiales y suministros no es valida
+        - La cantidad de materiales y suministros no es valida
+        - La unidad de medida de materiales y suministros no es valida
+        - El costo de materiales y suministros no es valido
     """
     # Elimina espacios al comienzo y final del input del form
     action = action.strip()
@@ -364,11 +379,29 @@ def edit_action_plan(
     start_date = start_date.strip()
     deadline = deadline.strip()
     work_hours = work_hours.strip()
-    cost = cost.strip()
+    amount_person_hl = amount_person_hl.strip()
+    cost_hl = cost_hl.strip()
+    category_ms = category_ms.strip()
+    description_ms = description_ms.strip()
+    amount_ms = amount_ms.strip()
+    cost_ms = cost_ms.strip()
 
     # Verifica que todos los campos estén completos
     if not all(
-        [action, activity, start_date, deadline, work_hours, charge_person_id, cost]
+        [
+            action,
+            activity,
+            start_date,
+            deadline,
+            work_hours,
+            charge_person_id,
+            amount_person_hl,
+            cost_hl,
+            category_ms,
+            description_ms,
+            amount_ms,
+            cost_ms
+        ]
     ):
         raise ActionPlanError("Todos los campos son obligatorios.")
     
@@ -394,6 +427,55 @@ def edit_action_plan(
         raise ActionPlanError("La actividad no existe.")
     edited_activity = activity_query[0]
 
+    # Selecciona el talento humano y verifica que exista
+    smt = db.select(HumanTalent).where(HumanTalent.id == human_talent_id)
+    human_talent_query = db.session.execute(smt).first()
+    if not human_talent_query:
+        raise ActionPlanError("El talento humano no existe.")
+    edited_human_talent = human_talent_query[0]
+
+    # Verifica que la cantidad de personas de talento humano sea válida
+    if not amount_person_hl.isdigit():
+        raise ActionPlanError("La cantidad de personas de talento humano debe ser un número entero.")
+    amount_person_hl = int(amount_person_hl)
+
+    # Verifica que el costo de talento humano sea válido
+    try:
+        cost_hl = float(cost_hl)
+    except ValueError:
+        raise ActionPlanError("El costo de talento humano debe ser mayor o igual a 0.")
+    if cost_hl < 0:
+        raise ActionPlanError("El costo de talento humano debe ser mayor o igual a 0.")
+
+    # Selecciona el material y suministro y verifica que exista
+    smt = db.select(MaterialSupply).where(MaterialSupply.id == material_supply_id)
+    material_supply_query = db.session.execute(smt).first()
+    if not material_supply_query:
+        raise ActionPlanError("El material y suministro no existe.")
+    edited_material_supply = material_supply_query[0]
+
+    # Verifica que la categoría de materiales y suministros sea válida
+    validate_input_text(category_ms, "Categoría de materiales y suministros", ActionPlanError)
+
+    # Verifica que la descripción de materiales y suministros sea válida
+    validate_input_text(description_ms, "Descripción de materiales y suministros", ActionPlanError)
+
+    # Verifica que la cantidad de materiales y suministros sea válida
+    if not amount_ms.isdigit():
+        raise ActionPlanError("La cantidad de materiales y suministros debe ser un número entero.")
+    amount_ms = int(amount_ms)
+
+    # Verifica que el costo de materiales y suministros sea válido
+    try:
+        cost_ms = float(cost_ms)
+    except ValueError:
+        raise ActionPlanError("El costo de materiales y suministros debe ser mayor o igual a 0.")
+
+    # Verifica que la unidad de medida exista
+    smt = db.select(MeasureUnit).where(MeasureUnit.id == measure_unit_ms_id)
+    if not db.session.execute(smt).first():
+        raise ActionPlanError("La unidad de medida no existe.")
+
     # Convert start_date a tipo Date usando la libreria datetime
     y, m, d = start_date.split("-")
     y, m, d = int(y), int(m), int(d)
@@ -410,7 +492,14 @@ def edit_action_plan(
     # Verifica que la cantidad de horas de trabajo sea válida
     work_hours = validate_works_hours(work_hours)
 
-    # Calcula el costo total (falta)
+    # Calcula el costo total de talento humano
+    total_hl = cost_hl * work_hours
+
+    # Calcula el costo total de materiales y suministros
+    total_ms = amount_ms * cost_ms
+
+    # Calcula el costo total de la actividad
+    total_activity = total_hl + total_ms
     
     # Edita el plan de acción
     edited_action_plan.action = action
@@ -419,10 +508,30 @@ def edit_action_plan(
     edited_activity.deadline = deadline_t
     edited_activity.work_hours = work_hours
     edited_activity.charge_person_id = charge_person_id
-    edited_activity.cost = float(cost) # Después se calcula el costo total
+    edited_activity.cost = total_activity
 
-    # Registra el evento en la base de datos
+    # Edita el talento humano
+    edited_human_talent.amount = amount_person_hl
+    edited_human_talent.cost = total_hl
+
+    # Edita el material y suministro
+    edited_material_supply.category = category_ms
+    edited_material_supply.description = description_ms
+    edited_material_supply.amount = amount_ms
+    edited_material_supply.cost = total_ms
+
+    # Registra los eventos en la base de datos
     events.add_event(
         "Planes de acción",
         f"Editar plan de acción '{edited_activity.action_plan.action}'"
+    )
+
+    events.add_event(
+        "Talentos Humanos",
+        f"Editar talento humano '{edited_human_talent.activity.description}' del plan de acción '{edited_activity.action_plan.action}'"
+    )
+
+    events.add_event(
+        "Materiales y Suministros",
+        f"Editar material y suministro '{edited_material_supply.activity.description}' del plan de acción '{edited_activity.action_plan.action}'"
     )
