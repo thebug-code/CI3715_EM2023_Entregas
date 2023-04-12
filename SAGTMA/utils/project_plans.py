@@ -205,7 +205,7 @@ def register_action_plan(
         # Verifica que no haya una actividad con la misma descripción
         smt = (
             db.select(Activity)
-            .where(Activity.action_id == action_id)
+            .where(Activity.action_plan_id == action_id)
             .where(Activity.description == activity)
         )
         if db.session.execute(smt).first():

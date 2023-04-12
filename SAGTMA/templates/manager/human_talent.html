@@ -8,7 +8,7 @@
 
 {# Barra de filtro de plan de acción #}
   <div class="container">
-    <form class="row search-filter" action="{{ url_for('human_talents') }}" method="post">
+    <form class="row search-filter" action="{{ url_for('human_talents', project_detail_id=project_detail.id) }}" method="POST">
       <div class="col-sm-12">
         <div class="input-group">
           <input name="human-talent-filter" id="human-talent-filter" type="text" class="form-control" placeholder="Buscar talentos humanos" aria-label="Buscar talentos humanos" aria-describedby="basic-addon2" />
@@ -41,6 +41,7 @@
               <th>Actividad</th>
               <th>Cantidad de horas</th>
               <th>Cantidad de personas</th>
+              <th>Responsable</th>
               <th>Monto</th>
               <th>Acción</th>
             </tr>
@@ -53,6 +54,7 @@
                 <td>{{ human_talent.activity.description }}</td>
                 <td>{{ human_talent.time }}</td>
                 <td>{{ human_talent.amount }}</td>
+                <td>{{ human_talent.activity.charge_person.names }} {{ human_talent.activity.charge_person.surnames }}</td>
                 <td>{{ human_talent.cost }}</td>
                 <td>
                   {# Botón de modificar #}
@@ -73,5 +75,5 @@
     </div>
   {% endif %}
 
-  <script src="{{ url_for('static', filename='js/action_plans.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/human_talents.js') }}"></script>
 {% endblock %}

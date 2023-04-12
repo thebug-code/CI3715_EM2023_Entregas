@@ -17,13 +17,12 @@ $(document).ready(function() {
         addPlanChargePersonSelect.empty();
 
         // Agregar opción "Seleccione una opción"
-        const defaultOption = $("<option>")
+        const defaultOptionUser = $("<option>")
           .attr("value", "")
           .attr("disabled", true)
           .attr("selected", true)
-          .text("Seleccione un usuario"); 
-        addPlanChargePersonSelect.append(defaultOption);
-
+          .text("Seleccione un usuario");
+        addPlanChargePersonSelect.append(defaultOptionUser);
 
         // Agregar una opción por cada usuario
         users.forEach(function(user) {
@@ -67,12 +66,12 @@ $(document).ready(function() {
             actionsSelect.empty();
 
             // Agregar opción "Seleccione una opción"
-            const defaultOption = $("<option>")
+            const defaultOptionAction = $("<option>")
               .attr("value", "")
               .attr("disabled", true)
               .attr("selected", true)
               .text("Seleccione una acción");
-            actionsSelect.append(defaultOption);
+            actionsSelect.append(defaultOptionAction);
 
             // Agregar una opción por cada acción
             actions.forEach(function(action) {
@@ -99,12 +98,12 @@ $(document).ready(function() {
         measureUnitSelect.empty();
 
         // Agregar opción "Seleccione una opción"
-        const defaultOption = $("<option>")
+        const defaultOptionUnit = $("<option>")
           .attr("value", "")
           .attr("disabled", true)
           .attr("selected", true)
           .text("Seleccione una unidad de medida");
-        measureUnitSelect.append(defaultOption);
+        measureUnitSelect.append(defaultOptionUnit);
 
         // Agregar una opción por cada unidad de medida
         units.forEach(function(unit) {

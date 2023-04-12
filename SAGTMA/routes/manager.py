@@ -450,33 +450,43 @@ def edit_action_plan(plan_id) -> Response:
 
 
 # ========== Talento Humano ==========
-@current_app.route("/human-talents/", methods=["GET", "POST"])
+@current_app.route("/human-talents/<int:project_detail_id>/", methods=["GET", "POST"])
 @requires_roles("Gerente de Operaciones")
-def human_talents() -> Response:
-    """Muestra la lista de talentos humanos registrados en el sistema."""
+def human_talents(project_detail_id) -> Response:
+    """Muestra la lista de talentos humanos asociados a un detalle de proyecto"""
+    # Selecciona el detalle de proyecto y verifica que exista
+    stmt = db.select(ProjectDetail).where(ProjectDetail.id == project_detail_id)
+    project_detail_query = db.session.execute(stmt).first()
+    if not project_detail_query:
+        flash("El detalle de proyecto indica que no existe")
+        return redirect(url_for("project_details"))
+    
+    # Obtiene el detalle de proyecto
+    _project_detail = project_detail_query[0]
+
     # Selecciona los talentos humanos y une las tablas necesarias para
     # mostrar los datos
     stmt = (
         db.select(HumanTalent)
-        .join(Activity)
-        .join(ActionPlan)
-        .join(User)
+        .join(Activity, HumanTalent.activity_id == Activity.id)
+        .join(ActionPlan, Activity.action_plan_id == ActionPlan.id)
+        .join(User, Activity.charge_person_id == User.id)
+        .where(ActionPlan.project_detail_id == project_detail_id)
     )
-
+    
     if request.method == "POST":
         # Obtiene los datos del formulario
-        human_talent = request.form.get("human-talent-filter", "")
+        human_talent = request.form.get("human-talent-filter", "").lower().strip()
 
-        # WHERE (action) LIKE '%human_talen%' OR
-        #       (activity) LIKE '%human_talen%' OR
-        #       (charge_person) LIKE '%human_talen%'
-        stmt = stmt.where(
-            db.or_(
-                ActionPlan.action.like(f"%{human_talent}%"),
-                Activity.description.like(f"%{human_talent}%"),
-                db.func.lower(User.names + " " + User.surnames).like(f"%{human_talent}%"),
+        if human_talent:
+            # Filtra los talentos humanos
+            stmt = stmt.where(
+                db.or_(
+                    ActionPlan.action.like(f"%{human_talent}%"),
+                    Activity.description.like(f"%{human_talent}%"),
+                    db.func.lower(User.names + " " + User.surnames).like(f"%{human_talent}%"),
+                )
             )
-        )
 
         # Añade el evento de búsqueda
         events.add_event("Talentos Humanos", f"Buscar '{human_talent}'")
@@ -486,41 +496,56 @@ def human_talents() -> Response:
     result = db.session.execute(stmt).fetchall()
     _human_talents = [r for r, in result]
 
-    return render_template("manager/human_talent.html", human_talents=_human_talents)
+    return render_template(
+        "manager/human_talent.html",
+        human_talents=_human_talents,
+        project_detail=_project_detail
+    )
 
 
 # ========== Materiales e insumos =============
-@current_app.route("/materials-supplies/", methods=["GET", "POST"])
+@current_app.route("/materials-supplies/<int:project_detail_id>/", methods=["GET", "POST"])
 @requires_roles("Gerente de Operaciones")
-def materials_supplies() -> Response:
-    """Muestra la lista de materiales e insumos registrados en el sistema."""
+def materials_supplies(project_detail_id) -> Response:
+    """Muestra la lista de materiales e insumos asociados a un detalle de proyecto"""
+    # Selecciona el detalle de proyecto y verifica que exista
+    stmt = db.select(ProjectDetail).where(ProjectDetail.id == project_detail_id)
+    project_detail_query = db.session.execute(stmt).first()
+    if not project_detail_query:
+        flash("El detalle de proyecto indica que no existe")
+        return redirect(url_for("project_details"))
+    
+    # Obtiene el detalle de proyecto
+    _project_detail = project_detail_query[0]
+
     # Selecciona los materiales e insumos y une las tablas necesarias para
     # mostrar los datos
     stmt = (
         db.select(MaterialSupply)
-        .join(MeasureUnit)
-        .join(Activity)
-        .join(ActionPlan)
-        .join(User)
+        .join(MeasureUnit, MaterialSupply.measure_unit_id == MeasureUnit.id)
+        .join(Activity, MaterialSupply.activity_id == Activity.id)
+        .join(ActionPlan, Activity.action_plan_id == ActionPlan.id)
+        .join(User, Activity.charge_person_id == User.id)
+        .where(ActionPlan.project_detail_id == project_detail_id)
     )
-    print(stmt)
 
     if request.method == "POST":
         # Obtiene los datos del formulario
-        material_supp = request.form.get("material-supp-filter", "")
+        material_supp = request.form.get("material-supp-filter", "").lower().strip()
 
-        # WHERE (action) LIKE '%material_supp%' OR
-        #       (activity) LIKE '%material_supp%' OR
-        #       (charge_person) LIKE '%material_supp%' OR
-        #       (measure_unit) LIKE '%material_supp%'
-        stmt = stmt.where(
-            db.or_(
-                ActionPlan.action.like(f"%{material_supp}%"),
-                Activity.description.like(f"%{material_supp}%"),
-                db.func.lower(User.names + " " + User.surnames).like(f"%{material_supp}%"),
-                MeasureUnit.unit.like(f"%{material_supp}%"),
+        if material_supp:
+            # WHERE (action) LIKE '%material_supp%' OR
+            #       (activity) LIKE '%material_supp%' OR
+            #       (charge_person) LIKE '%material_supp%' OR
+            #       (measure_unit) LIKE '%material_supp%'
+            stmt = stmt.where(
+                db.or_(
+                    ActionPlan.action.like(f"%{material_supp}%"),
+                    Activity.description.like(f"%{material_supp}%"),
+                    db.func.lower(User.names + " " + User.surnames).like(f"%{material_supp}%"),
+                    MeasureUnit.unit.like(f"%{material_supp}%"),
+                )
             )
-        )
 
         # Añade el evento de búsqueda
         events.add_event("Materiales y Suministros", f"Buscar '{material_supp}'")
@@ -530,5 +555,8 @@ def materials_supplies() -> Response:
     result = db.session.execute(stmt).fetchall()
     _materials_supplies = [r for r, in result]
 
-    return render_template("manager/materials_supplies.html", materials_supplies=_materials_supplies)
-
+    return render_template(
+        "manager/materials_supplies.html",
+        materials_supplies=_materials_supplies,
+        project_detail=_project_detail
+    )

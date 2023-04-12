@@ -8,7 +8,7 @@
 
 {# Barra de filtro de plan de acción #}
   <div class="container">
-    <form class="row search-filter" action="{{ url_for('materials_supplies') }}" method="post">
+    <form class="row search-filter" action="{{ url_for('materials_supplies', project_detail_id=project_detail.id) }}" method="post">
       <div class="col-sm-12">
         <div class="input-group">
           <input name="material-supp-filter" id="material-supp-filter" type="text" class="form-control" placeholder="Buscar materiales e insumos" aria-label="Buscar materiales e insumos" aria-describedby="basic-addon2" />
@@ -43,6 +43,7 @@
               <th>Descripción</th>
               <th>Cantidad de unidades</th>
               <th>Medida</th>
+              <th>Responsable</th>
               <th>Monto</th>
               <th>Acción</th>
             </tr>
@@ -57,6 +58,7 @@
                 <td>{{ material_supply.description }}</td>
                 <td>{{ material_supply.amount }}</td>
                 <td>{{ material_supply.measure_unit.unit }}</td>
+                <td>{{ material_supply.activity.charge_person.names }} {{ material_supply.activity.charge_person.surnames }}</td>
                 <td>{{ material_supply.cost }}</td>
                 <td>
                   {# Botón de modificar #}
