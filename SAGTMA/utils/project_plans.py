@@ -9,7 +9,7 @@ from SAGTMA.models import (
     MeasureUnit,
     MaterialSupply,
     HumanTalent,
-    db
+    db,
 )
 from SAGTMA.utils import events
 from SAGTMA.utils.validations import validate_date, validate_input_text
@@ -28,7 +28,9 @@ def validate_works_hours(work_hours: str) -> int:
         - Es un número entero positivo
     """
     if not work_hours.isdigit():
-        raise ActionPlanError("La cantidad de horas de trabajo debe ser un número entero positivo.")
+        raise ActionPlanError(
+            "La cantidad de horas de trabajo debe ser un número entero positivo."
+        )
     return int(work_hours)
 
 
@@ -48,7 +50,6 @@ def register_action_plan(
     amount_ms: str,
     measure_unit_ms_id: int,
     cost_ms: str,
-
 ):
     """
     Registra un plan de acción en la base de datos.
@@ -102,7 +103,7 @@ def register_action_plan(
         ]
     ):
         raise ActionPlanError("Todos los campos son obligatorios.")
-    
+
     # Selecciona el detalle de proyecto y verifica que exista
     smt = db.select(ProjectDetail).where(ProjectDetail.id == project_detail_id)
     project_detail_query = db.session.execute(smt).first()
@@ -120,49 +121,69 @@ def register_action_plan(
 
     # Verifica que la cantidad de personas en talento humano sea válida
     if not amount_person_hl.isdigit():
-        raise ActionPlanError("La cantidad de personas en talento humano debe ser un número entero positivo.")
+        raise ActionPlanError(
+            "La cantidad de personas en talento humano debe ser un número entero positivo."
+        )
     if int(amount_person_hl) < 1:
-        raise ActionPlanError("La cantidad de personas en talento humano debe ser mayor o igual a 1.")
+        raise ActionPlanError(
+            "La cantidad de personas en talento humano debe ser mayor o igual a 1."
+        )
     amount_person_hl = int(amount_person_hl)
 
     # Verifica que el costo de talento humano sea válido
     try:
-        cost_hl = float(cost_hl) 
+        cost_hl = float(cost_hl)
     except ValueError:
         raise ActionPlanError("El costo de talento humano debe ser mayor o igual a 0.")
     if cost_hl < 0:
         raise ActionPlanError("El costo de talento humano debe ser mayor o igual a 0.")
 
     # Verifica que la categoría de materiales y suministros sea válida
-    validate_input_text(category_ms, "Categoría de Materiales y Suministros", ActionPlanError)
+    validate_input_text(
+        category_ms, "Categoría de Materiales y Suministros", ActionPlanError
+    )
 
     # Verifica que la descripción de materiales y suministro
-    validate_input_text(description_ms, "Descripción de Materiales y Suministros", ActionPlanError)
+    validate_input_text(
+        description_ms, "Descripción de Materiales y Suministros", ActionPlanError
+    )
 
     # Verifica que la cantidad de materiales y suministros sea válida
     if not amount_ms.isdigit():
-        raise ActionPlanError("La cantidad de materiales y suministros debe ser un número entero positivo.")
+        raise ActionPlanError(
+            "La cantidad de materiales y suministros debe ser un número entero positivo."
+        )
     if int(amount_ms) < 1:
-        raise ActionPlanError("La cantidad de materiales y suministros debe ser mayor o igual a 1.")
+        raise ActionPlanError(
+            "La cantidad de materiales y suministros debe ser mayor o igual a 1."
+        )
     amount_ms = int(amount_ms)
 
     # Verifica que la unidad de medida de materiales y suministros sea válida
     if not measure_unit_ms_id.isdigit():
-        raise ActionPlanError("La unidad de medida de materiales y suministros no es válida.")
+        raise ActionPlanError(
+            "La unidad de medida de materiales y suministros no es válida."
+        )
     measure_unit_ms_id = int(measure_unit_ms_id)
 
     # Verifica que la unidad de medida de materiales y suministros exista
     smt = db.select(MeasureUnit).where(MeasureUnit.id == measure_unit_ms_id)
     if not db.session.execute(smt).first():
-        raise ActionPlanError("La unidad de medida de materiales y suministros no existe.")
+        raise ActionPlanError(
+            "La unidad de medida de materiales y suministros no existe."
+        )
 
     # Verifica que el costo de materiales y suministros sea válido
     try:
         cost_ms = float(cost_ms)
     except ValueError:
-        raise ActionPlanError("El costo de materiales y suministros debe ser mayor o igual a 0.")
+        raise ActionPlanError(
+            "El costo de materiales y suministros debe ser mayor o igual a 0."
+        )
     if cost_ms < 0:
-        raise ActionPlanError("El costo de materiales y suministros debe ser mayor o igual a 0.")
+        raise ActionPlanError(
+            "El costo de materiales y suministros debe ser mayor o igual a 0."
+        )
 
     # Convert start_date a tipo Date usando la libreria datetime
     y, m, d = start_date.split("-")
@@ -188,7 +209,7 @@ def register_action_plan(
 
     # Calcula el monto total del plan de acción
     total = total_hl + total_ms
-    
+
     # Verifica el tipo de acción
     action_id = int(action) if action.isdigit() else None
 
@@ -201,7 +222,7 @@ def register_action_plan(
         if not action_plan_query:
             raise ActionPlanError("El plan de acción no existe.")
         action_plan = action_plan_query[0]
-        
+
         # Verifica que no haya una actividad con la misma descripción
         smt = (
             db.select(Activity)
@@ -219,18 +240,18 @@ def register_action_plan(
             start_date_t,
             deadline_t,
             work_hours,
-            total
+            total,
         )
         db.session.add(activity)
 
         # Registra el evento en la base de datos
         events.add_event(
             "Planes de Acción",
-            f"Agregar actividad '{activity.description}' al plan de acción '{action_plan.action}'"
+            f"Agregar actividad '{activity.description}' al plan de acción '{action_plan.action}'",
         )
 
         activity_id = activity.id
-        
+
     else:
         # Verifica que la acción sea válida
         validate_input_text(action, "Acción", ActionPlanError)
@@ -258,23 +279,20 @@ def register_action_plan(
             start_date_t,
             deadline_t,
             work_hours,
-            total
+            total,
         )
         db.session.add(activity)
-        
+
         # Registra el evento en la base de datos
         events.add_event(
             "Planes de Acción",
-            f"Agregar actividad '{activity.description}' al plan de acción '{action_plan.action}'"
+            f"Agregar actividad '{activity.description}' al plan de acción '{action_plan.action}'",
         )
- 
+
         activity_id = activity.id
 
         # Registra los eventos en la base de datos
-        events.add_event(
-            "Planes de Acción", f"Agregar plan de acción '{action}'"
-        )
-
+        events.add_event("Planes de Acción", f"Agregar plan de acción '{action}'")
 
     # Crea un registro de talento humano
     human_talent = HumanTalent(
@@ -297,16 +315,16 @@ def register_action_plan(
     # Agrega los registros a la base de datos
     db.session.add(human_talent)
     db.session.add(materials_supplies)
-   
+
     # Registra los eventos en la base de datos
     events.add_event(
         "Talentos Humanos",
-        f"Agregar talento humano a la actividad '{activity.description}'"
+        f"Agregar talento humano a la actividad '{activity.description}'",
     )
 
     events.add_event(
-        "Materiales y Suministros", 
-        f"Agregar material y suministro '{materials_supplies.description}' a la actividad '{activity.description}'"
+        "Materiales y Suministros",
+        f"Agregar material y suministro '{materials_supplies.description}' a la actividad '{activity.description}'",
     )
 
 
@@ -352,7 +370,7 @@ def edit_action_plan(
     description_ms: str,
     amount_ms: str,
     measure_unit_ms_id: int,
-    cost_ms: str
+    cost_ms: str,
 ):
     """
     Edita un plan de acción en la base de datos.
@@ -400,11 +418,11 @@ def edit_action_plan(
             category_ms,
             description_ms,
             amount_ms,
-            cost_ms
+            cost_ms,
         ]
     ):
         raise ActionPlanError("Todos los campos son obligatorios.")
-    
+
     # Selecciona el plan de acción y verifica que exista
     smt = db.select(ActionPlan).where(ActionPlan.id == action_plan_id)
     action_plan_query = db.session.execute(smt).first()
@@ -436,7 +454,9 @@ def edit_action_plan(
 
     # Verifica que la cantidad de personas de talento humano sea válida
     if not amount_person_hl.isdigit():
-        raise ActionPlanError("La cantidad de personas de talento humano debe ser un número entero.")
+        raise ActionPlanError(
+            "La cantidad de personas de talento humano debe ser un número entero."
+        )
     amount_person_hl = int(amount_person_hl)
 
     # Verifica que el costo de talento humano sea válido
@@ -455,21 +475,29 @@ def edit_action_plan(
     edited_material_supply = material_supply_query[0]
 
     # Verifica que la categoría de materiales y suministros sea válida
-    validate_input_text(category_ms, "Categoría de materiales y suministros", ActionPlanError)
+    validate_input_text(
+        category_ms, "Categoría de materiales y suministros", ActionPlanError
+    )
 
     # Verifica que la descripción de materiales y suministros sea válida
-    validate_input_text(description_ms, "Descripción de materiales y suministros", ActionPlanError)
+    validate_input_text(
+        description_ms, "Descripción de materiales y suministros", ActionPlanError
+    )
 
     # Verifica que la cantidad de materiales y suministros sea válida
     if not amount_ms.isdigit():
-        raise ActionPlanError("La cantidad de materiales y suministros debe ser un número entero.")
+        raise ActionPlanError(
+            "La cantidad de materiales y suministros debe ser un número entero."
+        )
     amount_ms = int(amount_ms)
 
     # Verifica que el costo de materiales y suministros sea válido
     try:
         cost_ms = float(cost_ms)
     except ValueError:
-        raise ActionPlanError("El costo de materiales y suministros debe ser mayor o igual a 0.")
+        raise ActionPlanError(
+            "El costo de materiales y suministros debe ser mayor o igual a 0."
+        )
 
     # Verifica que la unidad de medida exista
     smt = db.select(MeasureUnit).where(MeasureUnit.id == measure_unit_ms_id)
@@ -500,7 +528,7 @@ def edit_action_plan(
 
     # Calcula el costo total de la actividad
     total_activity = total_hl + total_ms
-    
+
     # Edita el plan de acción
     edited_action_plan.action = action
     edited_activity.description = activity
@@ -523,15 +551,15 @@ def edit_action_plan(
     # Registra los eventos en la base de datos
     events.add_event(
         "Planes de acción",
-        f"Editar plan de acción '{edited_activity.action_plan.action}'"
+        f"Editar plan de acción '{edited_activity.action_plan.action}'",
     )
 
     events.add_event(
         "Talentos Humanos",
-        f"Editar talento humano '{edited_human_talent.activity.description}' del plan de acción '{edited_activity.action_plan.action}'"
+        f"Editar talento humano '{edited_human_talent.activity.description}' del plan de acción '{edited_activity.action_plan.action}'",
     )
 
     events.add_event(
         "Materiales y Suministros",
-        f"Editar material y suministro '{edited_material_supply.activity.description}' del plan de acción '{edited_activity.action_plan.action}'"
+        f"Editar material y suministro '{edited_material_supply.activity.description}' del plan de acción '{edited_activity.action_plan.action}'",
     )

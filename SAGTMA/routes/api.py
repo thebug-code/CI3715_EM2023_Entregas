@@ -170,25 +170,14 @@ def get_project_details_dropdown_data():
     stmt = db.select(User)
     result = db.session.execute(stmt).fetchall()
     users = [
-        {
-            "id": u.id,
-            "names": u.names,
-            "surnames": u.surnames,
-            "id_number": u.id_number
-        }
+        {"id": u.id, "names": u.names, "surnames": u.surnames, "id_number": u.id_number}
         for u, in result
     ]
 
     # SELECT * FROM department
     stmt = db.select(Department)
     result = db.session.execute(stmt).fetchall()
-    departments = [
-        {
-            "id": d.id,
-            "description": d.description
-        } 
-        for d, in result
-    ]
+    departments = [{"id": d.id, "description": d.description} for d, in result]
 
     # SELECT * FROM vehicle
     stmt = db.select(Vehicle)
@@ -277,25 +266,12 @@ def get_action_plans_dropdown_data():
     stmt = db.select(User)
     result = db.session.execute(stmt).fetchall()
 
-    users = [
-        {
-            "id": u.id,
-            "names": u.names,
-            "surnames": u.surnames
-        } 
-        for u, in result
-    ]
+    users = [{"id": u.id, "names": u.names, "surnames": u.surnames} for u, in result]
 
     # SELECT * FROM ActionPlan
     stmt = db.select(ActionPlan)
     result = db.session.execute(stmt).fetchall()
-    actions = [
-        {
-            "id": a.id,
-            "description": a.action
-        }
-        for a, in result
-    ]
+    actions = [{"id": a.id, "description": a.action} for a, in result]
 
     # Obtiene las unidades de medida
     measure_units = api_measure_units()
@@ -307,9 +283,8 @@ def get_action_plans_dropdown_data():
 @requires_roles("Gerente de Operaciones")
 def api_action_plans():
     # SELECT * FROM ActionPlan JOIN Activity ON ActionPlan.id = Activity.action_plan_id
-    stmt = (
-        db.select(ActionPlan, Activity)
-        .join(Activity, ActionPlan.id == Activity.action_plan_id)
+    stmt = db.select(ActionPlan, Activity).join(
+        Activity, ActionPlan.id == Activity.action_plan_id
     )
 
     # Obtiene los parámetros de la request para filtrar por id
@@ -354,41 +329,43 @@ def api_action_plans():
         if ap.id not in action_plans:
             # Si es la primera vez que se encuentra este ActionPlan,
             # se crea un nuevo diccionario para almacenar sus datos
-            action_plans[ap.id] = {
-                "id": ap.id,
-                "action": ap.action,
-                "activities": []
-            }
+            action_plans[ap.id] = {"id": ap.id, "action": ap.action, "activities": []}
         # Se agrega la actividad correspondiente al diccionario del ActionPlan
-        action_plans[ap.id]["activities"].append({
-            "id": act.id,
-            "description": act.description,
-            "start_date": act.start_date.strftime("%Y-%m-%d"),
-            "deadline": act.deadline.strftime("%Y-%m-%d"),
-            "work_hours": act.work_hours,
-            "cost": act.cost,
-            "human_talents": [
-                {
-                    "id": ht.id,
-                    "amount_persons": ht.amount,
-                    "cost_hl": ht.cost / act.work_hours,
-                }
-                for ht in act.human_talents
-            ],
-            "material_supplies": [
-                {
-                    "id": ms.id,
-                    "category": ms.category,
-                    "description": ms.description,
-                    "amount": ms.amount,
-                    "unit": ms.measure_unit_id,
-                    "cost": ms.cost / ms.amount,
-                }
-                for ms in act.materials
-            ]       
-        })
-    
+        action_plans[ap.id]["activities"].append(
+            {
+                "id": act.id,
+                "description": act.description,
+                "start_date": act.start_date.strftime("%Y-%m-%d"),
+                "deadline": act.deadline.strftime("%Y-%m-%d"),
+                "work_hours": act.work_hours,
+                "cost": act.cost,
+                "human_talents": [
+                    {
+                        "id": ht.id,
+                        "amount_persons": ht.amount,
+                        "cost_hl": ht.cost / act.work_hours,
+                    }
+                    for ht in act.human_talents
+                ],
+                "material_supplies": [
+                    {
+                        "id": ms.id,
+                        "category": ms.category,
+                        "description": ms.description,
+                        "amount": ms.amount,
+                        "unit": ms.measure_unit_id,
+                        "cost": ms.cost / ms.amount,
+                    }
+                    for ms in act.materials
+                ],
+            }
+        )
+
     # Obtiene los datos del dropdown para hallar los nombres de los usuarios
     data = get_action_plans_dropdown_data()
 
-    return {"actionPlans": action_plans, "users": data["users"], "measureUnits": data["measureUnits"]}
+    return {
+        "actionPlans": action_plans,
+        "users": data["users"],
+        "measureUnits": data["measureUnits"],
+    }

@@ -1,12 +1,12 @@
-$(document).ready(function() {
+$(document).ready(function () {
   // Agregar un nuevo plan de acción
-  $(document).on('click', '.add-action-plan', function() {
+  $(document).on("click", ".add-action-plan", function () {
     var form = $(this);
     id = form.attr("id").match(/\d+/)[0];
 
     $.getJSON({
       url: "/api/v1/action-plans-dropdown-data",
-      success: function(data) {
+      success: function (data) {
         $("#add-action-plan-modal").modal("show");
         var users = data.users;
         var actions = data.actions;
@@ -17,16 +17,14 @@ $(document).ready(function() {
         addPlanChargePersonSelect.empty();
 
         // Agregar opción "Seleccione una opción"
-        const defaultOptionUser = $("<option>")
-          .attr("value", "")
-          .attr("disabled", true)
-          .attr("selected", true)
-          .text("Seleccione un usuario");
+        const defaultOptionUser = $("<option>").attr("value", "").attr("disabled", true).attr("selected", true).text("Seleccione un usuario");
         addPlanChargePersonSelect.append(defaultOptionUser);
 
         // Agregar una opción por cada usuario
-        users.forEach(function(user) {
-          const option = $("<option>").attr("value", user.id).text(user.names + " " + user.surnames);
+        users.forEach(function (user) {
+          const option = $("<option>")
+            .attr("value", user.id)
+            .text(user.names + " " + user.surnames);
 
           // Agregar la opción al select
           addPlanChargePersonSelect.append(option);
@@ -46,7 +44,7 @@ $(document).ready(function() {
         const actionTypeSelect = $("#action-type");
 
         // Agregar un listener para detectar cambios
-        actionTypeSelect.change(function() {
+        actionTypeSelect.change(function () {
           // Obtener el valor del select
           const actionType = $(this).val();
 
@@ -60,21 +58,17 @@ $(document).ready(function() {
             existingActionSelect.prop("required", true);
             newActionFields.hide();
             existingActionFields.show();
-            
+
             // Obtener el select de acciones y vaciar su contenido
             const actionsSelect = existingActionFields.children().eq(1);
             actionsSelect.empty();
 
             // Agregar opción "Seleccione una opción"
-            const defaultOptionAction = $("<option>")
-              .attr("value", "")
-              .attr("disabled", true)
-              .attr("selected", true)
-              .text("Seleccione una acción");
+            const defaultOptionAction = $("<option>").attr("value", "").attr("disabled", true).attr("selected", true).text("Seleccione una acción");
             actionsSelect.append(defaultOptionAction);
 
             // Agregar una opción por cada acción
-            actions.forEach(function(action) {
+            actions.forEach(function (action) {
               const option = $("<option>").attr("value", action.id).text(action.description);
 
               // Agregar la opción al select
@@ -98,17 +92,13 @@ $(document).ready(function() {
         measureUnitSelect.empty();
 
         // Agregar opción "Seleccione una opción"
-        const defaultOptionUnit = $("<option>")
-          .attr("value", "")
-          .attr("disabled", true)
-          .attr("selected", true)
-          .text("Seleccione una unidad de medida");
+        const defaultOptionUnit = $("<option>").attr("value", "").attr("disabled", true).attr("selected", true).text("Seleccione una unidad de medida");
         measureUnitSelect.append(defaultOptionUnit);
 
         // Agregar una opción por cada unidad de medida
-        units.forEach(function(unit) {
+        units.forEach(function (unit) {
           const option = $("<option>").attr("value", unit.id).text(unit.dimension).text(unit.unit);
-          
+
           // Agregar la opción al select
           measureUnitSelect.append(option);
         });
@@ -119,7 +109,7 @@ $(document).ready(function() {
   });
 
   // Eliminar un plan de acción
-  $(document).on('click', '.delete-action-plan', function() {
+  $(document).on("click", ".delete-action-plan", function () {
     var form = $(this);
     id = form.attr("id").match(/\d+/)[0];
 
@@ -128,16 +118,16 @@ $(document).ready(function() {
   });
 
   // Editar un plan de acción
-  $(document).on('click', '.edit-action-plan', function(event) {
-    const actionId = $(event.currentTarget).attr('data-action-id');
-    const activityId = $(event.currentTarget).attr('data-activity-id');
-    const materialSupplyId = $(event.currentTarget).attr('data-material-supply-id');
-    const humanTalentId = $(event.currentTarget).attr('data-human-talent-id');
+  $(document).on("click", ".edit-action-plan", function (event) {
+    const actionId = $(event.currentTarget).attr("data-action-id");
+    const activityId = $(event.currentTarget).attr("data-activity-id");
+    const materialSupplyId = $(event.currentTarget).attr("data-material-supply-id");
+    const humanTalentId = $(event.currentTarget).attr("data-human-talent-id");
 
     $.getJSON({
       url: "/api/v1/action-plans",
       data: { action_id: actionId, activity_id: activityId, material_supply_id: materialSupplyId, human_talent_id: humanTalentId },
-      success: function(data) {
+      success: function (data) {
         $("#edit-action-plan-modal").modal("show");
         const actionPlan = data.actionPlans[actionId];
         const activity = actionPlan.activities[0];
@@ -151,9 +141,11 @@ $(document).ready(function() {
         editPlanChargePersonSelect.empty();
 
         // Agregar una opción por cada usuario
-        users.forEach(function(user) {
-          const option = $("<option>").attr("value", user.id).text(user.names + " " + user.surnames);
-          
+        users.forEach(function (user) {
+          const option = $("<option>")
+            .attr("value", user.id)
+            .text(user.names + " " + user.surnames);
+
           // Si el usuario es el responsable del plan de acción, seleccionarlo
           // por defecto
           if (user.id === actionPlan.charge_person_id) {
@@ -169,7 +161,7 @@ $(document).ready(function() {
         editMeasureUnitSelect.empty();
 
         // Agregar una opción por cada unidad de medida
-        units.forEach(function(unit) {
+        units.forEach(function (unit) {
           const option = $("<option>").attr("value", unit.id).text(unit.unit);
 
           // Si la unidad de medida es la misma que la del plan de acción, seleccionarla
@@ -195,16 +187,13 @@ $(document).ready(function() {
         $("#edit-cost-ms").val(materialSupply.cost);
 
         // Establece los valores de los inputs
-        $('#activity-id').val(activityId);
-        $('#action-id').val(actionId);
-        $('#human-talent-id').val(humanTalentId);
-        $('#material-supply-id').val(materialSupplyId);
+        $("#activity-id").val(activityId);
+        $("#action-id").val(actionId);
+        $("#human-talent-id").val(humanTalentId);
+        $("#material-supply-id").val(materialSupplyId);
 
         $("#edit-action-plan-form").attr("action", "/action-plans/" + actionId + "/edit/");
       },
     });
   });
 });
-
-      
-

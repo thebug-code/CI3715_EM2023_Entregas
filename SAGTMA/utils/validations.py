@@ -50,9 +50,7 @@ def validate_name(name: str, exception_type: Type[BaseException]):
 
 
 def validate_date(
-    start_date: date,
-    deadline: date,
-    exception_type: Type[BaseException]
+    start_date: date, deadline: date, exception_type: Type[BaseException]
 ) -> str:
     """
     Lanza una excepción si la fecha de inicio de un proyecto es despues que su fecha de cierre
@@ -65,9 +63,7 @@ def validate_date(
 
 
 def validate_input_text(
-    input_text: str,
-    campo: str,
-    exception_type: Type[BaseException]
+    input_text: str, campo: str, exception_type: Type[BaseException]
 ):
     """
     Lanza una excepción si el texto no es válido.
@@ -77,9 +73,7 @@ def validate_input_text(
         -No tiene caracteres especiales distintos de '-_.,;:¡!/ '
     """
     if len(input_text) < 3 or len(input_text) > 100:
-        raise exception_type(
-            f"El campo {campo} debe tener entre 3 y 100 caracteres"
-        )
+        raise exception_type(f"El campo {campo} debe tener entre 3 y 100 caracteres")
 
     regex = r"^[\w\s\-a-zA-Z0-9_.¡!,/;:]*$"
     if not re.match(regex, input_text):

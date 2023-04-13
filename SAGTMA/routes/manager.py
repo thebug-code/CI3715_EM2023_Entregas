@@ -22,7 +22,7 @@ from SAGTMA.models import (
     HumanTalent,
     MaterialSupply,
     MeasureUnit,
-    db
+    db,
 )
 
 
@@ -31,6 +31,7 @@ from SAGTMA.models import (
 def utility_processor():
     def zip_lists(a, b):
         return zip(a, b)
+
     return dict(zip_lists=zip_lists)
 
 
@@ -300,7 +301,7 @@ def action_plans(project_detail_id) -> Response:
         # Registra el evento en la base de datos
         events.add_event(
             "Planes de Accion",
-            f"Buscar '{plan}' del detalle de proyecto con id {project_detail_id}"
+            f"Buscar '{plan}' del detalle de proyecto con id {project_detail_id}",
         )
     else:
         # Selecciona los planes de accion del proyecto con el id indicado y
@@ -344,9 +345,9 @@ def register_action_plan(project_detail_id) -> Response:
     # Verifica si el plan de accion es nuevo o existente
     action_type = request.form.get("action-type-hidden", "")
     if action_type == "existing":
-        action = request.form.get("existing-action", "") # Es un id
+        action = request.form.get("existing-action", "")  # Es un id
     else:
-        action = request.form.get("new-action", "") # Es un string
+        action = request.form.get("new-action", "")  # Es un string
 
     try:
         project_plans.register_action_plan(
@@ -363,7 +364,7 @@ def register_action_plan(project_detail_id) -> Response:
             description_ms,
             amount_ms,
             measure_unit_ms_id,
-            cost_ms
+            cost_ms,
         )
     except project_plans.ActionPlanError as e:
         flash(f"{e}")
@@ -438,7 +439,7 @@ def edit_action_plan(plan_id) -> Response:
             description_ms,
             amount_ms,
             measure_unit_ms_id,
-            cost_ms
+            cost_ms,
         )
     except project_plans.ActionPlanError as e:
         flash(f"{e}")
@@ -460,7 +461,7 @@ def human_talents(project_detail_id) -> Response:
     if not project_detail_query:
         flash("El detalle de proyecto indica que no existe")
         return redirect(url_for("project_details"))
-    
+
     # Obtiene el detalle de proyecto
     _project_detail = project_detail_query[0]
 
@@ -473,7 +474,7 @@ def human_talents(project_detail_id) -> Response:
         .join(User, Activity.charge_person_id == User.id)
         .where(ActionPlan.project_detail_id == project_detail_id)
     )
-    
+
     if request.method == "POST":
         # Obtiene los datos del formulario
         human_talent = request.form.get("human-talent-filter", "").lower().strip()
@@ -484,7 +485,9 @@ def human_talents(project_detail_id) -> Response:
                 db.or_(
                     ActionPlan.action.like(f"%{human_talent}%"),
                     Activity.description.like(f"%{human_talent}%"),
-                    db.func.lower(User.names + " " + User.surnames).like(f"%{human_talent}%"),
+                    db.func.lower(User.names + " " + User.surnames).like(
+                        f"%{human_talent}%"
+                    ),
                 )
             )
 
@@ -499,12 +502,14 @@ def human_talents(project_detail_id) -> Response:
     return render_template(
         "manager/human_talent.html",
         human_talents=_human_talents,
-        project_detail=_project_detail
+        project_detail=_project_detail,
     )
 
 
 # ========== Materiales e insumos =============
-@current_app.route("/materials-supplies/<int:project_detail_id>/", methods=["GET", "POST"])
+@current_app.route(
+    "/materials-supplies/<int:project_detail_id>/", methods=["GET", "POST"]
+)
 @requires_roles("Gerente de Operaciones")
 def materials_supplies(project_detail_id) -> Response:
     """Muestra la lista de materiales e insumos asociados a un detalle de proyecto"""
@@ -514,7 +519,7 @@ def materials_supplies(project_detail_id) -> Response:
     if not project_detail_query:
         flash("El detalle de proyecto indica que no existe")
         return redirect(url_for("project_details"))
-    
+
     # Obtiene el detalle de proyecto
     _project_detail = project_detail_query[0]
 
@@ -542,7 +547,9 @@ def materials_supplies(project_detail_id) -> Response:
                 db.or_(
                     ActionPlan.action.like(f"%{material_supp}%"),
                     Activity.description.like(f"%{material_supp}%"),
-                    db.func.lower(User.names + " " + User.surnames).like(f"%{material_supp}%"),
+                    db.func.lower(User.names + " " + User.surnames).like(
+                        f"%{material_supp}%"
+                    ),
                     MeasureUnit.unit.like(f"%{material_supp}%"),
                 )
             )
@@ -558,5 +565,5 @@ def materials_supplies(project_detail_id) -> Response:
     return render_template(
         "manager/materials_supplies.html",
         materials_supplies=_materials_supplies,
-        project_detail=_project_detail
+        project_detail=_project_detail,
     )

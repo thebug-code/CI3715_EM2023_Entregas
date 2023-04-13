@@ -247,7 +247,7 @@ class Department(db.Model):
 
 
 class MeasureUnit(db.Model):
-    """ Modelo de unidades de medidas. """
+    """Modelo de unidades de medidas."""
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     dimension = db.Column(db.Float, nullable=False)
@@ -270,7 +270,9 @@ class Activity(db.Model):
     """Modelo de actividad."""
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    action_plan_id = db.Column(db.Integer, db.ForeignKey("action_plan.id"), nullable=False)
+    action_plan_id = db.Column(
+        db.Integer, db.ForeignKey("action_plan.id"), nullable=False
+    )
     charge_person_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     description = db.Column(db.String(100), nullable=False)
     start_date = db.Column(db.Date, nullable=False)
@@ -289,14 +291,14 @@ class Activity(db.Model):
     )
 
     def __init__(
-            self,
-            action_plan_id: int,
-            charge_person_id: int,
-            description: str,
-            start_date,
-            deadline,
-            work_hours: int,
-            cost: float
+        self,
+        action_plan_id: int,
+        charge_person_id: int,
+        description: str,
+        start_date,
+        deadline,
+        work_hours: int,
+        cost: float,
     ):
         self.action_plan_id = action_plan_id
         self.charge_person_id = charge_person_id
@@ -312,10 +314,13 @@ class Activity(db.Model):
 
 class ActionPlan(db.Model):
     """Modelo de plan de acción."""
+
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    project_detail_id = db.Column(db.Integer, db.ForeignKey("project_detail.id"), nullable=False)
+    project_detail_id = db.Column(
+        db.Integer, db.ForeignKey("project_detail.id"), nullable=False
+    )
     action = db.Column(db.String(100), nullable=False)
- 
+
     # Relacion 1:N entre plan de acción y actividades
     activities = db.relationship(
         "Activity", backref="action_plan", cascade="all, delete-orphan"
@@ -328,20 +333,14 @@ class ActionPlan(db.Model):
 
 class HumanTalent(db.Model):
     """Modelo de Talento Humano"""
+
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     activity_id = db.Column(db.Integer, db.ForeignKey("activity.id"), nullable=False)
     time = db.Column(db.Integer, nullable=False)
     amount = db.Column(db.Integer, nullable=False)
     cost = db.Column(db.Float, nullable=False)
 
-    def __init__(
-        self,
-        activity_id: int,
-        time: int,
-        amount: int,
-        cost: float
-    ):
-    
+    def __init__(self, activity_id: int, time: int, amount: int, cost: float):
         self.activity_id = activity_id
         self.time = time
         self.amount = amount
@@ -353,9 +352,12 @@ class HumanTalent(db.Model):
 
 class MaterialSupply(db.Model):
     """Modelo de Suministro de Materiales"""
+
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     activity_id = db.Column(db.Integer, db.ForeignKey("activity.id"), nullable=False)
-    measure_unit_id = db.Column(db.Integer, db.ForeignKey("measure_unit.id"), nullable=False)
+    measure_unit_id = db.Column(
+        db.Integer, db.ForeignKey("measure_unit.id"), nullable=False
+    )
     category = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(100), nullable=False)
     amount = db.Column(db.Integer, nullable=False)

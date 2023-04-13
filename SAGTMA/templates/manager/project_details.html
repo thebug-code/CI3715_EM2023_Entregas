@@ -183,7 +183,7 @@
                 <td>{{ detail.observations }}</td>
                 <td>
                   {# Boton de planes de acción #}
-                  <a href="{{ url_for('action_plans', project_detail_id=detail.id) }}"> 
+                  <a href="{{ url_for('action_plans', project_detail_id=detail.id) }}">
                     <button type="button" class="btn btn-primary">
                       <img src="{{ url_for('static', filename='img/action_plan.svg') }}" width="24" height="24" fill="white" class="table-button" value="submit" style="border-radius: 5px;" title="Planes de acción" />
                     </button>

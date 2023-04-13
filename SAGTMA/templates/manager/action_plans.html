@@ -5,7 +5,7 @@
   <div class="d-flex justify-content-center my-4">
     <h1 class="title-container">Plan de Acción</h1>
   </div>
-  
+
   <!-- Modal para agregar un plan de acción -->
   <div class="modal fade" id="add-action-plan-modal" tabindex="-1" role="dialog" aria-labelledby="AddModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -29,16 +29,15 @@
             <!-- Campo para seleccionar una acción existente -->
             <div class="mb-3" id="existing-action-fields" style="display:none;">
               <label class="form-label" for="existing-action">Acción existente</label>
-              <select class="form-select" id="existing-action" name="existing-action" required>
-              </select>
+              <select class="form-select" id="existing-action" name="existing-action" required></select>
             </div>
             <!-- Campo para ingresar una nueva acción -->
             <div class="mb-3" id="new-action-fields" style="display:none;">
               <label class="form-label" for="new-action">Nueva acción</label>
               <input type="text" class="form-control" id="new-action" name="new-action" placeholder="Ingrese la nueva acción" required />
             </div>
-             <!-- Campo oculto para almacenar el valor de la opción seleccionada en "Tipo de acción" -->
-            <input type="hidden" id="action-type-hidden" name="action-type-hidden" value="">
+            <!-- Campo oculto para almacenar el valor de la opción seleccionada en "Tipo de acción" -->
+            <input type="hidden" id="action-type-hidden" name="action-type-hidden" value="" />
             <!-- Detalles de la actividad -->
             <div class="mb-3">
               <label class="form-label" for="activity">Actividad</label>
@@ -63,7 +62,7 @@
 
             <div class="mb-3">
               <label class="form-label" for="cost">Monto</label>
-              <input type="number" step="any" class="form-control" id="add-cost" name="cost" placeholder="Monto" disabled>
+              <input type="number" step="any" class="form-control" id="add-cost" name="cost" placeholder="Monto" disabled />
               <small class="form-text text-lg my-0 text-muted" style="font-size: 0.8em;">Calculado automáticamente.</small>
             </div>
 
@@ -99,8 +98,7 @@
             </div>
             <div class="mb-3">
               <label class="form-label" for="add-measure-untit-ms">Medida</label>
-              <select class="form-select" name="measure-unit-ms" id="measure-unit-ms" required>
-              </select>
+              <select class="form-select" name="measure-unit-ms" id="measure-unit-ms" required></select>
             </div>
             <div class="mb-3">
               <label class="form-label" for="add-cost-ms">Costo</label>
@@ -139,7 +137,7 @@
         </div>
       </div>
     </div>
-  </div> 
+  </div>
 
   <!-- Modal para editar un plan de acción -->
   <div class="modal fade" id="edit-action-plan-modal" tabindex="-1" role="dialog" aria-labelledby="EditModalLabel" aria-hidden="true">
@@ -177,7 +175,7 @@
               <label class="form-label" for="work-hours">Cantidad de horas</label>
               <input type="number" class="form-control" id="edit-work-hours" name="work-hours" placeholder="Ingrese la cantidad de horas" required />
             </div>
-            
+
             <!-- Talento Humano -->
             <div class="mb-2 mt-4 fs-5 text-muted">Talento Humano</div>
             <div class="mb-3">
@@ -210,19 +208,18 @@
             </div>
             <div class="mb-3">
               <label class="form-label" for="edit-measure-unit-ms">Medida</label>
-              <select class="form-select" name="measure-unit-ms" id="edit-measure-unit-ms" required>
-              </select>
+              <select class="form-select" name="measure-unit-ms" id="edit-measure-unit-ms" required></select>
             </div>
             <div class="mb-3">
               <label class="form-label" for="edit-cost-ms">Costo</label>
               <input class="form-control" type="number" step="any" name="cost-ms" id="edit-cost-ms" placeholder="Ingrese el costo" required />
             </div>
 
-            <input type="hidden" name="activity-id" id="activity-id">
+            <input type="hidden" name="activity-id" id="activity-id" />
             <input type="hidden" name="project-detail-id" value="{{ project_detail.id }}" />
-            <input type="hidden" name="action-id" id="action-id">
-            <input type="hidden" name="human-talent-id" id="human-talent-id">
-            <input type="hidden" name="material-supply-id" id="material-supply-id">
+            <input type="hidden" name="action-id" id="action-id" />
+            <input type="hidden" name="human-talent-id" id="human-talent-id" />
+            <input type="hidden" name="material-supply-id" id="material-supply-id" />
 
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -281,30 +278,39 @@
             {% for action_plan in action_plans %}
               {% for activity in action_plan.activities %}
                 {% for human_talent, material_supply in zip_lists(activity.human_talents, activity.materials) %}
-                <tr>
-                  <td>{{ action_plan.id }}</td>
-                  <td>{{ action_plan.action }}</td>
-                  <td>{{ activity.description }}</td>
-                  <td>{{ activity.start_date }}</td>
-                  <td>{{ activity.deadline }}</td>
-                  <td>{{ activity.work_hours }}</td>
-                  <td>{{ activity.charge_person.names }} {{ activity.charge_person.surnames }}</td>
-                  <td>{{ activity.cost }}</td>
-                  <td>
-                    {# Botón de modificar #}
-                    <button id="edit{{ action_plan.id }}" data-action-id="{{ action_plan.id }}" data-activity-id="{{ activity.id }}" data-material-supply-id="{{ material_supply.id }}" data-human-talent-id="{{ human_talent.id }}" type="button" class="btn btn-primary my-2 edit-action-plan" data-bs-toggle="modal">
-                      <img src="{{ url_for('static', filename='img/edit.svg') }}" width="24" height="24" fill="white" class="table-button" value="submit" style="border-radius: 5px;" title="Modificar plan de acción" />
-                    </button>
+                  <tr>
+                    <td>{{ action_plan.id }}</td>
+                    <td>{{ action_plan.action }}</td>
+                    <td>{{ activity.description }}</td>
+                    <td>{{ activity.start_date }}</td>
+                    <td>{{ activity.deadline }}</td>
+                    <td>{{ activity.work_hours }}</td>
+                    <td>{{ activity.charge_person.names }} {{ activity.charge_person.surnames }}</td>
+                    <td>{{ activity.cost }}</td>
+                    <td>
+                      {# Botón de modificar #}
+                      <button
+                        id="edit{{ action_plan.id }}"
+                        data-action-id="{{ action_plan.id }}"
+                        data-activity-id="{{ activity.id }}"
+                        data-material-supply-id="{{ material_supply.id }}"
+                        data-human-talent-id="{{ human_talent.id }}"
+                        type="button"
+                        class="btn btn-primary my-2 edit-action-plan"
+                        data-bs-toggle="modal"
+                      >
+                        <img src="{{ url_for('static', filename='img/edit.svg') }}" width="24" height="24" fill="white" class="table-button" value="submit" style="border-radius: 5px;" title="Modificar plan de acción" />
+                      </button>
 
-                    {# Botón de eliminar #}
-                    <button id="delete{{ action_plan.id }}" type="button" class="btn btn-primary delete-action-plan" data-bs-toggle="modal">
-                      <img src="{{ url_for('static', filename='img/delete.svg') }}" width="24" height="24" fill="white" class="table-button" value="submit" style="border-radius: 5px;" title="Eliminar plan de acción" />
-                    </button>
-                  </td>
-                </tr>
+                      {# Botón de eliminar #}
+                      <button id="delete{{ action_plan.id }}" type="button" class="btn btn-primary delete-action-plan" data-bs-toggle="modal">
+                        <img src="{{ url_for('static', filename='img/delete.svg') }}" width="24" height="24" fill="white" class="table-button" value="submit" style="border-radius: 5px;" title="Eliminar plan de acción" />
+                      </button>
+                    </td>
+                  </tr>
+                {% endfor %}
               {% endfor %}
             {% endfor %}
-          {% endfor %}
           </tbody>
         </table>
       </div>
