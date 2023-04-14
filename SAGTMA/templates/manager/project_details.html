@@ -183,11 +183,16 @@
                 <td>{{ detail.observations }}</td>
                 <td>
                   {# Boton de planes de acción #}
-                  <a href="{{ url_for('action_plans', project_detail_id=detail.id) }}">
+                  <div class="custom-dropdown">
                     <button type="button" class="btn btn-primary">
                       <img src="{{ url_for('static', filename='img/action_plan.svg') }}" width="24" height="24" fill="white" class="table-button" value="submit" style="border-radius: 5px;" title="Planes de acción" />
                     </button>
-                  </a>
+                    <div class="custom-dropdown-content">
+                      <a href="{{ url_for('action_plans', project_detail_id=detail.id) }}">Plan de acción</a>
+                      <a href="{{ url_for('human_talents', project_detail_id=detail.id) }}">Talento humano</a>
+                      <a href="{{ url_for('materials_supplies', project_detail_id=detail.id) }}">Materiales e insumos</a>
+                    </div>
+                  </div>
 
                   {# Botón de modificar #}
                   <button id="edit{{ detail.id }}" type="button" class="btn btn-primary my-2 edit-project-detail" data-bs-toggle="modal">
