@@ -36,3 +36,5 @@ node_modules/
 yarn.lock
 .prettierrc
 geckodriver.log
+initapp
+runapp
