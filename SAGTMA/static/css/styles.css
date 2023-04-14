@@ -175,3 +175,33 @@ body {
   background-color: #f1f1ff;
   border-radius: 1rem;
 }
+
+/* ========== Modal pagination ========== */
+.pagination {
+  display: flex;
+  justify-content: center;
+}
+
+.page-btn {
+  border-radius: 1rem;
+  border-style: solid;
+  border-width: 1px;
+  padding: 0.5rem 1rem;
+  margin: 0 0.5rem;
+  font-size: 0.9em;
+}
+
+.page-btn:hover {
+  background-color: #3c6bb1;
+  color: #fff;
+}
+
+.page-btn:focus {
+  background-color: #3c6bb1;
+  color: #fff;
+}
+
+.page-btn.active {
+  background-color: #3c6bb1;
+  color: #fff;
+}

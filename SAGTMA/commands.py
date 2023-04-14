@@ -1,3 +1,4 @@
+from itertools import product
 from random import randint, choice
 from datetime import date
 
@@ -12,6 +13,7 @@ from SAGTMA.models import (
     Vehicle,
     Department,
     ProjectDetail,
+    MeasureUnit,
     db,
 )
 from SAGTMA.utils.auth import hash_password
@@ -212,5 +214,18 @@ def populate_db():
         "Ninguna",
     )
     db.session.add_all([detail0, detail1])
+
+    # Añade unidades de medida
+    units = [
+        "Pulgadas",
+        "Centímetros",
+        "Milímetros",
+        "Metros",
+        "Pies",
+    ]
+
+    units = [MeasureUnit(dim, unit) for unit, dim in product(units, [2, 4, 6])]
+
+    db.session.add_all(units)
 
     db.session.commit()

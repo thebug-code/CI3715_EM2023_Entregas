@@ -15,94 +15,101 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body" style="padding-top: 0px;">
-          <div class="mb-2 mt-4 fs-5 text-muted">Acciones y Actividades</div>
           <form method="post" id="add-action-plan-form">
-            <!-- Campo para seleccionar o ingresar la acción -->
-            <div class="mb-3">
-              <label class="form-label" for="action-type">Tipo de acción</label>
-              <select class="form-select" id="action-type" name="action-type" required>
-                <option value="" selected disabled>Seleccione una opción</option>
-                <option value="existing">Acción existente</option>
-                <option value="new">Nueva acción</option>
-              </select>
+            <div class="page general-info">
+              <div class="mb-2 mt-4 fs-5 text-muted">Acciones y Actividades</div>
+              <!-- Campo para seleccionar o ingresar la acción -->
+              <div class="mb-3">
+                <label class="form-label" for="action-type">Tipo de acción</label>
+                <select class="form-select" id="action-type" name="action-type" required>
+                  <option value="" selected disabled>Seleccione una opción</option>
+                  <option value="existing">Acción existente</option>
+                  <option value="new">Nueva acción</option>
+                </select>
+              </div>
+              <!-- Campo para seleccionar una acción existente -->
+              <div class="mb-3" id="existing-action-fields" style="display:none;">
+                <label class="form-label" for="existing-action">Acción existente</label>
+                <select class="form-select" id="existing-action" name="existing-action" required></select>
+              </div>
+              <!-- Campo para ingresar una nueva acción -->
+              <div class="mb-3" id="new-action-fields" style="display:none;">
+                <label class="form-label" for="new-action">Nueva acción</label>
+                <input type="text" class="form-control" id="new-action" name="new-action" placeholder="Ingrese la nueva acción" required />
+              </div>
+              <!-- Campo oculto para almacenar el valor de la opción seleccionada en "Tipo de acción" -->
+              <input type="hidden" id="action-type-hidden" name="action-type-hidden" value="" />
+              <!-- Detalles de la actividad -->
+              <div class="mb-3">
+                <label class="form-label" for="activity">Actividad</label>
+                <input class="form-control" type="text" name="activity" id="add-activity" placeholder="Ingrese la actividad" required />
+              </div>
+              <div class="mb-3">
+                <label class="form-label" for="charge-person">Persona a cargo</label>
+                <select class="form-select" name="charge-person" id="add-charge-person"></select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label" for="start-date">Fecha de inicio</label>
+                <input type="date" class="form-control" id="add-start-date" name="start-date" required />
+              </div>
+              <div class="mb-3">
+                <label class="form-label" for="deadline">Fecha de cierre</label>
+                <input type="date" class="form-control" id="add-deadline" name="deadline" required />
+              </div>
+              <div class="mb-3">
+                <label class="form-label" for="work-hours">Cantidad de horas</label>
+                <input type="number" class="form-control" id="add-work-hours" name="work-hours" placeholder="Ingrese la cantidad de horas" required />
+              </div>
             </div>
-            <!-- Campo para seleccionar una acción existente -->
-            <div class="mb-3" id="existing-action-fields" style="display:none;">
-              <label class="form-label" for="existing-action">Acción existente</label>
-              <select class="form-select" id="existing-action" name="existing-action" required></select>
-            </div>
-            <!-- Campo para ingresar una nueva acción -->
-            <div class="mb-3" id="new-action-fields" style="display:none;">
-              <label class="form-label" for="new-action">Nueva acción</label>
-              <input type="text" class="form-control" id="new-action" name="new-action" placeholder="Ingrese la nueva acción" required />
-            </div>
-            <!-- Campo oculto para almacenar el valor de la opción seleccionada en "Tipo de acción" -->
-            <input type="hidden" id="action-type-hidden" name="action-type-hidden" value="" />
-            <!-- Detalles de la actividad -->
-            <div class="mb-3">
-              <label class="form-label" for="activity">Actividad</label>
-              <input class="form-control" type="text" name="activity" id="add-activity" placeholder="Ingrese la actividad" required />
-            </div>
-            <div class="mb-3">
-              <label class="form-label" for="charge-person">Persona a cargo</label>
-              <select class="form-select" name="charge-person" id="add-charge-person"></select>
-            </div>
-            <div class="mb-3">
-              <label class="form-label" for="start-date">Fecha de inicio</label>
-              <input type="date" class="form-control" id="add-start-date" name="start-date" required />
-            </div>
-            <div class="mb-3">
-              <label class="form-label" for="deadline">Fecha de cierre</label>
-              <input type="date" class="form-control" id="add-deadline" name="deadline" required />
-            </div>
-            <div class="mb-3">
-              <label class="form-label" for="work-hours">Cantidad de horas</label>
-              <input type="number" class="form-control" id="add-work-hours" name="work-hours" placeholder="Ingrese la cantidad de horas" required />
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label" for="cost">Monto</label>
-              <input type="number" step="any" class="form-control" id="add-cost" name="cost" placeholder="Monto" disabled />
-              <small class="form-text text-lg my-0 text-muted" style="font-size: 0.8em;">Calculado automáticamente.</small>
-            </div>
-
             <!-- Talento Humano -->
-            <div class="mb-2 mt-4 fs-5 text-muted">Talento Humano</div>
-            <div class="mb-3">
-              <label class="form-label" for="add-amount-person-hl">Cantidad de personas</label>
-              <input class="form-control" name="amount-person-hl" id="add-amount-person-hl" type="number" placeholder="Ingrese la cantidad de personas" required />
+            <div class="page human-resources" style="display: none;">
+              <div class="mb-2 mt-4 fs-5 text-muted">Talento Humano</div>
+              <div class="mb-3">
+                <label class="form-label" for="add-amount-person-hl">Cantidad de personas</label>
+                <input class="form-control" name="amount-person-hl" id="add-amount-person-hl" type="number" placeholder="Ingrese la cantidad de personas" required />
+              </div>
+              <div class="mb-3">
+                <label class="form-label" for="add-cost-hl">Costo</label>
+                <input class="form-control" type="number" step="any" name="cost-hl" id="add-cost-hl" placeholder="Ingrese el costo" required />
+              </div>
             </div>
-            <div class="mb-3">
-              <label class="form-label" for="add-cost-hl">Costo</label>
-              <input class="form-control" type="number" step="any" name="cost-hl" id="add-cost-hl" placeholder="Ingrese el costo" required />
+            <!-- Materiales e insumos -->
+            <div class="page material-supplies" style="display: none;">
+              <div class="mb-2 mt-4 fs-5 text-muted">Materiales e insumos</div>
+              <div class="mb-3">
+                <label class="form-label" for="add-category-ms">Categoría</label>
+                <select class="form-select" name="category-ms" id="add-category-ms" required>
+                  <option value="" selected disabled>Seleccione una categoría</option>
+                  <option value="Ninguno">Ninguno</option>
+                  <option value="Materiales">Materiales</option>
+                  <option value="Insumos">Insumos</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label" for="add-description-ms">Descripción</label>
+                <input class="form-control" type="text" name="description-ms" id="add-description-ms" placeholder="Ingrese la descripción" required />
+              </div>
+              <div class="mb-3">
+                <label class="form-label" for="add-amount-ms">Cantidad</label>
+                <input class="form-control" type="number" name="amount-ms" id="add-amount-ms" placeholder="Ingrese la cantidad" required />
+              </div>
+              <div class="mb-3">
+                <label class="form-label" for="add-measure-untit-ms">Medida</label>
+                <select class="form-select" name="measure-unit-ms" id="measure-unit-ms" required></select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label" for="add-cost-ms">Costo</label>
+                <input class="form-control" type="number" step="any" name="cost-ms" id="add-cost-ms" placeholder="Ingrese el costo" required />
+              </div>
             </div>
 
-            <!-- Materiales e insumos -->
-            <div class="mb-2 mt-4 fs-5 text-muted">Materiales e insumos</div>
-            <div class="mb-3">
-              <label class="form-label" for="add-category-ms">Categoría</label>
-              <select class="form-select" name="category-ms" id="add-category-ms" required>
-                <option value="" selected disabled>Seleccione una categoría</option>
-                <option value="Ninguno">Ninguno</option>
-                <option value="Materiales">Materiales</option>
-                <option value="Insumos">Insumos</option>
-              </select>
-            </div>
-            <div class="mb-3">
-              <label class="form-label" for="add-description-ms">Descripción</label>
-              <input class="form-control" type="text" name="description-ms" id="add-description-ms" placeholder="Ingrese la descripción" required />
-            </div>
-            <div class="mb-3">
-              <label class="form-label" for="add-amount-ms">Cantidad</label>
-              <input class="form-control" type="number" name="amount-ms" id="add-amount-ms" placeholder="Ingrese la cantidad" required />
-            </div>
-            <div class="mb-3">
-              <label class="form-label" for="add-measure-untit-ms">Medida</label>
-              <select class="form-select" name="measure-unit-ms" id="measure-unit-ms" required></select>
-            </div>
-            <div class="mb-3">
-              <label class="form-label" for="add-cost-ms">Costo</label>
-              <input class="form-control" type="number" step="any" name="cost-ms" id="add-cost-ms" placeholder="Ingrese el costo" required />
+            <!-- Botones de paginación -->
+            <div class="pagination">
+              <div class="d-flex">
+                <button type="button" class="btn btn-secondary page-btn active" data-page="general-info">Acción</button>
+                <button type="button" class="btn btn-secondary page-btn" data-page="human-resources">Talento Humano</button>
+                <button type="button" class="btn btn-secondary page-btn" data-page="material-supplies">Materiales e Insumos</button>
+              </div>
             </div>
 
             <div class="modal-footer">
@@ -268,7 +275,7 @@
               <th>Actividad</th>
               <th>Fecha de inicio</th>
               <th>Fecha de cierre</th>
-              <th>Cantidad de horas</th>
+              <th>Horas</th>
               <th>Responsable</th>
               <th>Monto</th>
               <th>Acción</th>
@@ -314,6 +321,12 @@
           </tbody>
         </table>
       </div>
+    </div>
+
+    <!-- Botones para dirigirse a la sección de Materiales y Talento Humano -->
+    <div class="d-flex justify-content-end" style="margin-right: 4rem;">
+      <a href="{{ url_for('human_talents', project_detail_id=project_detail.id) }}" class="btn btn-primary float-right mx-1" style="border-radius: 5px;">Talento Humano</a>
+      <a href="{{ url_for('materials_supplies', project_detail_id=project_detail.id) }}" class="btn btn-primary float-right mx-1" style="border-radius: 5px;">Materiales</a>
     </div>
   {% endif %}
 

@@ -97,7 +97,7 @@ $(document).ready(function () {
 
         // Agregar una opción por cada unidad de medida
         units.forEach(function (unit) {
-          const option = $("<option>").attr("value", unit.id).text(unit.dimension).text(unit.unit);
+          const option = $("<option>").attr("value", unit.id).text(unit.dimension).text(`${unit.dimension} ${unit.unit}`);
 
           // Agregar la opción al select
           measureUnitSelect.append(option);
@@ -162,7 +162,7 @@ $(document).ready(function () {
 
         // Agregar una opción por cada unidad de medida
         units.forEach(function (unit) {
-          const option = $("<option>").attr("value", unit.id).text(unit.unit);
+          const option = $("<option>").attr("value", unit.id).text(`${unit.dimension} ${unit.unit}`);
 
           // Si la unidad de medida es la misma que la del plan de acción, seleccionarla
           // por defecto
@@ -195,5 +195,32 @@ $(document).ready(function () {
         $("#edit-action-plan-form").attr("action", "/action-plans/" + actionId + "/edit/");
       },
     });
+  });
+});
+
+// Paginación del modal
+
+// Obtener todos los botones de página
+const pageBtns = document.querySelectorAll(".page-btn");
+
+// Agregar un controlador de eventos a cada botón de página
+pageBtns.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    // Obtener el nombre de la página correspondiente a este botón
+    const pageName = btn.dataset.page;
+
+    // Ocultar todas las páginas
+    document.querySelectorAll(".page").forEach((page) => {
+      page.style.display = "none";
+    });
+
+    // Mostrar solo la página correspondiente a este botón
+    document.querySelector(`.${pageName}`).style.display = "block";
+
+    // Marcar este botón como activo y desmarcar los otros
+    pageBtns.forEach((btn) => {
+      btn.classList.remove("active");
+    });
+    btn.classList.add("active");
   });
 });

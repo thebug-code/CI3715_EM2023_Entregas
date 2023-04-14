@@ -39,8 +39,8 @@
               <th>ID</th>
               <th>Acción</th>
               <th>Actividad</th>
-              <th>Cantidad de horas</th>
-              <th>Cantidad de personas</th>
+              <th>Horas</th>
+              <th>Personas</th>
               <th>Responsable</th>
               <th>Monto</th>
               <th>Acción</th>
@@ -72,6 +72,12 @@
           </tbody>
         </table>
       </div>
+    </div>
+
+    <!-- Botones para dirigirse a la sección de Plan de Acción y Materiales -->
+    <div class="d-flex justify-content-end" style="margin-right: 4rem;">
+      <a href="{{ url_for('action_plans', project_detail_id=project_detail.id) }}" class="btn btn-primary float-right mx-1" style="border-radius: 5px;">Plan de Acción</a>
+      <a href="{{ url_for('materials_supplies', project_detail_id=project_detail.id) }}" class="btn btn-primary float-right mx-1" style="border-radius: 5px;">Materiales</a>
     </div>
   {% endif %}
 
