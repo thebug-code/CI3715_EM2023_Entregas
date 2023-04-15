@@ -179,7 +179,7 @@ class TestProjectDetails(BaseTestClass):
         self._login_manager()
 
         # Solución de longitud 2
-        _test("ZZ", "La solución debe tener entre 3 y 100 caracteres")
+        _test("ZZ", "El campo Solución debe tener entre 3 y 100 caracteres")
 
         # Solución de longitud 101
         _test(
@@ -214,7 +214,7 @@ class TestProjectDetails(BaseTestClass):
         # Observación de longitud 101
         _test(
             "Prueba Uno" * 10 + "2",
-            "Las observaciones deben tener entre 3 y 100 caracteres",
+            "El campo Observaciones debe tener entre 3 y 100 caracteres",
         )
 
         # Observación con caracteres inválidos

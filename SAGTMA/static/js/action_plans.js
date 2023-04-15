@@ -109,9 +109,13 @@ $(document).ready(function () {
   });
 
   // Eliminar un plan de acción
-  $(document).on("click", ".delete-action-plan", function () {
+  $(document).on("click", ".delete-action-plan", function (event) {
     var form = $(this);
     id = form.attr("id").match(/\d+/)[0];
+    const activityId = $(event.currentTarget).attr("data-activity-id");
+
+    // Establece el valor del campo oculto "delete-activity-id" con el valor del id de la actividad
+    $("#delete-activity-id").val(activityId);
 
     $("#delete-action-plan-modal").modal("show");
     $("#delete-action-plan-form").attr("action", "/action-plans/" + id + "/delete/");

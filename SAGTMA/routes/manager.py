@@ -312,11 +312,12 @@ def action_plans(project_detail_id) -> Response:
             .join(Activity)
             .join(HumanTalent)
             .join(MaterialSupply)
+            .distinct(ActionPlan.id)
         )
 
     result = db.session.execute(stmt).fetchall()
     _action_plans = [r for r, in result]
-
+    
     return render_template(
         "manager/action_plans.html",
         action_plans=_action_plans,
@@ -377,13 +378,15 @@ def register_action_plan(project_detail_id) -> Response:
 
 @current_app.route("/action-plans/<int:plan_id>/delete/", methods=["POST"])
 @requires_roles("Gerente de Operaciones")
-def delete_action_plan(plan_id) -> Response:
+def delete_activity_action_plan(plan_id) -> Response:
     """Elimina un plan de accion de la base de datos"""
     # Obtiene el id del detalle de proyecto
     project_detail_id = int(request.form.get("project-detail-id"))
+    # Obtiene el id de la actividad
+    activity_id = int(request.form.get("delete-activity-id"))
 
     try:
-        project_plans.delete_action_plan(plan_id)
+        project_plans.delete_activity_action_plan(plan_id, activity_id)
     except project_plans.ActionPlanError as e:
         flash(f"{e}")
         return redirect(url_for("action_plans", project_detail_id=project_detail_id))

@@ -328,13 +328,14 @@ def register_action_plan(
     )
 
 
-# ========== Eliminar planes de acción ===============
-def delete_action_plan(action_plan_id: int):
+# ========== Eliminar actividades ==========
+def delete_activity_action_plan(action_plan_id: int, activity_id: int):
     """
-    Elimina un plan de acción de la base de datos.
+    Elimina una actividad asociada a un plan de acción.
 
     Lanza una excepción si:
         - El plan de acción no existe
+        - La actividad no existe
     """
     # Selecciona el plan de acción y verifica que exista
     smt = db.select(ActionPlan).where(ActionPlan.id == action_plan_id)
@@ -343,12 +344,19 @@ def delete_action_plan(action_plan_id: int):
         raise ActionPlanError("El plan de acción no existe.")
     action_plan = action_plan_query[0]
 
-    # Elimina el plan de acción
-    db.session.delete(action_plan)
+    # Selecciona la actividad y verifica que exista
+    smt = db.select(Activity).where(Activity.id == activity_id)
+    activity_query = db.session.execute(smt).first()
+    if not activity_query:
+        raise ActionPlanError("La actividad no existe.")
+    deleted_activity = activity_query[0]
+    
+    # Elimina la actividad
+    db.session.delete(deleted_activity)
 
     # Registra el evento en la base de datos
     events.add_event(
-        "Planes de acción", f"Eliminar plan de acción '{action_plan.action}'"
+        "Planes de acción", f"Eliminar actividad '{deleted_activity.description}' del plan de acción '{action_plan.action}'"
     )
 
 

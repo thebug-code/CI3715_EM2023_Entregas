@@ -140,6 +140,9 @@
 
             {# Id del detalle del proyecto #}
             <input type="hidden" name="project-detail-id" value="{{ project_detail.id }}" />
+            {# Id de la actividad #}
+            <input type="hidden" name="delete-activity-id" id="delete-activity-id" />
+            {# Id del plan de acción #}
           </form>
         </div>
       </div>
@@ -310,7 +313,7 @@
                       </button>
 
                       {# Botón de eliminar #}
-                      <button id="delete{{ action_plan.id }}" type="button" class="btn btn-primary delete-action-plan" data-bs-toggle="modal">
+                      <button id="delete{{ action_plan.id }}" data-activity-id="{{ activity.id }}" type="button" class="btn btn-primary delete-action-plan" data-bs-toggle="modal">
                         <img src="{{ url_for('static', filename='img/delete.svg') }}" width="24" height="24" fill="white" class="table-button" value="submit" style="border-radius: 5px;" title="Eliminar plan de acción" />
                       </button>
                     </td>
