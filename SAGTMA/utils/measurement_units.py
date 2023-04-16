@@ -18,11 +18,11 @@ def validate_dimension(dimension: str) -> float:
 
     try:
         dimension = float(dimension)
-    except ValueError:
-        raise ValueError("La dimensión debe ser un número decimal.")
+    except MeasureUnitError:
+        raise MeasureUnitError("La dimensión debe ser un número decimal.")
 
     if dimension <= 0:
-        raise ValueError("La dimensión debe ser un número positivo.")
+        raise MeasureUnitError("La dimensión debe ser un número positivo.")
 
     return dimension
 
@@ -32,11 +32,11 @@ def validate_unit(unit: str):
     Lanza una excepcion si la unidad no es válida.
 
     Una unidad válida es una cadena de texto que contiene al menos un carácter
-    alfabético y no contiene caracteres especiales.
+    alfabético y no contiene caracteres especiales (excepto el espacio).
     """
 
-    if not re.search(r"[a-zA-Z]", unit):
-        raise ValueError("La unidad solo puede contener caracteres alfabéticos.")
+    if not re.match(r"^[a-zA-Z ]+$", unit):
+        raise MeasureUnitError("La unidad solo puede contener caracteres alfabéticos.")
 
 
 # ========== Registro ==========
@@ -53,7 +53,7 @@ def register_measure_unit(dimension: str, unit: str):
     unit = unit.strip()
 
     if not all([dimension, unit]):
-        raise ValueError("Todos los campos son obligatorios")
+        raise MeasureUnitError("Todos los campos son obligatorios")
 
     # Chequea si la dimensión es válida
     dimension = validate_dimension(dimension)
@@ -66,7 +66,7 @@ def register_measure_unit(dimension: str, unit: str):
         MeasureUnit.dimension == dimension and MeasureUnit.unit == unit
     )
     if db.session.execute(smt).first():
-        raise ValueError(
+        raise MeasureUnitError(
             "Ya existe una unidad de medida con la misma dimensión y unidad"
         )
 
@@ -95,7 +95,7 @@ def delete_measure_unit(measure_unit_id: int):
     smt = db.select(MeasureUnit).where(MeasureUnit.id == measure_unit_id)
     measure_unit_query = db.session.execute(smt).first()
     if not measure_unit_query:
-        raise ValueError("No existe una unidad de medida con el id especificado")
+        raise MeasureUnitError("No existe una unidad de medida con el id especificado")
     deleted_measure_unit = measure_unit_query[0]
 
     # Elimina la unidad de medida de la base de datos
@@ -124,7 +124,7 @@ def edit_measure_unit(measure_unit_id: int, dimension: str, unit: str):
     unit = unit.strip()
 
     if not all([dimension, unit]):
-        raise ValueError("Todos los campos son obligatorios")
+        raise MeasureUnitError("Todos los campos son obligatorios")
 
     # Chequea si la dimensión es válida
     dimension = validate_dimension(dimension)
@@ -136,7 +136,7 @@ def edit_measure_unit(measure_unit_id: int, dimension: str, unit: str):
     smt = db.select(MeasureUnit).where(MeasureUnit.id == measure_unit_id)
     measure_unit_query = db.session.execute(smt).first()
     if not measure_unit_query:
-        raise ValueError("No existe una unidad de medida con el id especificado")
+        raise MeasureUnitError("No existe una unidad de medida con el id especificado")
     edited_measure_unit = measure_unit_query[0]
 
     # Verifica si ya existe una unidad de medida con la misma dimensión y unidad
@@ -146,7 +146,7 @@ def edit_measure_unit(measure_unit_id: int, dimension: str, unit: str):
         .where(MeasureUnit.id != measure_unit_id)
     )
     if db.session.execute(smt).first():
-        raise ValueError(
+        raise MeasureUnitError(
             "Ya existe una unidad de medida con la misma dimensión y unidad"
         )
 
