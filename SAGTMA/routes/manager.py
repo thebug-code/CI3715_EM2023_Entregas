@@ -9,7 +9,7 @@ from flask import (
 )
 
 from SAGTMA.utils import projects, events, project_details, project_plans
-from SAGTMA.utils.decorators import login_required, requires_roles
+from SAGTMA.utils.decorators import requires_roles
 
 from SAGTMA.models import (
     Project,
@@ -281,6 +281,7 @@ def action_plans(project_detail_id) -> Response:
         .where(ActionPlan.project_detail_id == project_detail_id)
         .join(Activity)
         .join(User)
+        .distinct(ActionPlan.id)
     )
 
     if request.method == "POST":
@@ -327,8 +328,8 @@ def action_plans(project_detail_id) -> Response:
 
 @current_app.route("/action-plans/<int:project_detail_id>/register/", methods=["POST"])
 @requires_roles("Gerente de Operaciones")
-def register_action_plan(project_detail_id) -> Response:
-    """Crea y anade un plan de accion en la base de datos."""
+def register_activity_action_plan(project_detail_id) -> Response:
+    """Crea y anade un plan de accion y actividad asociada en la base de datos"""
     # Obtiene los datos del formulario
     activity = request.form.get("activity", "")
     start_date = request.form.get("start-date", "")
@@ -351,7 +352,7 @@ def register_action_plan(project_detail_id) -> Response:
         action = request.form.get("new-action", "")  # Es un string
 
     try:
-        project_plans.register_action_plan(
+        project_plans.register_activity_action_plan(
             project_detail_id,
             action,
             activity,
@@ -372,14 +373,14 @@ def register_action_plan(project_detail_id) -> Response:
         return redirect(url_for("action_plans", project_detail_id=project_detail_id))
 
     # Se permanece en la página
-    flash("Plan de accion registrado exitosamente")
+    flash("Actividad registrada exitosamente")
     return redirect(url_for("action_plans", project_detail_id=project_detail_id))
 
 
 @current_app.route("/action-plans/<int:plan_id>/delete/", methods=["POST"])
 @requires_roles("Gerente de Operaciones")
 def delete_activity_action_plan(plan_id) -> Response:
-    """Elimina un plan de accion de la base de datos"""
+    """Elimina una actividad de un plan de accion de la base de datos"""
     # Obtiene el id del detalle de proyecto
     project_detail_id = int(request.form.get("project-detail-id"))
     # Obtiene el id de la actividad
@@ -392,14 +393,14 @@ def delete_activity_action_plan(plan_id) -> Response:
         return redirect(url_for("action_plans", project_detail_id=project_detail_id))
 
     # Se permanece en la pagina
-    flash("Plan de accion eliminado exitosamente")
+    flash("Actividad eliminada exitosamente")
     return redirect(url_for("action_plans", project_detail_id=project_detail_id))
 
 
 @current_app.route("/action-plans/<int:plan_id>/edit/", methods=["POST"])
 @requires_roles("Gerente de Operaciones")
-def edit_action_plan(plan_id) -> Response:
-    """Edita un plan de accion de la base de datos"""
+def edit_activity_action_plan(plan_id) -> Response:
+    """Edita una actividad de un plan de accion en la base de datos"""
     # Obtiene los datos del formulario
     action = request.form.get("action", "")
     activity = request.form.get("activity", "")
@@ -425,7 +426,7 @@ def edit_action_plan(plan_id) -> Response:
     material_id = int(request.form.get("material-supply-id"))
 
     try:
-        project_plans.edit_action_plan(
+        project_plans.edit_activity_action_plan(
             plan_id,
             activity_id,
             material_id,
@@ -449,7 +450,7 @@ def edit_action_plan(plan_id) -> Response:
         return redirect(url_for("action_plans", project_detail_id=project_detail_id))
 
     # Se permanece en la pagina
-    flash("Plan de accion editado exitosamente")
+    flash("Actividad editada exitosamente")
     return redirect(url_for("action_plans", project_detail_id=project_detail_id))
 
 
