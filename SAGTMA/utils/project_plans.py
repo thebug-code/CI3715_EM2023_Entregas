@@ -1,4 +1,3 @@
-import re
 from datetime import date
 
 from SAGTMA.models import (
@@ -34,8 +33,8 @@ def validate_works_hours(work_hours: str) -> int:
     return int(work_hours)
 
 
-# ========= Registro de planes de acción =========
-def register_action_plan(
+# ========= Registro de Actividades de Planes de Acción =========
+def register_activity_action_plan(
     project_detail_id: int,
     action: str,
     activity: str,
@@ -52,7 +51,7 @@ def register_action_plan(
     cost_ms: str,
 ):
     """
-    Registra un plan de acción en la base de datos.
+    Registra una actividad y su plan de acción asociado.
 
     Lanza una excepción si:
         - El proyecto no existe
@@ -104,12 +103,10 @@ def register_action_plan(
     ):
         raise ActionPlanError("Todos los campos son obligatorios.")
 
-    # Selecciona el detalle de proyecto y verifica que exista
+    # Verificar que el detalle de proyecto exista
     smt = db.select(ProjectDetail).where(ProjectDetail.id == project_detail_id)
-    project_detail_query = db.session.execute(smt).first()
-    if not project_detail_query:
+    if not db.session.execute(smt).first():
         raise ActionPlanError("El detalle de proyecto no existe.")
-    project_detail = project_detail_query[0]
 
     # Verifica que la persona encargada exista
     smt = db.select(User).where(User.id == charge_person_id)
@@ -282,20 +279,19 @@ def register_action_plan(
             total,
         )
         db.session.add(activity)
-
-        # Registra el evento en la base de datos
-        events.add_event(
-            "Planes de Acción",
-            f"Agregar actividad '{activity.description}' al plan de acción '{action_plan.action}'",
-        )
-
-        activity_id = activity.id
-
+        
         # Registra los eventos en la base de datos
         events.add_event("Planes de Acción", f"Agregar plan de acción '{action}'")
 
+        events.add_event(
+            "Planes de Acción",
+            f"Agregar actividad '{activity.description}' al plan de acción '{action}'"
+        )
+
+        activity_id = activity.id        
+
     # Crea un registro de talento humano
-    human_talent = HumanTalent(
+    human_talent = HumanTalent (
         activity_id,
         work_hours,
         amount_person_hl,
@@ -328,10 +324,10 @@ def register_action_plan(
     )
 
 
-# ========== Eliminar actividades ==========
+# ========== Eliminar Actividades de Planes de Acción ==========
 def delete_activity_action_plan(action_plan_id: int, activity_id: int):
     """
-    Elimina una actividad asociada a un plan de acción.
+    Elimina una actividad de un plan de acción.
 
     Lanza una excepción si:
         - El plan de acción no existe
@@ -360,8 +356,8 @@ def delete_activity_action_plan(action_plan_id: int, activity_id: int):
     )
 
 
-# ========== Editar planes de acción ===============
-def edit_action_plan(
+# ========== Editar Actividades de Planes de Acción ==========
+def edit_activity_action_plan(
     action_plan_id: int,
     activity_id: int,
     material_supply_id: int,
@@ -381,7 +377,7 @@ def edit_action_plan(
     cost_ms: str,
 ):
     """
-    Edita un plan de acción en la base de datos.
+    Edita una actividad de un plan de acción.
 
     Lanza una excepción si:
         - El plan de acción no existe

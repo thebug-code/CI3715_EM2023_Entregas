@@ -122,16 +122,16 @@
     </div>
   </div>
 
-  <!-- Modal para confirmar la eliminación de un plan de acción -->
+  <!-- Modal para confirmar la eliminación de una actividad de un plan de acción -->
   <div class="modal fade" id="delete-action-plan-modal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="deleteModalLabel">Eliminar plan de acción</h5>
+          <h5 class="modal-title" id="deleteModalLabel">Eliminar Actividad</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <p>¿Está seguro que desea eliminar este plan de acción?</p>
+          <p>¿Está seguro que desea eliminar esta actividad?</p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -142,19 +142,18 @@
             <input type="hidden" name="project-detail-id" value="{{ project_detail.id }}" />
             {# Id de la actividad #}
             <input type="hidden" name="delete-activity-id" id="delete-activity-id" />
-            {# Id del plan de acción #}
           </form>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Modal para editar un plan de acción -->
+  <!-- Modal para editar una actividad de un plan de acción -->
   <div class="modal fade" id="edit-action-plan-modal" tabindex="-1" role="dialog" aria-labelledby="EditModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="EditModalLabel">Modificar Plan de Acción</h5>
+          <h5 class="modal-title" id="EditModalLabel">Modificar Actividad</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body" style="padding-top: 0px;">
@@ -198,7 +197,7 @@
             </div>
 
             <!-- Materiales e insumos -->
-            <div class="mb-2 mt-4 fs-5 text-muted">Materiales e insumos</div>
+            <div class="mb-2 mt-4 fs-5 text-muted">Materiales e Insumos</div>
             <div class="mb-3">
               <label class="form-label" for="edit-category-ms">Categoría</label>
               <select class="form-select" name="category-ms" id="edit-category-ms" required>
@@ -241,7 +240,7 @@
     </div>
   </div>
 
-  {# Barra de filtro de plan de acción #}
+  <!-- Barra de filtro de plan de acción -->
   <div class="container">
     <form class="row search-filter" action="{{ url_for('action_plans', project_detail_id=project_detail.id) }}" method="post">
       <div class="col-sm-12">
@@ -251,7 +250,7 @@
             <img src="{{ url_for('static', filename='img/search.svg') }}" width="40" height="40" fill="white" class="table-button" value="submit" style="border-radius: 5px;" title="Buscar planes de acción" />
           </button>
 
-          {# Boton de agregar planes de acción #}
+          <!-- Boton de agregar plan de acción -->
           <button type="button" class="btn btn-primary add-action-plan" style="border-radius: 5px;margin-left: 10px;" data-bs-toggle="modal" id="add-action{{ project_detail.id }}">
             <img src="{{ url_for('static', filename='img/add.svg') }}" width="40" height="40" fill="white" class="table-button" value="submit" style="border-radius: 5px;" />
           </button>
@@ -298,7 +297,7 @@
                     <td>{{ activity.charge_person.names }} {{ activity.charge_person.surnames }}</td>
                     <td>{{ activity.cost }}</td>
                     <td>
-                      {# Botón de modificar #}
+                      <!-- Botón de modificar -->
                       <button
                         id="edit{{ action_plan.id }}"
                         data-action-id="{{ action_plan.id }}"
@@ -309,12 +308,12 @@
                         class="btn btn-primary my-2 edit-action-plan"
                         data-bs-toggle="modal"
                       >
-                        <img src="{{ url_for('static', filename='img/edit.svg') }}" width="24" height="24" fill="white" class="table-button" value="submit" style="border-radius: 5px;" title="Modificar plan de acción" />
+                        <img src="{{ url_for('static', filename='img/edit.svg') }}" width="24" height="24" fill="white" class="table-button" value="submit" style="border-radius: 5px;" title="Modificar actividad" />
                       </button>
 
-                      {# Botón de eliminar #}
+                      <!-- Botón de eliminar -->
                       <button id="delete{{ action_plan.id }}" data-activity-id="{{ activity.id }}" type="button" class="btn btn-primary delete-action-plan" data-bs-toggle="modal">
-                        <img src="{{ url_for('static', filename='img/delete.svg') }}" width="24" height="24" fill="white" class="table-button" value="submit" style="border-radius: 5px;" title="Eliminar plan de acción" />
+                        <img src="{{ url_for('static', filename='img/delete.svg') }}" width="24" height="24" fill="white" class="table-button" value="submit" style="border-radius: 5px;" title="Eliminar actividad" />
                       </button>
                     </td>
                   </tr>
