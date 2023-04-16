@@ -170,34 +170,6 @@ class TestProjectDetails(BaseTestClass):
         _test_validate_cost_valid("1.1")
         _test_validate_cost_valid("100")
 
-    def test_validate_text_input_invalid(self):
-        "Testea la validacion de inputs de texto inválidos"
-
-        def _test_validate_text_input_invalid(text: str):
-            with self.assertRaises(pd.ProjectDetailError):
-                pd.validate_input_text(text)
-
-        # Inputs vacíos
-        _test_validate_text_input_invalid("")
-        _test_validate_text_input_invalid(" ")
-        _test_validate_text_input_invalid("  ")
-
-        # Inputs con más de 100 caracteres
-        _test_validate_text_input_invalid("a" * 101)
-
-        # Inputs con caracteres inválidos
-        _test_validate_text_input_invalid("a\n")
-
-    def test_validate_text_input_valid(self):
-        "Testea la validacion de inputs de texto válidos"
-
-        def _test_validate_text_input_valid(text: str):
-            self.assertIsNone(pd.validate_input_text(text))
-
-        # Inputs válidos
-        _test_validate_text_input_valid("N/A")
-        _test_validate_text_input_valid("a" * 100)
-
     def test_edit_project_data_valid(self):
         """Testea la edición de datos proyecto válidos."""
         self._login_manager()

@@ -350,13 +350,14 @@ def delete_activity_action_plan(action_plan_id: int, activity_id: int):
     if not activity_query:
         raise ActionPlanError("La actividad no existe.")
     deleted_activity = activity_query[0]
-    
+
     # Elimina la actividad
     db.session.delete(deleted_activity)
 
     # Registra el evento en la base de datos
     events.add_event(
-        "Planes de acción", f"Eliminar actividad '{deleted_activity.description}' del plan de acción '{action_plan.action}'"
+        "Planes de acción",
+        f"Eliminar actividad '{deleted_activity.description}' del plan de acción '{action_plan.action}'",
     )
 
 
