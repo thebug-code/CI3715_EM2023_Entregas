@@ -288,7 +288,7 @@
               {% for activity in action_plan.activities %}
                 {% for human_talent, material_supply in zip_lists(activity.human_talents, activity.materials) %}
                   <tr>
-                    <td>{{ action_plan.id }}</td>
+                    <td>{{ activity.id }}</td>
                     <td>{{ action_plan.action }}</td>
                     <td>{{ activity.description }}</td>
                     <td>{{ activity.start_date }}</td>
