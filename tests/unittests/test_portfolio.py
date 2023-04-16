@@ -85,21 +85,6 @@ class TestPortfolio(BaseTestClass):
         # Descripción con caracteres no válidos
         _test_validate_descrip_project_invalid("Descripcion con caracteres *invalidos*")
 
-    def test_validate_date_valid(self):
-        """Testea la validación de fechas de proyecto válidas."""
-        start_date = date(2023, 1, 1)
-        deadline = date(2023, 1, 31)
-
-        self.assertIsNone(projects.validate_date(start_date, deadline))
-
-    def test_validate_date_invalid(self):
-        """Testea la validación de fechas de proyecto inválidas."""
-        start_date = date(2023, 2, 1)
-        deadline = date(2023, 1, 31)
-
-        with self.assertRaises(projects.ProjectError):
-            projects.validate_date(start_date, deadline)
-
     def test_delete_project(self):
         """Testea la eliminación de proyectos."""
         self._login_manager()

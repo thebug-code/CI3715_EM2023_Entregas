@@ -318,7 +318,7 @@ def action_plans(project_detail_id) -> Response:
 
     result = db.session.execute(stmt).fetchall()
     _action_plans = [r for r, in result]
-    
+
     return render_template(
         "manager/action_plans.html",
         action_plans=_action_plans,

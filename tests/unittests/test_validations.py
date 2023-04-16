@@ -1,6 +1,7 @@
 from tests.unittests import BaseTestClass
 
 import SAGTMA.utils.validations as validations
+from datetime import date
 
 
 class TestClients(BaseTestClass):
@@ -73,3 +74,48 @@ class TestClients(BaseTestClass):
 
         # Nombre con caracteres especiales
         _test_validate_name_invalid("Nombre@Raro ^ Qué")
+
+    def test_validate_date_valid(self):
+        """Testea la validación de fechas de proyecto válidas."""
+        start_date = date(2023, 1, 1)
+        deadline = date(2023, 1, 31)
+
+        self.assertIsNone(validations.validate_date(start_date, deadline, Exception))
+
+    def test_validate_date_invalid(self):
+        """Testea la validación de fechas de proyecto inválidas."""
+        start_date = date(2023, 2, 1)
+        deadline = date(2023, 1, 31)
+
+        with self.assertRaises(Exception):
+            validations.validate_date(start_date, deadline, Exception)
+
+    def test_validate_text_input_invalid(self):
+        "Testea la validacion de inputs de texto inválidos"
+
+        def _test_validate_text_input_invalid(text: str):
+            with self.assertRaises(Exception):
+                validations.validate_input_text(text, "Generic Field", Exception)
+
+        # Inputs vacíos
+        _test_validate_text_input_invalid("")
+        _test_validate_text_input_invalid(" ")
+        _test_validate_text_input_invalid("  ")
+
+        # Inputs con más de 100 caracteres
+        _test_validate_text_input_invalid("a" * 101)
+
+        # Inputs con caracteres inválidos
+        _test_validate_text_input_invalid("a\n")
+
+    def test_validate_text_input_valid(self):
+        "Testea la validacion de inputs de texto válidos"
+
+        def _test_validate_text_input_valid(text: str):
+            self.assertIsNone(
+                validations.validate_input_text(text, "Generic Field", Exception)
+            )
+
+        # Inputs válidos
+        _test_validate_text_input_valid("N/A")
+        _test_validate_text_input_valid("a" * 100)
