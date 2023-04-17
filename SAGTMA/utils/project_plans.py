@@ -38,12 +38,13 @@ def validate_works_hours(work_hours: str) -> int:
         )
     return work_hours
 
-def validate_date_range(start_date: date, deadline: date, project_detail_id: int):
+
+def _validate_date_range(start_date: date, deadline: date, project_detail_id: int):
     """
     Lanza una excepción si el rango de fechas está fuera de los límites del proyecto.
     """
     smt = db.select(ProjectDetail).where(ProjectDetail.id == project_detail_id)
-    project_detail, = db.session.execute(smt).first()
+    (project_detail,) = db.session.execute(smt).first()
 
     if not project_detail:
         raise ActionPlanError("El detalle de proyecto no existe.")
@@ -55,6 +56,7 @@ def validate_date_range(start_date: date, deadline: date, project_detail_id: int
         raise ActionPlanError(
             "Las fechas de inicio y finalización deben estar en el rango de fechas del detalle de proyecto."
         )
+
 
 # ========= Registro de Actividades de Planes de Acción =========
 def register_activity_action_plan(
@@ -219,7 +221,7 @@ def register_activity_action_plan(
     validate_date(start_date_t, deadline_t, ActionPlanError)
 
     # Verifica que se encuentre en el rango de fechas del detalle de proyecto
-    validate_date_range(start_date_t, deadline_t, project_detail_id)
+    _validate_date_range(start_date_t, deadline_t, project_detail_id)
 
     # Verifica que la cantidad de horas de trabajo sea válida
     work_hours = validate_works_hours(work_hours)
@@ -560,7 +562,7 @@ def edit_activity_action_plan(
     validate_date(start_date_t, deadline_t, ActionPlanError)
 
     # Verifica que se encuentre en el rango de fechas del detalle de proyecto
-    validate_date_range(start_date_t, deadline_t, edited_action_plan.project_detail_id)
+    _validate_date_range(start_date_t, deadline_t, edited_action_plan.project_detail_id)
 
     # Verifica que la cantidad de horas de trabajo sea válida
     work_hours = validate_works_hours(work_hours)

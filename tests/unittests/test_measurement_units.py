@@ -1,12 +1,9 @@
 from tests.unittests import BaseTestClass
 
 from SAGTMA.models import (
-    User,
-    Role,
     db,
     MeasureUnit,
 )
-from SAGTMA.utils.auth import hash_password
 import SAGTMA.utils.measurement_units as mu
 
 
