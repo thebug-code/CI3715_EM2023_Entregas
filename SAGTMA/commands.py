@@ -89,7 +89,7 @@ def populate_db():
     # Añade proyectos dummy
     for i in range(1, 11):
         project = Project(
-            f"Proyecto Automotriz {i}", date(2021, 4, 1), date(2023, 4, 1)
+            f"Proyecto Automotriz {i}", date(2023, 1, 1), date(2023, 4, 30)
         )
 
         db.session.add(project)
