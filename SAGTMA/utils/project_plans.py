@@ -329,6 +329,9 @@ def register_activity_action_plan(
         f"Agregar material y suministro '{materials_supplies.description}' a la actividad '{activity.description}'",
     )
 
+    # Actualiza el monto del dato del proyecto
+    update_project_total(human_talent.activity.action_plan.project_detail)
+
 
 # ========== Eliminar Actividades de Planes de Acción ==========
 def delete_activity_action_plan(action_plan_id: int, activity_id: int):
@@ -361,6 +364,9 @@ def delete_activity_action_plan(action_plan_id: int, activity_id: int):
         "Planes de acción",
         f"Eliminar actividad '{deleted_activity.description}' del plan de acción '{action_plan.action}'",
     )
+
+    # Actualiza el monto del dato del proyecto
+    update_project_total(deleted_activity.action_plan.project_detail)
 
 
 # ========== Editar Actividades de Planes de Acción ==========
@@ -574,3 +580,22 @@ def edit_activity_action_plan(
         "Materiales y Suministros",
         f"Editar material y suministro '{edited_material_supply.activity.description}' del plan de acción '{edited_activity.action_plan.action}'",
     )
+
+    # Actualiza el monto del dato del proyecto
+    update_project_total(edited_human_talent.activity.action_plan.project_detail)
+
+
+# ========== Utilidades ==========
+def update_project_total(project_detail):
+    """Actualiza en la base de datos el monto total de los planes de acción
+    asociados al dato del proyecto.
+
+    Args:
+        project_detail (ProjectDetail): Dato del proyecto.
+    """
+    total = 0
+    for action_plan in project_detail.action_plans:
+        for activity in action_plan.activities:
+            total += activity.cost
+    project_detail.cost = total
+    db.session.commit()
