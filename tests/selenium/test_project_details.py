@@ -111,7 +111,7 @@ class TestProjectDetails(BaseTestClass):
         self.driver.find_element(By.ID, "add-solution").send_keys(solution)
         self.driver.find_element(By.ID, "add-cost").click()
         self.driver.find_element(By.ID, "add-cost").send_keys(cost)
-        self.driver.find_element(By.ID, "add-observation").click()
+        self.driver.find_element(By.ID, "add-observation").clear()
         self.driver.find_element(By.ID, "add-observation").send_keys(observations)
 
         self.driver.find_element(
@@ -123,7 +123,7 @@ class TestProjectDetails(BaseTestClass):
             )
         )
 
-    def _edit_project_data(self, solution: str, cost: str, observations: str):
+    def _edit_project_data(self, solution: str, observations: str):
         self.driver.find_element(By.CSS_SELECTOR, "#edit0").click()
         WebDriverWait(self.driver, 1).until(
             expected_conditions.visibility_of_element_located(
@@ -133,8 +133,6 @@ class TestProjectDetails(BaseTestClass):
 
         self.driver.find_element(By.ID, "edit-solution").clear()
         self.driver.find_element(By.ID, "edit-solution").send_keys(solution)
-        self.driver.find_element(By.ID, "edit-cost").clear()
-        self.driver.find_element(By.ID, "edit-cost").send_keys(cost)
         self.driver.find_element(By.ID, "edit-observations").clear()
         self.driver.find_element(By.ID, "edit-observations").send_keys(observations)
 
@@ -183,13 +181,14 @@ class TestProjectDetails(BaseTestClass):
 
         # Solución de longitud 101
         _test(
-            "Prueba Uno" * 10 + "2", "La solución debe tener entre 3 y 100 caracteres"
+            "Prueba Uno" * 10 + "2",
+            "El campo Solución debe tener entre 3 y 100 caracteres",
         )
 
         # Solución con caracteres inválidos
         _test(
             "Prueba con caracteres inválidos: !@#$%^&*()_+",
-            "La solución solo puede contener caracteres alfanuméricos, guiones y espacios",
+            "El campo Solución solo puede contener caracteres alfanuméricos, guiones y espacios",
         )
 
     def test_register_project_data_observation_invalid(self):
@@ -209,7 +208,7 @@ class TestProjectDetails(BaseTestClass):
         self._login_manager()
 
         # Observación de longitud 2
-        _test("ZZ", "Las observaciones deben tener entre 3 y 100 caracteres")
+        _test("ZZ", "El campo Observaciones debe tener entre 3 y 100 caracteres")
 
         # Observación de longitud 101
         _test(
@@ -220,7 +219,7 @@ class TestProjectDetails(BaseTestClass):
         # Observación con caracteres inválidos
         _test(
             "Prueba con caracteres inválidos: !@#$%^&*()_+",
-            "Las observaciones solo pueden contener caracteres alfanuméricos, guiones y espacios",
+            "El campo Observaciones solo puede contener caracteres alfanuméricos, guiones y espacios",
         )
 
     def test_edit_project_data_valid(self):
@@ -228,7 +227,7 @@ class TestProjectDetails(BaseTestClass):
 
         self._login_manager()
 
-        self._edit_project_data("Prueba", "2", "N/A")
+        self._edit_project_data("Prueba", "N/A")
 
         self.assertEqual(
             self.driver.find_element(By.CSS_SELECTOR, ".toast-body").text,
@@ -242,8 +241,8 @@ class TestProjectDetails(BaseTestClass):
     def test_edit_project_data_invalid(self):
         """Testea la edición de datos de proyecto de forma inválida."""
 
-        def _test(solution: str, cost: str, observations: str, message: str):
-            self._edit_project_data(solution, cost, observations)
+        def _test(solution: str, observations: str, message: str):
+            self._edit_project_data(solution, observations)
             self.assertEqual(
                 self.driver.find_element(By.CSS_SELECTOR, ".toast-body").text,
                 message,
@@ -256,18 +255,14 @@ class TestProjectDetails(BaseTestClass):
         self._login_manager()
 
         # Solucion muy larga
-        _test("a" * 101, "1", "N/A", "La solución debe tener entre 3 y 100 caracteres")
+        _test("a" * 101, "N/A", "El campo Solución debe tener entre 3 y 100 caracteres")
 
         # Observacion muy larga
         _test(
             "ZZZ",
-            "1",
             "a" * 101,
-            "Las observaciones deben tener entre 3 y 100 caracteres",
+            "El campo Observaciones debe tener entre 3 y 100 caracteres",
         )
-
-        # Costo negativo
-        _test("ZZZ", "-1", "N/A", "El costo debe ser mayor o igual a 0")
 
     def test_delete_project_data(self):
         """Testea la eliminación de datos de proyecto."""
@@ -409,7 +404,7 @@ class TestProjectDetails(BaseTestClass):
 
         self.assertEqual(
             self.driver.find_element(By.CSS_SELECTOR, ".toast-body").text,
-            "El usuario no puede ser eliminado porque está asociado a un detalle de proyecto",
+            "El usuario no puede ser eliminado porque gerencia alguna parte de un proyecto",
         )
 
         self.assertIn(
