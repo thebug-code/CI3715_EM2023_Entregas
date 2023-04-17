@@ -6,6 +6,21 @@
     <h1 class="title-container">Materiales e Insumos</h1>
   </div>
 
+  <!-- Modal para informar al usuario -->
+  <div class="modal fade" id="info-modal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="infoModalLabel">Plan de Acción</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Para agregar, modificar o eliminar esta actividad, diríjase a la página de Plan de Acción</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
   {# Barra de filtro de plan de acción #}
   <div class="container">
     <form class="row search-filter" action="{{ url_for('materials_supplies', project_detail_id=project_detail.id) }}" method="post">
@@ -16,7 +31,7 @@
             <img src="{{ url_for('static', filename='img/search.svg') }}" width="40" height="40" fill="white" class="table-button" value="submit" style="border-radius: 5px;" title="Buscar materiales e insumos" />
           </button>
           {# Boton de agregar materiales e insumos #}
-          <button type="button" class="btn btn-primary add-material-supp" style="border-radius: 5px;margin-left: 10px;" data-bs-toggle="modal" id="add-matetial-supp">
+          <button type="button" class="btn btn-primary info-modal" style="border-radius: 5px;margin-left: 10px;" data-bs-toggle="modal" id="add-matetial-supp">
             <img src="{{ url_for('static', filename='img/add.svg') }}" width="40" height="40" fill="white" class="table-button" value="submit" style="border-radius: 5px;" />
           </button>
         </div>
@@ -85,5 +100,5 @@
     </div>
   {% endif %}
 
-  <script src="{{ url_for('static', filename='js/materials_supplies.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/info_modals.js') }}"></script>
 {% endblock %}
