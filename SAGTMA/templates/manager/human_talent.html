@@ -88,13 +88,13 @@
         </table>
       </div>
     </div>
-
-    <!-- Botones para dirigirse a la sección de Plan de Acción y Materiales -->
-    <div class="d-flex justify-content-end" style="margin-right: 4rem;">
-      <a href="{{ url_for('action_plans', project_detail_id=project_detail.id) }}" class="btn btn-primary float-right mx-1" style="border-radius: 5px;">Plan de Acción</a>
-      <a href="{{ url_for('materials_supplies', project_detail_id=project_detail.id) }}" class="btn btn-primary float-right mx-1" style="border-radius: 5px;">Materiales</a>
-    </div>
   {% endif %}
+
+  <!-- Botones para dirigirse a la sección de Plan de Acción y Materiales -->
+  <div class="d-flex justify-content-end" style="margin-right: 4rem;">
+    <a href="{{ url_for('action_plans', project_detail_id=project_detail.id) }}" class="btn btn-primary float-right mx-1" style="border-radius: 5px;">Plan de Acción</a>
+    <a href="{{ url_for('materials_supplies', project_detail_id=project_detail.id) }}" class="btn btn-primary float-right mx-1" style="border-radius: 5px;">Materiales</a>
+  </div>
 
   <script src="{{ url_for('static', filename='js/info_modals.js') }}"></script>
 {% endblock %}
