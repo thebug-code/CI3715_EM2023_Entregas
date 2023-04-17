@@ -241,7 +241,7 @@ def api_measure_units():
 
     # Obtiene los parámetros de la request para filtrar por id
     # y filtra de ser necesario
-    measure_unit_id = request.args.get("id")
+    measure_unit_id = request.args.get("measurement-unit-id")
     if measure_unit_id:
         stmt = stmt.where(MeasureUnit.id == measure_unit_id)
 
@@ -268,8 +268,15 @@ def get_action_plans_dropdown_data():
 
     users = [{"id": u.id, "names": u.names, "surnames": u.surnames} for u, in result]
 
-    # SELECT * FROM ActionPlan
+    # Obtiene los parámetros de la request para filtrar por id
+    # y filtra de ser necesario
+    project_detail_id = request.args.get("id")
+
     stmt = db.select(ActionPlan)
+    if project_detail_id:
+        stmt = stmt.where(ActionPlan.project_detail_id == project_detail_id)
+
+    # Consulta los planes de acción requeridos
     result = db.session.execute(stmt).fetchall()
     actions = [{"id": a.id, "description": a.action} for a, in result]
 

@@ -6,6 +6,7 @@ $(document).ready(function () {
 
     $.getJSON({
       url: "/api/v1/action-plans-dropdown-data",
+      data: { id },
       success: function (data) {
         $("#add-action-plan-modal").modal("show");
         var users = data.users;
