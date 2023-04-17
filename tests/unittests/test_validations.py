@@ -4,12 +4,16 @@ import SAGTMA.utils.validations as validations
 from datetime import date
 
 
+class TestException(Exception):
+    pass
+
+
 class TestClients(BaseTestClass):
     def test_validate_id_number_valid(self):
         """Testea la validación de cédulas válidas."""
 
         def _test_validate_id_number_valid(id: str, actual_id: str):
-            self.assertEqual(validations.validate_id(id, Exception), actual_id)
+            self.assertEqual(validations.validate_id(id, TestException), actual_id)
 
         # Prueba varios formatos de números de cédula válidos
         _test_validate_id_number_valid("j-1234567", "J-1234567")
@@ -22,8 +26,8 @@ class TestClients(BaseTestClass):
         """Testea la validación de cédulas inválidas."""
 
         def _test_validate_id_number_invalid(id: str):
-            with self.assertRaises(Exception):
-                validations.validate_id_number(id, Exception)
+            with self.assertRaises(TestException):
+                validations.validate_id(id, TestException)
 
         # Sin guión
         _test_validate_id_number_invalid("V2346789")
@@ -50,7 +54,7 @@ class TestClients(BaseTestClass):
         "Testea la validación de nombres válidos"
 
         def _test_validate_name_valid(name):
-            self.assertIsNone(validations.validate_name(name, Exception))
+            self.assertIsNone(validations.validate_name(name, TestException))
 
         # Nombres de 2 y 50 caracteres
         _test_validate_name_valid("Ja")
@@ -63,8 +67,8 @@ class TestClients(BaseTestClass):
         "Testea la validación de nombres inválidos"
 
         def _test_validate_name_invalid(name: str):
-            with self.assertRaises(Exception):
-                validations.validate_name(name)
+            with self.assertRaises(TestException):
+                validations.validate_name(name, TestException)
 
         # Nombres de 1 y 51 caracteres
         _test_validate_name_invalid("K")
@@ -80,22 +84,24 @@ class TestClients(BaseTestClass):
         start_date = date(2023, 1, 1)
         deadline = date(2023, 1, 31)
 
-        self.assertIsNone(validations.validate_date(start_date, deadline, Exception))
+        self.assertIsNone(
+            validations.validate_date(start_date, deadline, TestException)
+        )
 
     def test_validate_date_invalid(self):
         """Testea la validación de fechas de proyecto inválidas."""
         start_date = date(2023, 2, 1)
         deadline = date(2023, 1, 31)
 
-        with self.assertRaises(Exception):
-            validations.validate_date(start_date, deadline, Exception)
+        with self.assertRaises(TestException):
+            validations.validate_date(start_date, deadline, TestException)
 
     def test_validate_text_input_invalid(self):
         "Testea la validacion de inputs de texto inválidos"
 
         def _test_validate_text_input_invalid(text: str):
-            with self.assertRaises(Exception):
-                validations.validate_input_text(text, "Generic Field", Exception)
+            with self.assertRaises(TestException):
+                validations.validate_input_text(text, "Generic Field", TestException)
 
         # Inputs vacíos
         _test_validate_text_input_invalid("")
@@ -113,7 +119,7 @@ class TestClients(BaseTestClass):
 
         def _test_validate_text_input_valid(text: str):
             self.assertIsNone(
-                validations.validate_input_text(text, "Generic Field", Exception)
+                validations.validate_input_text(text, "Generic Field", TestException)
             )
 
         # Inputs válidos

@@ -28,10 +28,11 @@ class MeasurementUnitsTests(BaseTestClass):
 
     def test_validate_dimension_invalid(self):
         """Testea la validación de dimensiones inválidas."""
+
         def _test(dimension: str):
             with self.assertRaises(mu.MeasureUnitError):
                 mu.validate_dimension(dimension)
-        
+
         # Testea dimensiones inválidas
         _test("0")
         _test("-1")
@@ -41,6 +42,7 @@ class MeasurementUnitsTests(BaseTestClass):
 
     def test_validate_unit_valid(self):
         """Testea la validación de unidades válidas."""
+
         def _test(unit: str):
             self.assertIsNone(mu.validate_unit(unit))
 
@@ -50,6 +52,7 @@ class MeasurementUnitsTests(BaseTestClass):
 
     def test_validate_unit_invalid(self):
         """Testea la validación de unidades inválidas."""
+
         def _test(unit: str):
             with self.assertRaises(mu.MeasureUnitError):
                 mu.validate_unit(unit)

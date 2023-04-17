@@ -127,9 +127,9 @@ def register_activity_action_plan(
         raise ActionPlanError(
             "La cantidad de personas en talento humano debe ser un número entero positivo."
         )
-    if int(amount_person_hl) < 1:
+    if int(amount_person_hl) < 0:
         raise ActionPlanError(
-            "La cantidad de personas en talento humano debe ser mayor o igual a 1."
+            "La cantidad de personas en talento humano debe ser mayor o igual a 0."
         )
     amount_person_hl = int(amount_person_hl)
 
@@ -156,9 +156,9 @@ def register_activity_action_plan(
         raise ActionPlanError(
             "La cantidad de materiales y suministros debe ser un número entero positivo."
         )
-    if int(amount_ms) < 1:
+    if int(amount_ms) < 0:
         raise ActionPlanError(
-            "La cantidad de materiales y suministros debe ser mayor o igual a 1."
+            "La cantidad de materiales y suministros debe ser mayor o igual a 0."
         )
     amount_ms = int(amount_ms)
 
@@ -285,19 +285,19 @@ def register_activity_action_plan(
             total,
         )
         db.session.add(activity)
-        
+
         # Registra los eventos en la base de datos
         events.add_event("Planes de Acción", f"Agregar plan de acción '{action}'")
 
         events.add_event(
             "Planes de Acción",
-            f"Agregar actividad '{activity.description}' al plan de acción '{action}'"
+            f"Agregar actividad '{activity.description}' al plan de acción '{action}'",
         )
 
-        activity_id = activity.id        
+        activity_id = activity.id
 
     # Crea un registro de talento humano
-    human_talent = HumanTalent (
+    human_talent = HumanTalent(
         activity_id,
         work_hours,
         amount_person_hl,

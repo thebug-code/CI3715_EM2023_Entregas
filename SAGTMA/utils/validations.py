@@ -77,7 +77,6 @@ def validate_input_text(
 
     regex = r"^[\w\s\-a-zA-Z0-9_.¡!,/;:]*$"
     if not re.match(regex, input_text):
-        if flag:
-            raise exception_type(
-                f"El campo {campo} solo puede contener caracteres alfanuméricos, guiones y espacios"
-            )
+        raise exception_type(
+            f"El campo {campo} solo puede contener caracteres alfanuméricos, guiones y espacios"
+        )
