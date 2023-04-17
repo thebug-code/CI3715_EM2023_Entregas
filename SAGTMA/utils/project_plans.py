@@ -359,6 +359,11 @@ def delete_activity_action_plan(action_plan_id: int, activity_id: int):
     # Elimina la actividad
     db.session.delete(deleted_activity)
 
+    project_detail = action_plan.project_detail
+    # Si el plan de acción asociado se quedó sin actividades, se elimina también
+    if not action_plan.activities:
+        db.session.delete(action_plan)
+
     # Registra el evento en la base de datos
     events.add_event(
         "Planes de acción",
@@ -366,7 +371,7 @@ def delete_activity_action_plan(action_plan_id: int, activity_id: int):
     )
 
     # Actualiza el monto del dato del proyecto
-    update_project_total(deleted_activity.action_plan.project_detail)
+    update_project_total(project_detail)
 
 
 # ========== Editar Actividades de Planes de Acción ==========

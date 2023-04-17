@@ -147,6 +147,13 @@ $(document).ready(function () {
 
         $("#edit-solution").val(projectDetail.solution);
         $("#edit-cost").val(projectDetail.cost);
+
+        if (projectDetail.cost === 0) {
+          // Coloca el caption edit-cost-caption invisible y quita hace disabled=false el input de edit-cost
+          $("#edit-cost-caption").css("display", "none");
+          $("#edit-cost").prop("disabled", false);
+        }
+
         $("#edit-observations").val(projectDetail.observations);
 
         $("#edit-project-detail-form").attr("action", "/project-details/" + id + "/edit/");

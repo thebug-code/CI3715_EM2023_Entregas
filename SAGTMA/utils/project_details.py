@@ -212,7 +212,11 @@ def edit_project_detail(
     edited_detail.department_id = department_id
     edited_detail.manager_id = manager_id
     edited_detail.solution = solution
-    edited_detail.cost = cost
+
+    # Solo se puede editar el costo de los datos de proyecto sin plan de acción
+    if len(edited_detail.action_plans) == 0:
+        edited_detail.cost = cost
+
     edited_detail.observations = observations
 
     # Registra el evento en la base de datos

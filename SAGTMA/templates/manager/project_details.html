@@ -35,7 +35,7 @@
             </div>
             <div class="mb-3">
               <label for="cost" class="form-label">Monto</label>
-              <input type="number" step="any" class="form-control" id="add-cost" name="cost" placeholder="Ingrese el monto del proyecto" required />
+              <input type="number" step="any" class="form-control" id="add-cost" name="cost" placeholder="Ingrese el monto del proyecto" required/>
             </div>
             <div class="mb-3">
               <label for="observations" class="form-label">Observaciones</label>
@@ -82,9 +82,10 @@
               <label for="solution" class="form-label">Solución</label>
               <input type="text" class="form-control" id="edit-solution" name="solution" placeholder="Ingrese la solución del problema" required />
             </div>
-            <div class="mb-3">
+            <div class="mb-2">
               <label for="cost" class="form-label">Monto</label>
-              <input type="number" step="any" class="form-control" id="edit-cost" name="cost" placeholder="Ingrese el monto del proyecto" required />
+              <input type="number" step="any" class="form-control" id="edit-cost" name="cost" placeholder="Ingrese el monto del proyecto" required disabled />
+              <div class="form-text text-end" id="edit-cost-caption">Calculado automáticamente</div>
             </div>
             <div class="mb-3">
               <label for="observations" class="form-label">Observaciones</label>
