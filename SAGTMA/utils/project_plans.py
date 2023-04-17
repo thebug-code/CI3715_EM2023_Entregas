@@ -30,7 +30,13 @@ def validate_works_hours(work_hours: str) -> int:
         raise ActionPlanError(
             "La cantidad de horas de trabajo debe ser un número entero positivo."
         )
-    return int(work_hours)
+
+    work_hours = int(work_hours)
+    if work_hours <= 0:
+        raise ActionPlanError(
+            "La cantidad de horas de trabajo debe ser un número entero positivo."
+        )
+    return work_hours
 
 
 # ========= Registro de Actividades de Planes de Acción =========

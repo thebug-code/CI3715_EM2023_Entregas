@@ -22,10 +22,10 @@ class ProjectPlansTests(BaseTestClass):
             self.assertEqual(pp.validate_works_hours(input_value), expected_value)
 
         # Caso borde
-        _test("1")
+        _test("1", 1)
 
         # Valor nominal
-        _test("8")
+        _test("8", 8)
 
     def test_invalid_working_hours(self):
         """Testea la validación de horas de trabajo inválidas"""

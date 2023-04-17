@@ -18,7 +18,7 @@ def validate_dimension(dimension: str) -> float:
 
     try:
         dimension = float(dimension)
-    except MeasureUnitError:
+    except ValueError:
         raise MeasureUnitError("La dimensión debe ser un número decimal.")
 
     if dimension <= 0:
