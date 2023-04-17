@@ -3,24 +3,10 @@
 {% block title %}Plan de Acción{% endblock %}
 {% block content %}
   <div class="d-flex justify-content-center my-4">
-    <h1 class="title-container">Talentos Humanos</h1>
+    <h1 class="title-container">Talento Humano</h1>
   </div>
 
-  <!-- Modal para informar al usuario -->
-  <div class="modal fade" id="info-modal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="infoModalLabel">Plan de Acción</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <p>Para agregar, modificar o eliminar esta actividad, diríjase a la página de Plan de Acción</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
+  {% include 'manager/info_modal.html' %}
   {# Barra de filtro de plan de acción #}
   <div class="container">
     <form class="row search-filter" action="{{ url_for('human_talents', project_detail_id=project_detail.id) }}" method="POST">
@@ -92,8 +78,8 @@
 
   <!-- Botones para dirigirse a la sección de Plan de Acción y Materiales -->
   <div class="d-flex justify-content-end" style="margin-right: 4rem;">
-    <a href="{{ url_for('action_plans', project_detail_id=project_detail.id) }}" class="btn btn-primary float-right mx-1" style="border-radius: 5px;">Plan de Acción</a>
-    <a href="{{ url_for('materials_supplies', project_detail_id=project_detail.id) }}" class="btn btn-primary float-right mx-1" style="border-radius: 5px;">Materiales</a>
+    <a href="{{ url_for('action_plans', project_detail_id=project_detail.id) }}" class="btn btn-primary float-right mx-1" style="border-radius: 5px;">{{ "<<" }}</a>
+    <a href="{{ url_for('materials_supplies', project_detail_id=project_detail.id) }}" class="btn btn-primary float-right mx-1" style="border-radius: 5px;">{{ ">>" }}</a>
   </div>
 
   <script src="{{ url_for('static', filename='js/info_modals.js') }}"></script>

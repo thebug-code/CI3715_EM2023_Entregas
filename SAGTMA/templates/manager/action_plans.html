@@ -343,8 +343,8 @@
 
   <!-- Botones para dirigirse a la sección de Materiales y Talento Humano -->
   <div class="d-flex justify-content-end" style="margin-right: 4rem;">
-    <a href="{{ url_for('human_talents', project_detail_id=project_detail.id) }}" class="btn btn-primary float-right mx-1" style="border-radius: 5px;">Talento Humano</a>
-    <a href="{{ url_for('materials_supplies', project_detail_id=project_detail.id) }}" class="btn btn-primary float-right mx-1" style="border-radius: 5px;">Materiales</a>
+    <a href="{{ url_for('materials_supplies', project_detail_id=project_detail.id) }}" class="btn btn-primary float-right mx-1" style="border-radius: 5px;">{{ "<<" }}</a>
+    <a href="{{ url_for('human_talents', project_detail_id=project_detail.id) }}" class="btn btn-primary float-right mx-1" style="border-radius: 5px;">{{ ">>" }}</a>
   </div>
 
   <script src="{{ url_for('static', filename='js/action_plans.js') }}"></script>

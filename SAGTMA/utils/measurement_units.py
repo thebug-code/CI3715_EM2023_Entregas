@@ -98,6 +98,12 @@ def delete_measure_unit(measure_unit_id: int):
         raise MeasureUnitError("No existe una unidad de medida con el id especificado")
     deleted_measure_unit = measure_unit_query[0]
 
+    # Si está asociado a algún material no se puede eliminar
+    if deleted_measure_unit.materials:
+        raise MeasureUnitError(
+            "No se puede eliminar una unidad de medida asociada a un material."
+        )
+
     # Elimina la unidad de medida de la base de datos
     db.session.delete(deleted_measure_unit)
 

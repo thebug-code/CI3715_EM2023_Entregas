@@ -15,6 +15,20 @@ import SAGTMA.utils.measurement_units as mu
 
 
 class MeasurementUnitsTests(BaseTestClass):
+    def populate_db(self):
+        super().populate_db()
+
+        # Añade una unidad de medida
+        dept = Department("Eléctrica")
+        dept.id = 0
+
+        db.session.add(dept)
+        db.session.commit()
+
+    def _login_admin(self):
+        """Inicia sesión con un usuario Administrador."""
+        return self.login_user("admin", "Admin123.")
+
     def test_validate_dimension_valid(self):
         """Testea la validación de dimensiones válidas."""
 

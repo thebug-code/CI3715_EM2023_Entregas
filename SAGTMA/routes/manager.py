@@ -560,8 +560,6 @@ def materials_supplies(project_detail_id) -> Response:
 
         # Añade el evento de búsqueda
         events.add_event("Materiales y Suministros", f"Buscar '{material_supp}'")
-    else:
-        pass
 
     result = db.session.execute(stmt).fetchall()
     _materials_supplies = [r for r, in result]

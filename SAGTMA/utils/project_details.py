@@ -158,8 +158,11 @@ def edit_project_detail(
     observations = observations.strip()
 
     # Verifica que todos los campos estén completos
-    if not all([vehicle, department, manager, solution, cost, observations]):
+    if not all([vehicle, department, manager, solution, observations]):
         raise ProjectDetailError("Todos los campos son obligatorios")
+
+    if not cost:
+        cost = "0"
 
     # Verifica que el detalle de proyecto exista
     smt = db.select(ProjectDetail).where(ProjectDetail.id == detail_id)
@@ -210,7 +213,7 @@ def edit_project_detail(
     # Edita el detalle de proyecto
     edited_detail.vehicle_id = vehicle_id
     edited_detail.department_id = department_id
-    edited_detail.manager_id = manager_id
+    edited_detail.project_manager_id = manager_id
     edited_detail.solution = solution
 
     # Solo se puede editar el costo de los datos de proyecto sin plan de acción
