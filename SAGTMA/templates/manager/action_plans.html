@@ -157,71 +157,86 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body" style="padding-top: 0px;">
-          <div class="mb-2 mt-4 fs-5 text-muted">Acciones y Actividades</div>
           <form method="post" id="edit-action-plan-form">
-            <div class="mb-3">
-              <label class="form-label" for="action">Acción</label>
-              <input type="text" class="form-control" id="edit-action" name="action" placeholder="Ingrese la nueva acción" required />
-            </div>
-            <!-- Detalles de la actividad -->
-            <div class="mb-3">
-              <label class="form-label" for="activity">Actividad</label>
-              <input class="form-control" type="text" name="activity" id="edit-activity" placeholder="Ingrese la actividad" required />
-            </div>
-            <div class="mb-3">
-              <label class="form-label" for="charge-person">Persona a cargo</label>
-              <select class="form-select" name="charge-person" id="edit-charge-person"></select>
-            </div>
-            <div class="mb-3">
-              <label class="form-label" for="start-date">Fecha de inicio</label>
-              <input type="date" class="form-control" id="edit-start-date" name="start-date" required />
-            </div>
-            <div class="mb-3">
-              <label class="form-label" for="deadline">Fecha de cierre</label>
-              <input type="date" class="form-control" id="edit-deadline" name="deadline" required />
-            </div>
-            <div class="mb-3">
-              <label class="form-label" for="work-hours">Cantidad de horas</label>
-              <input type="number" class="form-control" id="edit-work-hours" name="work-hours" placeholder="Ingrese la cantidad de horas" required />
+            <div class="page general-info-edit">
+              <div class="mb-2 mt-4 fs-5 text-muted">Acciones y Actividades</div>
+              <div class="mb-3">
+                <label class="form-label" for="action">Acción</label>
+                <input type="text" class="form-control" id="edit-action" name="action" placeholder="Ingrese la nueva acción" required />
+              </div>
+              <!-- Detalles de la actividad -->
+              <div class="mb-3">
+                <label class="form-label" for="activity">Actividad</label>
+                <input class="form-control" type="text" name="activity" id="edit-activity" placeholder="Ingrese la actividad" required />
+              </div>
+              <div class="mb-3">
+                <label class="form-label" for="charge-person">Persona a cargo</label>
+                <select class="form-select" name="charge-person" id="edit-charge-person"></select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label" for="start-date">Fecha de inicio</label>
+                <input type="date" class="form-control" id="edit-start-date" name="start-date" required />
+              </div>
+              <div class="mb-3">
+                <label class="form-label" for="deadline">Fecha de cierre</label>
+                <input type="date" class="form-control" id="edit-deadline" name="deadline" required />
+              </div>
+              <div class="mb-3">
+                <label class="form-label" for="work-hours">Cantidad de horas</label>
+                <input type="number" class="form-control" id="edit-work-hours" name="work-hours" placeholder="Ingrese la cantidad de horas" required />
+              </div>
             </div>
 
             <!-- Talento Humano -->
-            <div class="mb-2 mt-4 fs-5 text-muted">Talento Humano</div>
-            <div class="mb-3">
-              <label class="form-label" for="edit-amount-person-hl">Cantidad de personas</label>
-              <input class="form-control" name="amount-person-hl" id="edit-amount-person-hl" type="number" placeholder="Ingrese la cantidad de personas" required />
-            </div>
-            <div class="mb-3">
-              <label class="form-label" for="edit-cost-hl">Costo</label>
-              <input class="form-control" type="number" step="any" name="cost-hl" id="edit-cost-hl" placeholder="Ingrese el costo" required />
+            <div class="page human-resources-edit" style="display: none;">
+              <div class="mb-2 mt-4 fs-5 text-muted">Talento Humano</div>
+              <div class="mb-3">
+                <label class="form-label" for="edit-amount-person-hl">Cantidad de personas</label>
+                <input class="form-control" name="amount-person-hl" id="edit-amount-person-hl" type="number" placeholder="Ingrese la cantidad de personas" required />
+              </div>
+              <div class="mb-3">
+                <label class="form-label" for="edit-cost-hl">Costo</label>
+                <input class="form-control" type="number" step="any" name="cost-hl" id="edit-cost-hl" placeholder="Ingrese el costo" required />
+              </div>
             </div>
 
             <!-- Materiales e insumos -->
-            <div class="mb-2 mt-4 fs-5 text-muted">Materiales e Insumos</div>
-            <div class="mb-3">
-              <label class="form-label" for="edit-category-ms">Categoría</label>
-              <select class="form-select" name="category-ms" id="edit-category-ms" required>
-                <option value="" selected disabled>Seleccione una categoría</option>
-                <option value="Ninguno">Ninguno</option>
-                <option value="Materiales">Materiales</option>
-                <option value="Insumos">Insumos</option>
-              </select>
+            <div class="page material-supplies-edit" style="display: none;">
+              <div class="mb-2 mt-4 fs-5 text-muted">Materiales e Insumos</div>
+              <div class="mb-3">
+                <label class="form-label" for="edit-category-ms">Categoría</label>
+                <select class="form-select" name="category-ms" id="edit-category-ms" required>
+                  <option value="" selected disabled>Seleccione una categoría</option>
+                  <option value="Ninguno">Ninguno</option>
+                  <option value="Materiales">Materiales</option>
+                  <option value="Insumos">Insumos</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label" for="edit-description-ms">Descripción</label>
+                <input class="form-control" type="text" name="description-ms" id="edit-description-ms" placeholder="Ingrese la descripción" required />
+              </div>
+              <div class="mb-3">
+                <label class="form-label" for="edit-amount-ms">Cantidad</label>
+                <input class="form-control" type="number" name="amount-ms" id="edit-amount-ms" placeholder="Ingrese la cantidad" required />
+              </div>
+              <div class="mb-3">
+                <label class="form-label" for="edit-measure-unit-ms">Medida</label>
+                <select class="form-select" name="measure-unit-ms" id="edit-measure-unit-ms" required></select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label" for="edit-cost-ms">Costo</label>
+                <input class="form-control" type="number" step="any" name="cost-ms" id="edit-cost-ms" placeholder="Ingrese el costo" required />
+              </div>
             </div>
-            <div class="mb-3">
-              <label class="form-label" for="edit-description-ms">Descripción</label>
-              <input class="form-control" type="text" name="description-ms" id="edit-description-ms" placeholder="Ingrese la descripción" required />
-            </div>
-            <div class="mb-3">
-              <label class="form-label" for="edit-amount-ms">Cantidad</label>
-              <input class="form-control" type="number" name="amount-ms" id="edit-amount-ms" placeholder="Ingrese la cantidad" required />
-            </div>
-            <div class="mb-3">
-              <label class="form-label" for="edit-measure-unit-ms">Medida</label>
-              <select class="form-select" name="measure-unit-ms" id="edit-measure-unit-ms" required></select>
-            </div>
-            <div class="mb-3">
-              <label class="form-label" for="edit-cost-ms">Costo</label>
-              <input class="form-control" type="number" step="any" name="cost-ms" id="edit-cost-ms" placeholder="Ingrese el costo" required />
+
+            <!-- Botones de paginación -->
+            <div class="pagination">
+              <div class="d-flex">
+                <button type="button" class="btn btn-secondary page-btn active" data-page="general-info-edit">Acción</button>
+                <button type="button" class="btn btn-secondary page-btn" data-page="human-resources-edit">Talento Humano</button>
+                <button type="button" class="btn btn-secondary page-btn" data-page="material-supplies-edit">Materiales e Insumos</button>
+              </div>
             </div>
 
             <input type="hidden" name="activity-id" id="activity-id" />
