@@ -344,6 +344,7 @@ def api_action_plans():
                 "description": act.description,
                 "start_date": act.start_date.strftime("%Y-%m-%d"),
                 "deadline": act.deadline.strftime("%Y-%m-%d"),
+                "charge_person_id": act.charge_person_id,
                 "work_hours": act.work_hours,
                 "cost": act.cost,
                 "human_talents": [
@@ -360,7 +361,7 @@ def api_action_plans():
                         "category": ms.category,
                         "description": ms.description,
                         "amount": ms.amount,
-                        "unit": ms.measure_unit_id,
+                        "unit_id": ms.measure_unit_id,
                         "cost": ms.cost / ms.amount,
                     }
                     for ms in act.materials

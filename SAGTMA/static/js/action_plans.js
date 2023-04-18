@@ -153,7 +153,7 @@ $(document).ready(function () {
 
           // Si el usuario es el responsable del plan de acción, seleccionarlo
           // por defecto
-          if (user.id === actionPlan.charge_person_id) {
+          if (user.id === activity.charge_person_id) {
             option.attr("selected", "selected");
           }
 
@@ -171,7 +171,7 @@ $(document).ready(function () {
 
           // Si la unidad de medida es la misma que la del plan de acción, seleccionarla
           // por defecto
-          if (unit.id === materialSupply.measure_unit_id) {
+          if (unit.id === materialSupply.unit_id) {
             option.attr("selected", "selected");
           }
 
