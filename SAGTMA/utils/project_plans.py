@@ -533,12 +533,22 @@ def edit_activity_action_plan(
         raise ActionPlanError(
             "La cantidad de materiales y suministros debe ser un número entero."
         )
+
+    if int(amount_ms) < 0:
+        raise ActionPlanError(
+            "La cantidad de materiales y suministros debe ser mayor o igual a 0."
+        )
+
     amount_ms = int(amount_ms)
 
     # Verifica que el costo de materiales y suministros sea válido
     try:
         cost_ms = float(cost_ms)
     except ValueError:
+        raise ActionPlanError(
+            "El costo de materiales y suministros debe ser mayor o igual a 0."
+        )
+    if cost_ms < 0:
         raise ActionPlanError(
             "El costo de materiales y suministros debe ser mayor o igual a 0."
         )

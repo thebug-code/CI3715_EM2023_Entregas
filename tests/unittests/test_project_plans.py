@@ -123,6 +123,12 @@ class ProjectPlansTests(BaseTestClass):
             f"/action-plans/{data['id']}/register/", data=data, follow_redirects=True
         )
 
+    def _post_edit_activity(self, data):
+        """Envía una petición POST para editar una actividad."""
+        return self.client.post(
+            f"/action-plans/{data['id']}/edit/", data=data, follow_redirects=True
+        )
+
     def test_valid_working_hours(self):
         """Testea la validación de horas de trabajo válidas"""
 
@@ -227,3 +233,112 @@ class ProjectPlansTests(BaseTestClass):
         _test("measure-unit-ms", "-1")
         _test("cost-ms", "-1")
 
+    def test_edit_activity_valid(self):
+        """Testea la edición de una actividad válida"""
+        self._login_manager()
+
+        # Datos de actividad válidos
+        self._post_edit_activity(
+            {
+                "id": 0,
+                "action": "Higiene",
+                "activity": "Lavao",
+                "start-date": "2022-04-01",
+                "deadline": "2022-04-01",
+                "work-hours": "8",
+                "charge-person": "2",
+                "amount-person-hl": "1",
+                "cost-hl": "1",
+                "category-ms": "Materiales",
+                "description-ms": "Jabón",
+                "amount-ms": "1",
+                "measure-unit-ms": "0",
+                "cost-ms": "1",
+                "activity-id": "0",
+                "project-detail-id": "0",
+                "human-talent-id": "0",
+                "material-supply-id": "0",
+            }
+        )
+
+        stmt = db.select(Activity).where(Activity.description == "Lavao")
+        self.assertIsNotNone(db.session.execute(stmt).first())
+
+    def test_edit_activity_invalid(self):
+        """Testea la edición de una actividad inválida"""
+        self._login_manager()
+
+        def _test(field: str, value: str):
+            data = {
+                "id": 0,
+                "action": "Higiene",
+                "activity": "Lavao",
+                "start-date": "2022-04-01",
+                "deadline": "2022-04-01",
+                "work-hours": "8",
+                "charge-person": "2",
+                "amount-person-hl": "1",
+                "cost-hl": "1",
+                "category-ms": "Materiales",
+                "description-ms": "Jabón",
+                "amount-ms": "1",
+                "measure-unit-ms": "0",
+                "cost-ms": "1",
+                "activity-id": "0",
+                "project-detail-id": "0",
+                "human-talent-id": "0",
+                "material-supply-id": "0",
+            }
+
+            data[field] = value
+            self._post_edit_activity(data)
+
+            stmt = db.select(Activity).where(
+                Activity.description == "Preparar el material"
+            )
+            self.assertIsNotNone(db.session.execute(stmt).first())
+
+        # Datos de actividad inválidos
+        # Fecha fuera del rango del proyecto padre
+        _test("start-date", "2020-04-01")
+
+        # Id inexistente
+        _test("id", "99")
+
+        # Campos naturales negativos
+        _test("work-hours", "-1")
+        _test("work-hours", "-1")
+        _test("charge-person", "-1")
+        _test("amount-person-hl", "-1")
+        _test("cost-hl", "-1")
+        _test("amount-ms", "-1")
+        _test("measure-unit-ms", "-1")
+        _test("cost-ms", "-1")
+
+    def test_delete_activity_valid(self):
+        """Testea la eliminación de una actividad válida"""
+        self._login_manager()
+
+        # Se elimina una actividad válida
+        self.client.post(
+            "/action-plans/0/delete/",
+            data={"project-detail-id": "0", "delete-activity-id": "0"},
+            follow_redirects=True,
+        )
+
+        stmt = db.select(Activity).where(Activity.id == 0)
+        self.assertIsNone(db.session.execute(stmt).first())
+
+    def test_delete_activity_invalid(self):
+        """Testea la eliminación de una actividad inválida"""
+        self._login_manager()
+
+        # Se elimina una actividad inexistente
+        self.client.post(
+            "/action-plans/1/delete/",
+            data={"project-detail-id": "0", "delete-activity-id": "0"},
+            follow_redirects=True,
+        )
+
+        stmt = db.select(Activity).where(Activity.id == 0)
+        self.assertIsNotNone(db.session.execute(stmt).first())
