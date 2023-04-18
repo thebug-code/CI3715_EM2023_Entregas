@@ -4,10 +4,6 @@ from SAGTMA.models import User, db
 
 
 class TestProfiles(BaseTestClass):
-    def _login_admin(self):
-        """Inicia sesión con un usuario Administrador."""
-        return self.login_user("admin", "Admin123.")
-
     def test_validate_password_invalid(self):
         """Testea registros de usuarios con contraseñas inválidas.
 

@@ -464,7 +464,7 @@ def human_talents(project_detail_id) -> Response:
     project_detail_query = db.session.execute(stmt).first()
     if not project_detail_query:
         flash("El detalle de proyecto indica que no existe")
-        return redirect(url_for("project_details"))
+        return redirect(url_for("project_data"))
 
     # Obtiene el detalle de proyecto
     _project_detail = project_detail_query[0]
@@ -522,7 +522,7 @@ def materials_supplies(project_detail_id) -> Response:
     project_detail_query = db.session.execute(stmt).first()
     if not project_detail_query:
         flash("El detalle de proyecto indica que no existe")
-        return redirect(url_for("project_details"))
+        return redirect(url_for("project_data"))
 
     # Obtiene el detalle de proyecto
     _project_detail = project_detail_query[0]

@@ -18,10 +18,6 @@ class MeasurementUnitsTests(BaseTestClass):
         db.session.add(unit)
         db.session.commit()
 
-    def _login_admin(self):
-        """Inicia sesión con un usuario Administrador."""
-        return self.login_user("admin", "Admin123.")
-
     def _post_register_unit(self, data: dict):
         """Envía una petición POST para registrar una unidad de medida."""
         return self.client.post(

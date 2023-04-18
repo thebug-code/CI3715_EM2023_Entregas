@@ -50,10 +50,6 @@ class TestClients(BaseTestClass):
         db.session.add_all([analyst_user, client])
         db.session.commit()
 
-    def _login_analyst(self):
-        """Inicia sesión con un usuario Analista de Operaciones."""
-        return self.login_user("analyst", "Analyst123.")
-
     def test_validate_phone_number_valid(self):
         """Testea la validación de números de teléfonos válidos."""
 

@@ -63,6 +63,15 @@ class BaseTestClass(unittest.TestCase):
             follow_redirects=True,
         )
 
+    def _login_manager(self):
+        return self.login_user("manager", "Manager123.")
+
+    def _login_admin(self):
+        return self.login_user("admin", "Admin123.")
+
+    def _login_analyst(self):
+        return self.login_user("analyst", "Analyst123.")
+
     def tearDown(self):
         # Sale el contexto de la aplicación
         self.ctx.pop()

@@ -111,12 +111,6 @@ class ProjectPlansTests(BaseTestClass):
 
         db.session.commit()
 
-    def _login_manager(self):
-        return self.login_user("manager", "Manager123.")
-
-    def _login_admin(self):
-        return self.login_user("admin", "Admin123.")
-
     def _post_register_activity(self, data):
         """Envía una petición POST para registrar una actividad."""
         return self.client.post(

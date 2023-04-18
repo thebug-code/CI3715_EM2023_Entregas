@@ -85,15 +85,6 @@ class TestProjectDetails(BaseTestClass):
         db.session.add_all([analyst_user, manager_user, project, client, dept, detail])
         db.session.commit()
 
-    def _login_manager(self):
-        return self.login_user("manager", "Manager123.")
-
-    def _login_analyst(self):
-        return self.login_user("analyst", "Analyst123.")
-
-    def _login_admin(self):
-        return self.login_user("admin", "Admin123.")
-
     def test_add_project_data_valid(self):
         """Testea la adición de datos proyecto válidos."""
         self._login_manager()

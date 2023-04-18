@@ -31,9 +31,6 @@ class TestPortfolio(BaseTestClass):
         db.session.add_all([manager_user, project])
         db.session.commit()
 
-    def _login_manager(self):
-        return self.login_user("manager", "Manager123.")
-
     def test_register_project_valid(self):
         """Testea la creación de proyecto válidos."""
         self._login_manager()
