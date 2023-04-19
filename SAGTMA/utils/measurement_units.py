@@ -35,7 +35,7 @@ def validate_unit(unit: str):
     alfabético y no contiene caracteres especiales (excepto el espacio).
     """
 
-    if not re.match(r"^[a-zA-Z ]+$", unit):
+    if not re.match(r"^[a-zA-Záéíóú ]+$", unit):
         raise MeasureUnitError("La unidad solo puede contener caracteres alfabéticos.")
 
 
@@ -62,9 +62,12 @@ def register_measure_unit(dimension: str, unit: str):
     validate_unit(unit)
 
     # Verifica si ya existe una unidad de medida con la misma dimensión y unidad
-    smt = db.select(MeasureUnit).where(
-        MeasureUnit.dimension == dimension and MeasureUnit.unit == unit
+    smt = (
+        db.select(MeasureUnit)
+        .where(MeasureUnit.dimension == dimension)
+        .where(MeasureUnit.unit == unit)
     )
+
     if db.session.execute(smt).first():
         raise MeasureUnitError(
             "Ya existe una unidad de medida con la misma dimensión y unidad"
@@ -148,7 +151,8 @@ def edit_measure_unit(measure_unit_id: int, dimension: str, unit: str):
     # Verifica si ya existe una unidad de medida con la misma dimensión y unidad
     smt = (
         db.select(MeasureUnit)
-        .where(MeasureUnit.dimension == dimension and MeasureUnit.unit == unit)
+        .where(MeasureUnit.dimension == dimension)
+        .where(MeasureUnit.unit == unit)
         .where(MeasureUnit.id != measure_unit_id)
     )
     if db.session.execute(smt).first():
