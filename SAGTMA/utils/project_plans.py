@@ -165,7 +165,7 @@ def register_activity_action_plan(
         category_ms, "Categoría de Materiales y Suministros", ActionPlanError
     )
 
-    # Verifica que la descripción de materiales y suministro
+    # Verifica que la descripción de materiales y suministro sea válida
     validate_input_text(
         description_ms, "Descripción de Materiales y Suministros", ActionPlanError
     )
@@ -538,7 +538,6 @@ def edit_activity_action_plan(
         raise ActionPlanError(
             "La cantidad de materiales y suministros debe ser mayor o igual a 0."
         )
-
     amount_ms = int(amount_ms)
 
     # Verifica que el costo de materiales y suministros sea válido
@@ -588,6 +587,8 @@ def edit_activity_action_plan(
 
     # Edita el plan de acción
     edited_action_plan.action = action
+
+    # Edita la actividad
     edited_activity.description = activity
     edited_activity.start_date = start_date_t
     edited_activity.deadline = deadline_t
