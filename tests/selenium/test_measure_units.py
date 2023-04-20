@@ -47,9 +47,7 @@ class MeasurementUnitsTests(BaseTestClass):
         )
 
     def _edit_unit(self, dimension: str, unit: str):
-        self.driver.find_element(
-            By.CSS_SELECTOR, "#edit0"
-        ).click()
+        self.driver.find_element(By.CSS_SELECTOR, "#edit0").click()
 
         WebDriverWait(self.driver, 1).until(
             expected_conditions.visibility_of_element_located(
@@ -93,6 +91,7 @@ class MeasurementUnitsTests(BaseTestClass):
 
     def test_register_unit_invalid(self):
         """Testea el registro de una unidad de medida inválida"""
+
         def _test(dimension: str, unit: str, error_message: str):
             self._register_unit(dimension, unit)
 
@@ -101,7 +100,7 @@ class MeasurementUnitsTests(BaseTestClass):
                 error_message,
             )
             self.assertNotIn(unit, self.driver.page_source)
-        
+
         self._login_admin()
 
         # Datos de unidad inválidos
@@ -110,6 +109,7 @@ class MeasurementUnitsTests(BaseTestClass):
 
     def test_edit_unit_valid(self):
         """Testea la edición de una unidad de medida válida"""
+
         def _test(dimension: str, unit: str):
             self._edit_unit(dimension, unit)
 
@@ -129,6 +129,7 @@ class MeasurementUnitsTests(BaseTestClass):
 
     def test_edit_unit_invalid(self):
         """Testea la edición de una unidad de medida inválida"""
+
         def _test(dimension: str, unit: str, error_message: str):
             self._edit_unit(dimension, unit)
 

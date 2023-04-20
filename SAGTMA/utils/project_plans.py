@@ -240,7 +240,7 @@ def register_activity_action_plan(
 
     # Crea o selecciona un plan de acción de acuerdo al tipo de acción
     activity_id = None
-    if action_id:
+    if action_id is not None:
         # Seleciona el plan de acción con el id indicado y verifica que exista
         smt = db.select(ActionPlan).where(ActionPlan.id == action_id)
         action_plan_query = db.session.execute(smt).first()
@@ -276,7 +276,6 @@ def register_activity_action_plan(
         )
 
         activity_id = activity.id
-
     else:
         # Verifica que la acción sea válida
         validate_input_text(action, "Acción", ActionPlanError)
