@@ -63,12 +63,12 @@
                 <td>{{ material_supply.cost }}</td>
                 <td>
                   {# Botón de modificar #}
-                  <button id="edit{{ material_supply.id }}" type="button" class="btn btn-primary my-2 edit-material-supp" data-bs-toggle="modal">
+                  <button id="edit{{ material_supply.id }}" type="button" class="btn btn-primary my-2 info-modal" data-bs-toggle="modal">
                     <img src="{{ url_for('static', filename='img/edit.svg') }}" width="24" height="24" fill="white" class="table-button" value="submit" style="border-radius: 5px;" title="Modificar material e insumo" />
                   </button>
 
                   {# Botón de eliminar #}
-                  <button id="delete{{ material_supply.id }}" type="button" class="btn btn-primary delete-material-supp" data-bs-toggle="modal">
+                  <button id="delete{{ material_supply.id }}" type="button" class="btn btn-primary info-modal" data-bs-toggle="modal">
                     <img src="{{ url_for('static', filename='img/delete.svg') }}" width="24" height="24" fill="white" class="table-button" value="submit" style="border-radius: 5px;" title="Eliminar material e insumo" />
                   </button>
                 </td>
