@@ -66,7 +66,7 @@ export WEBDRIVER=Firefox # Cambie a Chrome o Edge según su preferencia, set en 
 3. En otra terminal, ejecute las pruebas:
 
 ```bash
-python -m unittest -v
+python -m unittest
 ```
 
 ## Construido con
@@ -74,3 +74,4 @@ python -m unittest -v
 - [Flask](https://flask.palletsprojects.com/en/2.0.x/) - El framework utilizado.
 - [SQLite3](https://www.sqlite.org/index.html) - El motor de base de datos utilizado.
 - [Flask-SQLAlchemy](https://flask-sqlalchemy.palletsprojects.com/en/3.0.x/) - El ORM utilizado.
+- [Bootstrap](https://getbootstrap.com/) - El framework de CSS utilizado para el desarrollo de las vistas.
