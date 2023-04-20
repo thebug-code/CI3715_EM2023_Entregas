@@ -617,3 +617,22 @@ class ProjectPlansTests(BaseTestClass):
             "No se encontraron planes de acción para el proyecto",
             self.driver.find_element(By.CSS_SELECTOR, ".alert").text,
         )
+
+    def test_cycle_through(self):
+        """Testea ciclar por las páginas de plan de acción, talento humano y materiales e insumos"""
+        self._login_manager()
+
+        self.driver.find_element(By.CSS_SELECTOR, ".float-right:nth-child(2)").click()
+        self.assertEqual(self.driver.current_url, f"{self.base_url}/human-talents/0/")
+
+        self.driver.find_element(By.CSS_SELECTOR, ".float-right:nth-child(2)").click()
+        self.assertEqual(self.driver.current_url, f"{self.base_url}/materials-supplies/0/")
+
+        self.driver.find_element(By.CSS_SELECTOR, ".float-right:nth-child(2)").click()
+        self.assertEqual(self.driver.current_url, f"{self.base_url}/action-plans/0/")
+
+        self.driver.find_element(By.CSS_SELECTOR, ".float-right:nth-child(1)").click()
+        self.assertEqual(self.driver.current_url, f"{self.base_url}/materials-supplies/0/")
+
+        self.driver.find_element(By.CSS_SELECTOR, ".float-right:nth-child(1)").click()
+        self.assertEqual(self.driver.current_url, f"{self.base_url}/human-talents/0/")
