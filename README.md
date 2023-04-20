@@ -57,7 +57,7 @@ flask --app SAGTMA:test_app run --port 5001
 2. Configure las variables de entorno para las pruebas:
 
 ```bash
-export HEADLESS=1 # Omita esto si desea ver el navegador en ejecución, set en Windows
+export HEADLESS=1 # Omita si desea ver el navegador en ejecución, set en Windows
 # unset HEADLESS # Si desea luego deshabilitar el modo headless
 
 export WEBDRIVER=Firefox # Cambie a Chrome o Edge según su preferencia, set en Windows
