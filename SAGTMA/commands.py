@@ -15,7 +15,7 @@ from SAGTMA.models import (
     ProjectDetail,
     MeasureUnit,
     db,
-) # prueba comment
+)
 from SAGTMA.utils.auth import hash_password
 
 

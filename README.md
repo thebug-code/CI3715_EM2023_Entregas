@@ -1,4 +1,4 @@
-# SAGTMA:
+# SAGTMA
 
 Sistema Automatizado de Gestión del Taller Mecánico Automotriz de Alta Gama Holiday International.
 
