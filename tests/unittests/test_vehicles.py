@@ -71,6 +71,7 @@ class TestVehicles(BaseTestClass):
 
         stmt = db.select(Vehicle).where(Vehicle.license_plate == "ABC-ACB")
         self.assertIsNotNone(db.session.execute(stmt).first())
+        self._test_logger_works()
 
     def test_validate_license_plate_invalid(self):
         """Testea la validacion de placas con placas inválidas."""
@@ -242,6 +243,7 @@ class TestVehicles(BaseTestClass):
 
         stmt = db.select(Vehicle)
         self.assertIsNone(db.session.execute(stmt).fetchone())
+        self._test_logger_works()
 
     def test_edit_vehicle_valid(self):
         """Testea la edición válida de vehículos."""
@@ -267,3 +269,4 @@ class TestVehicles(BaseTestClass):
         stmt = db.select(Vehicle).where(Vehicle.license_plate == "ABC-123")
         self.assertEqual(db.session.execute(stmt).fetchone()[0].brand, "Otro")
         self.assertEqual(len(db.session.execute(stmt).fetchall()), 1)
+        self._test_logger_works()

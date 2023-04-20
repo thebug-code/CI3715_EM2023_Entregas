@@ -105,6 +105,7 @@ class TestProjectDetails(BaseTestClass):
 
         stmt = db.select(ProjectDetail).where(ProjectDetail.solution == "Arreglarlo p")
         self.assertIsNotNone(db.session.execute(stmt).first())
+        self._test_logger_works()
 
     def test_add_project_data_missing_fields_invalid(self):
         "Testea adición de datos de proyectos con los campos vacíos"
@@ -185,6 +186,7 @@ class TestProjectDetails(BaseTestClass):
 
         stmt = db.select(ProjectDetail).where(ProjectDetail.solution == "Dejarlo asi")
         self.assertIsNotNone(db.session.execute(stmt).first())
+        self._test_logger_works()
 
     def test_edit_project_data_invalid(self):
         """Testea la edición de datos proyecto válidos."""
@@ -227,6 +229,7 @@ class TestProjectDetails(BaseTestClass):
         # Verifica que se eliminó el proyecto
         stmt = db.select(ProjectDetail).where(ProjectDetail.solution == "Prueba")
         self.assertIsNone(db.session.execute(stmt).first())
+        self._test_logger_works()
 
     def test_delete_client_project_associated(self):
         """Testea que no se pueda eliminar un cliente con proyectos asociados."""

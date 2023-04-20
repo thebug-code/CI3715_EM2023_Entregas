@@ -67,6 +67,7 @@ class TestProfiles(BaseTestClass):
 
         stmt = db.select(Department).where(Department.description == "Mecánica")
         self.assertIsNotNone(db.session.execute(stmt).first())
+        self._test_logger_works()
 
     def test_register_dept_invalid(self):
         """Testea el registro de un departamento inválido"""
@@ -111,6 +112,7 @@ class TestProfiles(BaseTestClass):
 
         stmt = db.select(Department).where(Department.description == "Mecatrónica")
         self.assertIsNotNone(db.session.execute(stmt).first())
+        self._test_logger_works()
 
     def test_edit_dept_invalid(self):
         """Testea la edición de departamentos de manera inválida."""
@@ -143,3 +145,4 @@ class TestProfiles(BaseTestClass):
         # Verifica que se eliminó el proyecto
         stmt = db.select(Department)
         self.assertEqual(len(db.session.execute(stmt).fetchall()), 0)
+        self._test_logger_works()

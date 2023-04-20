@@ -161,6 +161,7 @@ class TestProfiles(BaseTestClass):
 
         stmt = db.select(User)
         self.assertEqual(len(db.session.execute(stmt).fetchall()), 2)
+        self._test_logger_works()
 
     def test_delete_user(self):
         self._login_admin()
@@ -185,3 +186,4 @@ class TestProfiles(BaseTestClass):
 
         stmt = db.select(User)
         self.assertEqual(len(db.session.execute(stmt).fetchall()), 1)
+        self._test_logger_works()

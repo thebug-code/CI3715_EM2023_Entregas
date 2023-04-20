@@ -85,6 +85,7 @@ class MeasurementUnitsTests(BaseTestClass):
 
         stmt = db.select(MeasureUnit).where(MeasureUnit.unit == "Pulgada")
         self.assertIsNotNone(db.session.execute(stmt).first())
+        self._test_logger_works()
 
     def test_register_unit_invalid(self):
         """Testea el registro de una unidad de medida inválida"""
@@ -113,6 +114,7 @@ class MeasurementUnitsTests(BaseTestClass):
 
         stmt = db.select(MeasureUnit).where(MeasureUnit.unit == "Centímetros")
         self.assertIsNone(db.session.execute(stmt).first())
+        self._test_logger_works()
 
     def test_edit_unit_invalid(self):
         """Testea la edición de una unidad de medida inválida"""
@@ -141,6 +143,7 @@ class MeasurementUnitsTests(BaseTestClass):
 
         stmt = db.select(MeasureUnit).where(MeasureUnit.id == 0)
         self.assertIsNone(db.session.execute(stmt).first())
+        self._test_logger_works()
 
     def test_delete_unit_invalid(self):
         """Testea la eliminación de una unidad de medida de forma inválida."""

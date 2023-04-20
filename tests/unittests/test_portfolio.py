@@ -48,6 +48,7 @@ class TestPortfolio(BaseTestClass):
 
         stmt = db.select(Project).where(Project.description == "Proyecto de ejemplo")
         self.assertIsNotNone(db.session.execute(stmt).first())
+        self._test_logger_works()
 
     def test_validate_descrip_project_valid(self):
         "Testea la validacion de descripciones de proyecto válidas"
@@ -92,6 +93,7 @@ class TestPortfolio(BaseTestClass):
         # Verifica que se eliminó el proyecto
         stmt = db.select(Project).where(Project.description == "Proyecto Automotriz 1")
         self.assertIsNone(db.session.execute(stmt).first())
+        self._test_logger_works()
 
     def test_edit_project_valid(self):
         """Testea la edición de un proyecto válido."""
@@ -114,3 +116,4 @@ class TestPortfolio(BaseTestClass):
         # Verifica que el proyecto editado existe
         stmt = db.select(Project).where(Project.description == "Proyecto Editado")
         self.assertIsNotNone(db.session.execute(stmt).first())
+        self._test_logger_works()

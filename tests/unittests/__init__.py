@@ -1,7 +1,7 @@
 import unittest
 
 import SAGTMA
-from SAGTMA.models import Role, User, db
+from SAGTMA.models import Role, User, Event, db
 from SAGTMA.utils.profiles import hash_password
 
 
@@ -71,6 +71,12 @@ class BaseTestClass(unittest.TestCase):
 
     def _login_analyst(self):
         return self.login_user("analyst", "Analyst123.")
+
+    def _test_logger_works(self):
+        stmt = db.select(Event)
+        self.assertIsNotNone(
+            db.session.execute(stmt).first()
+        )
 
     def tearDown(self):
         # Sale el contexto de la aplicación

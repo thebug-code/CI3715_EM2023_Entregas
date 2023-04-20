@@ -180,6 +180,7 @@ class ProjectPlansTests(BaseTestClass):
 
         stmt = db.select(Activity).where(Activity.description == "Prueba")
         self.assertIsNotNone(db.session.execute(stmt).first())
+        self._test_logger_works()
 
     def test_register_activity_invalid(self):
         """Testea el registro de una actividad inválida"""
@@ -257,6 +258,7 @@ class ProjectPlansTests(BaseTestClass):
 
         stmt = db.select(Activity).where(Activity.description == "Lavao")
         self.assertIsNotNone(db.session.execute(stmt).first())
+        self._test_logger_works()
 
     def test_edit_activity_invalid(self):
         """Testea la edición de una actividad inválida"""
@@ -322,6 +324,7 @@ class ProjectPlansTests(BaseTestClass):
 
         stmt = db.select(Activity).where(Activity.id == 0)
         self.assertIsNone(db.session.execute(stmt).first())
+        self._test_logger_works()
 
     def test_delete_activity_invalid(self):
         """Testea la eliminación de una actividad inválida"""

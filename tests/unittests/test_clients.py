@@ -169,6 +169,7 @@ class TestClients(BaseTestClass):
 
         stmt = db.select(Client).where(Client.id_number == "V-12457845")
         self.assertIsNotNone(db.session.execute(stmt).first())
+        self._test_logger_works()
 
     def test_register_client_already_registered(self):
         """Testea la creación de clientes con cédula ya registrada."""
@@ -205,6 +206,7 @@ class TestClients(BaseTestClass):
         # Verifica que se eliminó su vehiculos
         stmt = db.select(Vehicle).where(Vehicle.license_plate == "ABC-123")
         self.assertIsNone(db.session.execute(stmt).first())
+        self._test_logger_works()
 
     def test_edit_client_valid(self):
         """Testea la creación de clientes válidos."""
@@ -231,3 +233,4 @@ class TestClients(BaseTestClass):
         # Verifica que el cliente editado existe
         stmt = db.select(Client).where(Client.id_number == "V-12121212")
         self.assertIsNotNone(db.session.execute(stmt).first())
+        self._test_logger_works()
