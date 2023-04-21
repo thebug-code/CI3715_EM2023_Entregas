@@ -75,3 +75,14 @@ python -m unittest
 - [SQLite3](https://www.sqlite.org/index.html) - El motor de base de datos utilizado.
 - [Flask-SQLAlchemy](https://flask-sqlalchemy.palletsprojects.com/en/3.0.x/) - El ORM utilizado.
 - [Bootstrap](https://getbootstrap.com/) - El framework de CSS utilizado para el desarrollo de las vistas.
+- [Jenkins](https://www.jenkins.io/) - Servidor de automatización utilizado para integración continua/entrega continua.
+- [Selenium](https://www.selenium.dev/) - Herramienta para tests automatizados de interfaz de usuario.
+
+# Desarrollo
+
+El sistema fue desarrollado utilizando el método ágil eXtreme Programming en 4 iteraciones, siendo la última de estas la iteración Release. El equipo de desarrollo estuvo conformado por:
+
+- Jean Carlos Guzmán (Agile Coach). Contacto: jguzman106@gmail.com.
+- Alejandro Meneses (desarrollador). Contacto: alejandrocardie12@gmail.com.
+- Christopher Gómez (desarrollador). Contacto: ruckrollhuke@gmail.com.
+- Edwin Franco (desarrollador). Contacto: edwinfm33@gmail.com.
